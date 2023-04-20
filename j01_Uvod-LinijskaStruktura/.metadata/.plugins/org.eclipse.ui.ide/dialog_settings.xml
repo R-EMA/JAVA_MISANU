@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="ExternalProjectImportWizard">
+		<item key="WizardProjectsImportPage.STORE_NESTED_PROJECTS" value="false"/>
+		<item key="WizardProjectsImportPage.STORE_COPY_PROJECT_ID" value="false"/>
+		<item key="WizardProjectsImportPage.STORE_ARCHIVE_SELECTED" value="false"/>
+		<item key="WizardProjectsImportPage.STORE_CLOSE_CREATED_PROJECTS_ID" value="false"/>
+		<item key="WizardProjectsImportPage.STORE_HIDE_CONFLICTING_PROJECTS_ID" value="false"/>
+		<list key="WizardProjectsImportPage.STORE_DIRECTORIES">
+			<item value="/home/emma/eclipse-workspace/j01_Uvod-LinijskaStruktura/Znakovi"/>
+			<item value="/home/emma/eclipse-workspace/j01_Uvod-LinijskaStruktura/Unos_podataka"/>
+			<item value="/home/emma/eclipse-workspace/j01_Uvod-LinijskaStruktura/Tipovi_podataka"/>
+			<item value="/home/emma/eclipse-workspace/j01_Uvod-LinijskaStruktura/Realni_brojevi"/>
+			<item value="/home/emma/eclipse-workspace/j01_Uvod-LinijskaStruktura/Primeri"/>
+			<item value="/home/emma/eclipse-workspace/j01_Uvod-LinijskaStruktura/Operatori"/>
+			<item value="/home/emma/eclipse-workspace/j01_Uvod-LinijskaStruktura/Logicke_vrednosti"/>
+			<item value="/home/emma/eclipse-workspace/j01_Uvod-LinijskaStruktura/Konverzija_Tipova"/>
+			<item value="/home/emma/eclipse-workspace/j01_Uvod-LinijskaStruktura/Konstante"/>
+			<item value="/home/emma/eclipse-workspace_git/JAVA_Uvod_linijskaStruktura/Hello"/>
+			<item value="/home/emma/eclipse-workspace/j01_Uvod-LinijskaStruktura/Celi_brojevi"/>
+		</list>
+		<list key="WizardProjectsImportPage.STORE_ARCHIVES">
+			<item value=""/>
+		</list>
+	</section>
+	<section name="ChooseWorkspaceDialogSettings">
+		<item key="DIALOG_X_ORIGIN" value="336"/>
+		<item key="DIALOG_Y_ORIGIN" value="156"/>
+	</section>
+	<section name="WORKBENCH_SETTINGS">
+		<list key="ENABLED_TRANSFERS">
+		</list>
+	</section>
+</section>
