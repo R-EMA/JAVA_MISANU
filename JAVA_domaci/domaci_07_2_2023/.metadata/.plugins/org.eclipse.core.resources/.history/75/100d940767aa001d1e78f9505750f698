@@ -1,0 +1,31 @@
+package teret;
+
+/**
+ * 
+ * @author emma
+ * 
+ * Zadatak 3 - Klasa Sanduk, nasleđuje Teret
+ * Sanduk je teret oblika kvadra zadatih dužina ivica. Oznak vrste je S.
+ *
+ */
+
+public class Sanduk extends Teret {
+
+	private double a;
+	private double b;
+	private double c;
+	
+	public Sanduk(double a, double b, double c) {
+		this.a = a;
+		this.b = b;
+		this.c = c;
+	}
+	
+	@Override
+	public double zapremina() {
+		// zapremina sanduka
+		return a*b*c;
+	}
+	
+
+}

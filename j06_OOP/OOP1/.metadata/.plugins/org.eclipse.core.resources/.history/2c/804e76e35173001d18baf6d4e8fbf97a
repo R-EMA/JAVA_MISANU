@@ -1,0 +1,52 @@
+package demo;
+
+public class Rect {
+	
+	/*
+	 * demonstracija rada sa pravouganikom
+	 * definisanje (dimenzije)
+	 * računanje površine
+	 * računanje obima
+	 * računanje dijagonale
+	 * 
+	 * i upotreba privatne statičke osobine kao brojača
+	 * 
+	 */
+	
+	private double a; //dužina
+	private double b; //širina
+	private static int broj;  // brojač instanci
+	
+	//konstruktori
+	Rect()   {
+		System.out.println("Kreiran je " + (++broj) + ". pravouganik.");
+	}
+	Rect(double a)   {
+		System.out.println("Kreiran je " + (++broj) + ". pravouganik.");
+		// za kvadrat
+		this.a = a;
+		this.b = a;
+	}
+	Rect(double a, double b)   {
+		System.out.println("Kreiran je " + (++broj) + ". pravouganik.");
+		// za pravouganik
+		this.a = a;
+		this.b = b;
+	}
+	
+	//set-get a
+	public void setA(double a) {
+		this.a = a;
+	}
+	public double getA() {
+		return a;
+	}
+	//set-get b
+	public void setB(double b) {
+		this.b = b;
+	}
+	public double getB() {
+		return b;
+	}
+
+}

@@ -1,0 +1,14 @@
+package en;
+
+public class Main {
+
+	public static void main(String[] args) {
+		
+		//ordinal() - rb, pozicija konstante.0,1,2, TODO Auto-generated method stub
+		
+		for(Boja b : Boja.values())
+			System.out.println(b.ordinal() + " " + b);
+		
+	}
+
+}

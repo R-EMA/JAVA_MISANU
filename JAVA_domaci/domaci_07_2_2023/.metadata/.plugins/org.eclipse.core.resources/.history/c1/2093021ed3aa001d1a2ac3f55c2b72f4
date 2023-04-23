@@ -1,0 +1,30 @@
+package vozila;
+
+/**
+ * 
+ * @author emma
+ * 
+ * Zadatak 3 - klasa Lokomotiva, nasleđuje Vozilo
+ * Lokomotiva je vozilo zadate vučne sile. Tekstualni opis je L(ukTezina | vučnaSila).
+ *
+ */
+public class Lokomotiva extends Vozilo {
+	
+	Lokomotiva(int t, int sila) {
+		super(t);
+		super.vucnaSila = sila;
+	}
+
+	@Override
+	public int ukupnaTezina() {
+		// ukupna (maksimalna) težina lokomotive
+		return this.vucnaSila + this.tezinaVozila;
+	}
+
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return "L(" + this.ukupnaTezina() + " | " + this.vucnaSila + ")";
+	}
+
+}

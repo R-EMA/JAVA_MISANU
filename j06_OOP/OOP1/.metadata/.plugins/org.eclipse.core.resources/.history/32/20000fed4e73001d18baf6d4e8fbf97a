@@ -1,0 +1,21 @@
+package demo;
+
+public class E {
+	
+	/*
+	 * V - konstuktor-i i this
+	 * 
+	 * svaki put kada se kreira objekat izvrši se i jedan specijalni metod konstruktor
+	 * 
+	 * konstruktor može biti kreiran i od strane programera
+	 * jedna JAVA klasa može imati više korisničkih konstruktora
+	 * konstruktor je istog naziva kao i klasa kojoj pripada
+	 * konstruktor je uvek javan i nikada ne vraća nikakvu vrednost, pa čak ni void
+	 * 
+	 */
+	
+	private String ime;
+	
+	K
+
+}

@@ -1,0 +1,53 @@
+
+
+***** nabacano niti
+
+public class Main { public static void main(String[] args) { // TODO Auto-generated method stub A a = new A(); B b = new B(); // Kada odredjenoj niti zelite da dodate prioritet prilikom izvrsavanja pozovite metodu setPriority() koja je clan klase Thread //void setPriority(nivo); //parametrom nivo zadajete nivo prioriteta niti za koju je metoda pozvana //vrednost mora biti u opsegu izmedju MIN_PRIORITY i MAX_PRIORITY //a vrednosti tih konstanti su izmedju 1 i 10 //podrazumevana vrednost iznosi 5 a moze se zadati preko NORM_PRIORITY a.setPriority(Thread.MIN_PRIORITY+5);//1 6 b.setPriority(Thread.MAX_PRIORITY-7);//10-7 = 3 a.start(); b.start(); System.out.println("Kraj glavne niti."); } }
+
+****
+
+kage ana; public class A extends Thread{ public void run() { int i = 1; while(i <=10) { System.out.println("i: " + i); // sleep(vrednost u milisekundama) try { Thread.sleep(100);} catch(InterruptedException e) { System.out.println("Nit je prekinuta"); e.printStackTrace(); } i++; //metoda sleep(milisekunde) privremeno suspenduje ili zaustavlja izvrsavanje niti //argument metode sleep() je interval cekanja u milisekundama //metoda sleep moze da izazove izuzetak interruptedException //desice se izuzetak ukoliko neka druga nit pozeli da prekine ovu suspendovanu nit } } }
+
+***
+
+package ana; public class Main { public static void main(String[] args) { // TODO Auto-generated method stub A a = new A(); a.start(); } }
+
+****
+
+public class A implements Runnable { String ime;//ime niti Thread t; A(String name){ ime = name; t = new Thread(this,ime); t.start(); } public void run() { try { for(int i = 1; i<5; i++) { System.out.println(ime + " = " + i); Thread.sleep(500); } } catch (Exception e ) {} } }
+
+****
+
+public class Main { public static void main(String[] args) { // isAlive() utvrdjuje da li se nit jos izvrsava //join() ona ceka da se druga nit zavrsi A a1 = new A("Prva nit"); System.out.println("Prva nit se izvrsava: " + a1.t.isAlive()); A a2 = new A("Druga nit"); System.out.println("Prva nit se izvrsava: " + a2.t.isAlive()); A a3 = new A("Treca nit"); System.out.println("Prva nit se izvrsava: " + a3.t.isAlive()); try { a1.t.join(); a2.t.join(); a3.t.join(); }catch(Exception e ) {} System.out.println("Prva nit se izvrsava: " +a1.t.isAlive() ); System.out.println("Druga nit se izvrsava: " +a2.t.isAlive() ); System.out.println("Treca nit se izvrsava: " +a3.t.isAlive() ); } }
+
+****
+
+public class Main { public static void main(String[] args) { // prilikom pokretanja java programa 1 programska nit odmah pocinje da se izvrsava //to je glavna ili inicijalna nit //upravljanje glavnom niti radi se preko objekta tipa //Thread i to pozivom metode currentThread koja pripada klasi currentThread() Thread t = Thread.currentThread(); System.out.println("Trenutna nit: " + t); //getName() = vraca ime niti System.out.println("Naziv niti: " + Thread.currentThread().getName()); //getPriority()= vraca prioritet niti System.out.println("Prioritet niti: " + Thread.currentThread().getPriority()); //ime niti , prioritet, ime grupe kojoj pripada nit //podrazumevano ime glavne niti je main. njen prioritet je 5 po dafaultu sto je takodje podrazumevana vrednost //treci parametar main je ime grupe niti kojoj ta nit pripada //grupa niti je struktura podataka koja upravlja stanjem kolekcije niti kao celinom
+
+****
+
+package ana; //Nit se moze napraviti za svaki objekat koji implementira interfejs Runnable //da bi klasa implementirala interfejs runnable potrebno je da ima tu jednu metodu koja se zove run() koja je deklarisana u sledecem obliku //public void run() //u metodu run se zadaje kod koji treba da se izrsava u novoj niti //kada se izvrsi metoda run nit se unistava public class A implements Runnable{ public void run() { for (int i = 1; i<=5; i++) { System.out.println(Thread.currentThread().getName()); } }
+
+****
+
+//pokretanje nove niti // novu nit pokrecemo tako sto pravimo instancu objekta thread //na 2 nacina //1.implementacija inerfejsa Runnable //2. prosirivajnem klase Thread //u main klasi: //nakon kreiranja klase koja implementira interfejs runnable, //potrebno je napraviti instancu objekta tipa Thread public class Main { public static void main(String[] args) { A a = new A();//** //*** //oblik konstruktora: //Thread(Runnable objekatNit, String imeNiti) //objekatNit je instanca klase koja implementira interfejs Runnable //definise mesto gde zapocinje nit //imeNiti predstavlja ime nove niti koju mi zadajemo Thread t = new Thread(a, "Nit1"); Thread t2 = new Thread(a, "Nit2"); Thread t3 = new Thread(a, "Nit3"); t.start();//metoda start poziva metodu run t2.start(); t3.start(); } }
+
+***
+
+package ana; //nit se moze napraviti i kada klasu thread prosirite novom nasledjenom klasom //a zatim napravimo instancu te klase //nova podklasa mora da redefinise metodu run() public class A extends Thread{ A(String s){ super (s);//poziva se konstruktor Thread sledeceg oblika // public Thread (String imeNiti) } public void run() { for (int i = 1; i<=10; i++) { System.out.println(getName()); } } }
+
+***
+
+public class Main { public static void main(String[] args) { // TODO Auto-generated method stub A a1 = new A("Nit1"); A a2 = new A("Nit2"); A a3 = new A("Nit3"); a1.start();//zapocinje izvrsavanje niti pozivanjem njene metode run a2.start(); a3.start(); } }
+
+***
+
+public class A extends Thread{ public void run() { for(int i = 1; i<=10; i++) { System.out.println("Nit A: " + i); } System.out.println("Kraj izvrsavanja niti A."); } }
+
+***
+
+public class B extends Thread{ public void run() { for(int i = 1; i<=10; i++) { System.out.println("Nit B: " + i); } System.out.println("Kraj izvrsavanja niti B."); } }
+
+****
+
+

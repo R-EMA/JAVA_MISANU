@@ -1,0 +1,240 @@
+CREATE DATABASE preduzece;
+
+USE preduzece;
+
+CREATE TABLE sektori( 
+    sektorID int(10) PRIMARY KEY, 
+    naziv varchar(55) NOT NULL 
+)ENGINE = INNODB;
+
+CREATE TABLE radnik( 
+    radnik_id INT(10) PRIMARY KEY, 
+    ime VARCHAR(55) NOT NULL, 
+    prezime VARCHAR(55) NOT NULL, 
+    datumrodj DATE, 
+    pol VARCHAR(1), 
+    plata INT(10), 
+    brsek INT(10), 
+    FOREGIN KEY(brsek) REFERENCES sektori(sektor_id) 
+    ON UPDATE CASCADE ON DELETE NO ACTION 
+)ENGINE=INNODB;
+
+INSERT INTO `sektori`(`sektorID`, `naziv`) VALUES ('1',"Uprava"),('2',"Administracija"),('3',"Marketing"), ('4',"Razvoj softvera"),('5',"Testiranje");
+
+INSERT INTO `radnik`( `radnikID`, `ime`, `prezime`, `datumRodjenja`, `pol`, `plata`, `brsek` ) VALUES( 1, "Pera", "Peric", "2000-01-01", 'M', 45000, 1 ),( 2, "Zika", "Zikic", "2001-01-01", 'M', 55000, 2 ),( 3, "Laza", "Lazic", "2002-01-01", 'M', 65000, 3 ),( 4, "Mika", "Mikic", "1990-01-01", 'M', 75000, 4 ),( 5, "Milan", "Milanovic", "1985-01-01", 'M', 85000, 5 ),( 6, "Ana", "Anic", "1986-02-02", 'Z', 46000, 1 ),( 7, "Ivana", "Ivanovic", "1987-03-03", 'Z', 56000, 2 ),( 8, "Nina", "Ninic", "1988-04-04", 'Z', 66000, 3 ),( 9, "Mina", "Minic", "1989-05-05", 'Z', 76000, 4 ),( 10, "Masa", "Masic", "1989-06-06", 'Z', 88000, 5 );
+
+
+##### upiti SELECT
+svaki upit počinje sa SELECT
+može da koristi kolone i funkcije
+# SELECT kolona FROM tabela
+SELECT ime FROM radnik; # da pokaze samo imena radnika
+
+#SELECT kol1, kol2,...,kolN FROM tabela
+SELECT ime, prezime, datumRodj FROM radnik; 
+
+#svi podaci kolone iz tabele
+#  1. nacin: sve kolone nabrojati
+# SELECT kol1, kol2,...,kolN FROM tabela
+# 2. nacin: korišćenjem *
+# SELECT * FROM tabela
+SELECT * FROM radnik
+
+SELECT naziv FROM sektori
+
+# sortiranje
+# SELECT ... FROM tabela ORDER BY kolona-e za sortiranje
+SELECT ime, prezime, plata FROM radnik ORDER BY plata # plata po rastućem redosledu
+# eksplicitno navodjenje redosleda sortiranja
+# asc - rastući, podrazumevano
+# desc - opadajući redosled
+# # SELECT ... FROM tabela ORDER BY kolona-e za sortiranje DESC; # opadajući redosled sortiranja, poredak
+SELECT ime, prezime, plata FROM radnik ORDER BY plata # plata po opadajućem redosledu-poretku
+
+# Prikazati ime, prezime, datum rodjenja svih radnika sortiranih u rastucem I opadajućem redosledu po datumu rodjenja
+SELECT ime, prezime, datumRodj FROM radnik ORDER BY datumRodj;
+SELECT ime, prezime, datumRodj FROM radnik ORDER BY datumRodj DESC;
+
+### FUNKCIJE
+#racunanje prosečne plate radnika - primena funkcije
+# F-JA avg(kolona) racuna prosek
+SELECT AVG(plata) FROM RADNIK;
+
+#alternativni naziv
+# AS naziv
+SELECT AVG(plata) AS ProsekPlate FROM radnik;
+
+# Ispisati ukupan broj svih radnika 
+SELECT COUNT(radnik_id) AS UkupanBrojRadnika FROM radnik
+# COUNT(kolona) prebrojavanje
+
+# najveća/najmanja vrednost  MAX(kolona) / MIN(kolona)
+# Prikazati najvecu platu 
+SELECT MAX(plata) AS NajvecaPlata FROM radnik
+
+# zbir SUM(kolona)
+
+#filtriranje
+"uopšte ako se ne navede koji se podaci traze navode se sve kolone
+# SELECT * FROM tabela WHERE uslov
+# string može kao stringKOl = "vrednost" / stringKOl LIKE "VREDNOST
+
+# prikazati imena i prezimena svih radnika cija je plata veca od 60000 SELECT ime, prezime FROM radnik WHERE plata>60000
+
+SELECT * FROM radnik WHERE prezime = "Lazic" AND plata < 60000
+
+# logički operatori
+# AND za I, OR za ILI, XOR za isključivo ili NOT za negaciju
+# NOT se koristi i uz druge operatore kako bi okrenuo istinitost
+
+SELECT * FROM radnik WHERE prezime = "Zikic" OR "Anic"
+
+# Prikazati sve podatke o svim radnicima koji se prezivaju Zikic # ili Anic. 
+SELECT * from radnik where prezime = "Zikic" or prezime = "Anic"
+
+SELECT * FROM radnik WHERE prezime IN("Zikic","Anic");
+# operator IN ima značenje sadrži neku od vrednosit (ili, ili)
+# kolona IN(vred1,vred2,...)
+
+SELECT * FROM radnik WHERE prezime NOT IN("Peric","Ninic")
+
+SELECT * FROM radnik WHERE prezime <> "Peric" AND prezime <> "Ninic"
+
+# od ... do BETWEEN od AND do  /   > od AND < do ne ukljucuje granicne vrednosti
+Select * from radnik Where plata Between 60000 and 80000;
+
+# Prikazati sve podatke o svim radnicima cije prezime pocinje slovom M
+# LIKE - (ne)potpuno poredjenje stringova % - menja bilo koji skup znakova,0,1,...n
+# Prikazati sve podatke o svim radnicima cije prezime pocinje #slovom M SELECT * from radnik WHERE prezime LIKE "M%"
+# ne sadrzi N u prezimenu
+SELECT * FROM radnik WHERE prezime NOT LIKE "%n%"
+
+SELECT * FROM radnik WHERE IS null (datum)
+
+#provera da li je podatak upisan ovde za datum rodjenja
+SELECT * FROM radnik WHERE datumRodjenja IS NULL
+
+SELECT * FROM radnik ORDER BY brsek DESC, prezime ASC
+
+
+
+Prikazati sve radnike koji rade u 2. sektoru. 
+Prikazati sve muske radnike. 
+Prikazati sve radnike koji su rodjeni izmedju 1990 i 2000 godine. Prikazati sve zenske radnike koji su stariji od 20 godina. Prikazati sve muske radnike cija je plata manja od 64321.
+
+SELECT * FROM radnik WHERE brsek = 2;
+
+SELECT * FROM radnik OREDER BY datumRodj WHERE datumRodj BETWEEN #01.01.1989# AND #01.01.2001#;
+
+# od 3ceg dela, prva dva su laganica
+SELECT * FROM radnici WHERE datumRodjenja BETWEEN '1990-01-01' AND '2000-01-01'
+
+SELECT * FROM radnik WHERE pol = 'Z' AND datumrodj > '01-01-2002'
+
+SELECT * FROM radnik WHERE pol='M' AND plata <64321
+
+#vraca trenutni broj godina - starost
+SELECT ime, prezime, TIMESTAMPDIFF(year, datumrodj, CURRENT_DATE) AS godine FROM radnik;
+
+# LIKE može i za date LIKE "1987-%-%") 1987 GODINA
+
+6. Prikazati sve muske radnike koji imaju platu vecu od 65000 i koji u imenu imaju slovo M na prvo mesto. 
+7. Prikazati sve zenske radnike koji imaju platu manju od 60000 i koji nemaju slovo N u imenu. 
+8. Prikazati sve radnike po sektorima sortirane prema broju sektora u kome rade silazno, a prema imenu isto silazno. 
+9. Prikazati zbirnu platu svih radnika koji rade u 2. sektoru. 
+10. Prikazati samo najvecu i samo najmanju platu iz svih sektora.. 
+11. Prikazati sve radnike zenskog pola koje su rodjenje 1987 godine. 
+12. Prikazati sve muske osobe koje rade Testiranje i koje su starije od 1990g.
+
+SELECT * FROM radnik WHERE plata > 65000 AND ime LIKE "M%";
+
+SELECT * FROM radnik WHERE pol = "Z" AND plata < 60000 AND ime NOT LIKE "%N%";
+
+SELECT * FROM radnik ORDER BY brsek DESC, ime DESC;
+
+SELECT sum(plata) AS Plata_sektor2 FROM radnik WHERE brsek = 2;
+
+SELECT min(plata) AS NajmanjaPlata, max(plata) AS NajvecaPlata FROM radnik;
+
+SELECT * from radnik where pol = "Z" AND datumRodj BETWEEN "1987-01-01" AND "1987-12-31"
+
+select * from radnik where pol = "M" WHEREL brsek = 5 AND datumRodj < "1990-01-01"
+
+SELECT * from radnik WHERE pol = "M" AND brsek = 5 AND datumrodj < '1990-%-%'  #može i ovako, ali ne svuda
+
+SELECT * from radnik WHERE pol = "M" AND brsek = 5 AND year(datumrodj) < 1990; # r+treća varijanta je ok
+
+#sql, mysql podržava i matematičke funkcije sličnih / istih naziva kao i u javi i drugim programskim jezyicima
+
+mod(n,x) ostatak deljenja
+power(a, stepen) stepenov
+sign/n) znaka broja, vraća -1,0 ili 1 ya - ,0 +
+sqrt(n) koren
+trunc(n,d) - n sa d decimala, zaokruzivanje
+rand() - slucajan brij 0-1
+rand(n)- od 0 do 1
+...
+concat(a,b,...) - povezivanje vredosti
+
+mounth(datum) - mesec iz datuma
+year(d( godina
+length/s( dyzina stringa
+version() mysql verzija
+user() korisnik koji korististi server
+now() - tekuci datum i vreme
+a div b - deljenje a/b
+
+#### ažuriranje vrednosti
+prvo pronaci
+SELECT radnik_id FROM radnik WHERE ime = "Proba" AND prezime = "Proba"
+pa azurirati nrp ime
+UPDATE radnik set ime = "Nikola" WHERE radnik_id = 11;
+prezime
+UPDATE radnik SET prezime = "Nikolic" WHERE radnik_id = 11
+
+#### brisanje, zahteva više provera: naći, proveriti šta se sve briše, brisanje, provera da li je zaista obrisan
+SELECT radnik_id FROM radnik WHERE ime = "NikolA" AND prezime = "Nikolic"
+SELECT * where radni_id = 11 # rpovera
+DELETE FROM radnik WHERE radnik_id = 11 #brisanje, postavice mysql pitanje
+SELECT * where radni_id = 11 #provera da li je obrisan
+
+### povezivanje dva stringa, podatka: ime i prezime
+SELECT concat(ime, ' ' , prezime) AS ImePrezime From radnik
+SELECT concat(ime, ' ', prezime as imePrezime from radnik order by length(imePrezime)
+sa štampanjem i dyzune
+SELECT concat(ime, ' ', prezime) as imePrezime, length(ime)+length(prezime)+1 as Duzina from radnik order by length(imePrezime) desc;
+ili
+SELECT concat(ime, ' ' , prezime) AS ImePrezime, length(concat(ime, ' ' , prezime)) as duzina From radnik order by length(ImePrezime) DESC;
+
+# left(text,n) - izdvaja prvih n znakova
+#right(text,n) - poslednjih n znakova
+#trim(text) - odbacuhe blankove sa početka i kraja 
+# upper(t) sve velika slova
+
+select upper(ime) from radnik
+
+# replace(str1, str2, str3) str2 se menja sa str3 u str1
+nekitext, neki, dobar => dobartext
+substring(t,n,m) -izdvaja deo teksta od n u dužini m: n=0,1,2,...
+d
+
+# datum i freme
+date(d) izvlači datum
+time(d) iyvlaci vreme
+d ? datum u podržanom formatu ili za tekuci now
+
+# pogled - prikaz tabele, virtuelna tabela
+create view pogled as UPIT
+
+create view radnici as select ime, prezime from radnik
+
+create view sviradnici select * from radnik
+
+rezultati su tabele - pogledikoise mogu koriste
+
+######### zadatak
+1. За сваки филм знамо његов назив и годину када је снимљен. Филм може да има тачно једног режисера. За сваког режисера знамо име, презиме, државу рођења, годину рођења, годину смрти. Потребно је да податке о улогама разних глумаца у разним филмовима. За сваког глумца знамо уметничко име (обавезно), име и презиме (опционо), државу рођења, годину рођења, годину смрти. Сваки филм припада тачно једном жанру (комедија, хорор, крими...). Жанр има назив и опис. Приказати и узорак података у бази креираној на основу овог модела.
+
+nacrtitat ER dijagram i napraviti i popuniti tabele
+
+

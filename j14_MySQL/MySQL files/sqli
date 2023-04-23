@@ -1,0 +1,1659 @@
+
+
+
+CREATE TABLE vozila (
+    voziloID int PRIMARY KEY AUTO_INCREMENT,
+    marka Varchar(30)
+);
+INSERT INTO vozila(marka) VALUES ("opel"), ("BMB"), ("peugeat"), ("mazda"), ("zastava");
+
+
+
+sa predavanja
+
+# naredba za kreiranje baze podataka CREATE DATABASE itp # Naredba za brisanje baze podataka drop DATABASE itp; CREATE TABLE osobe( broj INT(5), nekoIme Varchar(55), datum Date, # YYYY-MM-DD cena decimal(3,2), # za valute 123.45 vrednost double, # kada je potrebno vise od 7 cifara preciznosti f float, # u ostalim slucajevima pol ENUM('M','Z') ) 
+CREATE TABLE polaznici( ImePolaznika Varchar(15), PrezimePolaznika VARCHAR(20), datumRodjenja Date, godineStaza Int(2) ) 
+CREATE TABLE knjige( knjigaID int PRIMARY KEY, nazivKnjige varchar(55) ) 
+CREATE TABLE knjige( knjigaID int, nazivKnjige varchar(55), PRIMARY KEY(knjigaID) ) 
+CREATE TABLE knjige1( knjigaID int PRIMARY KEY AUTO_INCREMENT, nazivKnjige varchar(100) ) 
+alter TABLE knjige ADD godinaIzdavanja INT 
+ALTER TABLE knjige drop COLUMN godinaIzdavanja # objekat iz spoljnog sveta = tabela = relacijom = entitet # kolona = atribut # Tip podataka kolone = Domena atributa # Vrsta = podatak # imePolaznika = atribut(kolona) # Andrija = Vrsta(podatak) # primarni kljuc # kolona1 # kolona2 # straniKljucevi # Vozilo relacija # primarniKljuc # Marka # opel, bmw, peugeot, mazda CREATE table kontakti( kontaktID INT PRIMARY KEY NOT NULL, email varchar(50) NOT Null, telefon varchar(15) not null )
+
+----
+
+zadatak
+
+-----
+
+U bazi podataka treba čuvati podatke o dva tipa entiteta: VOZILO, sa atributima Tip, RegistarskiBroj, BrojMotora, BrojSasije, i VLASNIK sa atributima LicnoIme, Prezime, Adresa, BrojDozvole
+
+
+
+CREATE BASE baza1;
+SELECT baza1;
+CREATE TABLE polaznici (
+    polaznikID int PRIMARY KEY,
+    ime varchar(30) not null,
+    prezime varchar(30) not null,
+    godine int not null
+) ENGINE = INNODB;  # obavezno kada se tabele povezuju
+
+CREATE TABEL if not exists kontakti (
+    kontaktID int PRIMARY KEY,
+    email varchar(45),
+    telefon varchar(45)
+); ENGINE = INNODB;
+
+# veza 1-1 ostvaruje se povezivanjem primarnih ključeva tabele
+# dodavanje veze - drugi način
+ALTER TABLE kontakti ADD FOREIGN KEY(kontaktID) REFERENCES polaznici(polaznikID)
+
+#popunjavanje povezanih tabela
+INSERT INTO polaznici(polaznikID, ime, prezime, godine) VALUES(1, "Mika", "Mikic", 20); INSERT INTO polaznici(polaznikID, ime, prezime, godine) VALUES(2, "Zika", "Zikic", 40)
+
+#druga tabela
+INSERT INTO kontakti (kontaktID, email, telefon)VALUES(1,"mikamikic@gamil.com","06234554321");
+INSERT INTO kontakti (kontaktID, email, telefon)VALUES(2,"zikazikic@gamil.com","06324654326");
+
+# EER dijagram je grafički prikaz tabela i njihovih veza
+
+# #####
+# država
+CREATE TABLE drzave (
+    drzavaID int PRIMARY KEY,
+    nazivDrzave varchar(50) not null
+) ENGINE = INNODB;
+CREATE TABLE glavniGradovi (
+    gradID int PRIMARY KEY,
+    nazivGrada varchar(50) not null
+) ENGINE = INNODB;
+#ovo je usvojeno
+CREATE table if NOT EXISTS glavniGradovi( gradID int PRIMARY KEY, nazivGlavnogGrada varchar(45)) ENGINE = INNODB;
+#veza . druga tabela (njen id) referenca prva tabela(ključprvetabele)
+ALTER TABLE glavniGradovi ADD FOREIGN KEY(gradID) REFERENCES drzave(drzavaID);
+# unos
+INSERT INTO drzave (drzavaID, nazivDrzave) VALUES (1,"Srbija"), (2,"Rumunija");
+
+INSERT INTO glavniGradovi (gradID, nazivGrada) VALUES (1,"Beograd"), (2,"Bukurešt");
+
+
+#### veza 1 prema više
+# roditelj je na strani 1, dete je na strani više
+
+CREATE TABLE ucenici (
+    ucenikID int PRIMARY KEY,
+    imeUcenika Varchar(50),
+    prezimeUcenika Varchar(50)
+) ENGINE = INNODB;
+
+CREATE TABLE odeljenja (
+    odeljenjeID int PRIMARY KEY,
+    razred int(2),
+    oznaka varchar(10) not null
+) ENGINE = INNODB;
+
+#povezivanje
+#detetu, ako ne postoji, dodati kolonu istog naziva kao primarni ključ roditelja
+ALTER TABLE ucenici ADD COLUMN odeljenjeID int;
+# veza: detetu dodati strani ključ koji je istog naziva/vrednosti i tipa kao primarni ključ roditelja
+# alter table dete add foreign key (primarni-roditelj) REFERENCES roditelj(primarni-roditelj)
+ALTER TABLE ucenici ADD FOREIGN KEY (odeljenjeID) REFERENCES odeljenja(odeljenjeID) ON UPDATE CASCADE ON DELETE NO ACTION;
+# referencijalni integrited treba dodati
+* ON UPDATE CASCADE $ promena roditelja rezultira promenom kd deteta
+* ON DELETE NO ACTION # sprečava da brisanje deteta, ne obriše se roditelj.
+
+# unos podataka: prvo se "puni" roditelj, a posle toga dete jer dete uzima vrednosti primarnog ključa roditelja kao sekundardni ključ, vezu.
+INSERT INTO odeljenja (odeljenjeID, razred, oznaka) VALUES (1,1,"1"),(2,1,"2"),(3,1,"3");
+
+INSERT INTO ucenici (ucenikID, imeUcenika, prezimeUcenika, odeljenjeID) VALUES (1,"Mika","Mikic",1), (1,"Andrija","Đurišić",3), (3,"Petar","Petrovic",3);
+
+
+##### više prema više
+CREATE TABLE knjige (
+    knjigaID int PRIMARY KEY,
+    nazivKnjige VARCHAR(50)
+) ENGINE = INNODB;
+
+CREATE TABLE autori (
+    autorID int PRIMARY KEY,
+    imeAutora varchar(30),
+    prezimeAutor varchar(30)
+) ENGINE = INNODB;
+
+# dodaje se posrednička tabela; spajaju se nazivi tabela, a može bilo šta
+# ima svoj primarni ključ
+# sadrži primarne ključeve tabela koje povezuje (naziv, tip, duzina su isti; naziv ne mora da bude isti). to su strani ključevi iz roditeljskih tabela
+# može da sadrži i dodatne zajedničke kolone za obe tabele
+3
+CREATE TABLE knjigeAutori (
+    knjigaAutorID int PRIMARY KEY AUTO_INCREMENT
+    knjigaID int,
+    autoriID int
+) ENGINE = INNODB;
+
+ALTER TABLE knjigeAutori 
+ADD FOREIGN KEY (knjigaID) REFERENCES knjige(knjigaID) ON UPDATE CASCADE ON DELETE NO ACTION,
+ADD FOREIGN KEY (autorID) REFERENCES autori(autorID) ON UPDATE CASCADE ON DELETE NO ACTION;
+
+# popunjavanje
+# prvo oba roditelja, redosled nije uvek bitan
+
+INSERT INTO knjige (knjigaID, nazivKnjige) VALUES (1, "Na Drini Ćuprija"), (2, "Starac i more"), (3, "Tom Sojer"), (4, "Koreni");
+INSERT INTO autori (autorID, imeAutora, prezimeAutora) VALUES (1, "Ivo", "Andrić"), (2, "Ernest", "Hemingvej"), "3, "Mark", "Tven"), (4, "Dobrica", "Ćosić"), (5, "Džejn", "Ostin");
+# dete, zajednicka
+INSERT INTO knjigeAutori (knjigaID, autorID) VALUES (1,1), (2,2), (3,3), (4,4);
+
+
+
+### zadatak za vežbu
+
+Продајни салон продаје возила зарних произвођача. Сваки произвођач аутомобила има назив, адресу седишта (улица и број, град) и адресу веб-сајта. Kако су произвођачи аутомобила правна лица имају додељен ПИБ (порески идентификациони број). Произвођач аутомобила производи више различитих модела. Сваки модел има ознаку, јачину мотора, број врата и цену.
+
+CREATE TABLE proizvodjaci (
+    pib int(9) PRIMARY KEY,
+    naziv varchar(50),
+    grad varchar(25),
+    ulica varchar(30),
+    broj varchar(10),
+    sajt varchar(50)
+
+) ENGINE = INNODB;
+
+CREATE TABLE modeli (
+    modelID int PRIMARY KEY,
+    oznakaModela varchar(30),
+    jacinaMotora int(5),
+    brojVrata int(1),
+    cena Decimal,
+    pib int(9)        
+) ENGINE = INNODB;
+
+ALTER TABLE modeli ADD FOREIGN KEY (pib) REFERENCES proizvodjaci(pib);
+
+
+
+
+
+CREATE DATABASE automobili;
+USE automobili;
+
+CREATE TABLE proizvodjaci (
+    pib int(9) PRIMARY KEY not null,
+    naziv Varchar(55) not null,
+    grad Varchar(35),
+    ulica Varchar(55),
+    broj Varchar(10),
+    webadresa Varchar(50)
+    
+) ENGINE = INNODB;
+
+CREATE TABLE modeli (
+    modelid int primary key,
+    oznaka varchar(45) not null,
+    jacina motora int(3)
+    brojVrata int(1)
+    cena int,
+    pib int(9),
+    foreign key(pib)
+    references proizvodjaci(pib)
+    on update cascade
+    on delete no action
+) ENGINE = iNNODB;
+
+
+########### profesorovo rešenje
+CREATE DATABASE automobili; CREATE TABLE proizvodjaci ( PIB int (9) PRIMARY KEY not null, naziv varchar(45) not null, grad varchar(35) not null, ulica varchar(55) not null, broj varchar(10) not null, adresaSajta varchar(45) not null )ENGINE = INNODB create table modeli ( modelID int primary key, oznaka varchar(45) not null, jacinaMotora int(3), brojVrata int(1), cena int, PIB int(9), foreign key(PIB) references Proizvodjaci(PIB) ON UPDATE CASCADE ON DELETE NO ACTION )Engine = INNODB
+###############################################
+
+Школа страних језика организује курсеве. Сваки курс има свој назив, укупан број часова, план и програм. Један курс води један предавач, док исти предавач може да води и неколико различитих курсева. Предавач је запослен у школи и познате су његове контакт информације, као и број текућег рачуна и датум од када ради у школи. Исти курс може више пута да се реализује и за сваку реализацију имамо датум почетка, датум завршетка и број полазника.
+
+################################################
+predavaci: 
+predavacID int *
+ime varchar 45
+prezime varchar 45
+brojracuna varchar 20
+datumzaposlenja date
+grad varchar 45
+ulica varchar 45
+broj int 4
+telefon varchar 15
+
+kursevi
+kursid int *
+naziv varchar 45
+brijcasiva int
+plan varcgar 45
+predavacid int * strani
+
+realizacije
+realizacijaid int
+pocetak date
+kraj date
+broj polaznika
+kursid int
+
+
+
+CREATE TABLE predavaci( predavacID INT PRIMARY KEY NOT null, imePredavaca VARCHAR(45), prezimePredavaca VARCHAR(45), nazivUlice VARCHAR(45), brojUlice VARCHAR(10), nazivGrada VARCHAR(25), brojRacuna VARCHAR(45), telefon VARCHAR(25), zaposlenOd VARCHAR(25) )ENGINE= INNODB 
+
+CREATE TABLE kursevi( kursID INT PRIMARY KEY NOT null, nazivKursa VARCHAR(45), brojCasova INT(3), planKursa VARCHAR (500), predavacID INT, FOREIGN KEY(predavacID) REFERENCES predavaci(predavacID) ON UPDATE CASCADE ON DELETE NO ACTION )ENGINE=INNODB 
+
+CREATE TABLE predavanja( predavanjeID INT PRIMARY KEY NOT null, datumPocetka VARCHAR(25), datumKraja VARCHAR(25), brojPolaznika INT(2), kursID INT, FOREIGN KEY(kursID) REFERENCES kursevi(kursID) ON UPDATE CASCADE ON DELETE NO ACTION )ENGINE=INNODB
+
+INSERT INTO `predavaci`(`predavacID`, `imePredavaca`, `prezimePredavaca`, `nazivUlice`, `brojUlice`, `nazivGrada`, `brojRacuna`, `telefon`, `zaposlenOd`) VALUES (1, "Lazar", "Lazic", "Ulica 1", 10, "Novi Grad", 11220005632, 06652253113, '2023-02-07') 
+INSERT INTO `kursevi`(`kursID`, `nazivKursa`, `brojCasova`, `planKursa`, `predavacID`) VALUES (1, "Baze podataka", 60, "Osnove baza podataka", 1) INSERT INTO `predavanja`(`predavanjeID`, `datumPocetka`, `datumKraja`, `brojPolaznika`, `kursID`) VALUES (1, "05.01.2023", "28.02.2023", 25, 1)
+ Milica Jarić 21:11
+
+CREATE TABLE `kursevi` ( 
+`id` int NOT NULL AUTO_INCREMENT, 
+`skola_id` int NOT NULL, 
+`naziv` varchar(255) NOT NULL, 
+`plan_i_program` varchar(255) NOT NULL, `
+predavac_id` int NOT NULL, 
+PRIMARY KEY (`id`), KEY `predavac_id` (`predavac_id`), KEY `skola_id` (`skola_id`), CONSTRAINT `kursevi_ibfk_1` FOREIGN KEY (`predavac_id`) REFERENCES `predavac` (`id`), CONSTRAINT `kursevi_ibfk_2` FOREIGN KEY (`skola_id`) REFERENCES `skole` (`id`) ) CREATE TABLE `predavac` ( `id` int NOT NULL AUTO_INCREMENT, `ime` int NOT NULL, `prezime` int NOT NULL, PRIMARY KEY (`id`) ) CREATE TABLE `realizacije_kurseva` ( `id` int NOT NULL AUTO_INCREMENT, `kurs_id` int NOT NULL, `broj_polaznika` int NOT NULL, `pocetak` date NOT NULL, `kraj` date NOT NULL, PRIMARY KEY (`id`), KEY `kurs_id` (`kurs_id`), CONSTRAINT `realizacije_kurseva_ibfk_1` FOREIGN KEY (`kurs_id`) REFERENCES `kursevi` (`id`) CREATE TABLE `skole` ( `id` int NOT NULL AUTO_INCREMENT, `naziv` int NOT NULL, `kontakt` int NOT NULL, PRIMARY KEY (`id`) )
+
+#######################################
+
+Фудбалски клуб има неколико различитих група. 
+За сваку групу су познати најмлађе и најстарије годиште чланова. 
+Kлуб има неколико тренера. 
+Тренер је запослен у клубу и познате су његове контакт информације, као и број текућег рачуна и број тренерске лиценце. 
+Један тренер може да води и неколико група, а исту групу може да води и неколико тренера. 
+Сваки тренер додељен некој групи има одређену улогу (главни тренер, помоћни тренер, кондициони тренер и сл.), а познати су и датуми од када и до када ради са неком групом.
+
+
+
+
+CREATE DATABASE preduzece;
+
+USE preduzece;
+
+CREATE TABLE sektori( 
+    sektorID int(10) PRIMARY KEY, 
+    naziv varchar(55) NOT NULL 
+)ENGINE = INNODB;
+
+CREATE TABLE radnik( 
+    radnik_id INT(10) PRIMARY KEY, 
+    ime VARCHAR(55) NOT NULL, 
+    prezime VARCHAR(55) NOT NULL, 
+    datumrodj DATE, 
+    pol VARCHAR(1), 
+    plata INT(10), 
+    brsek INT(10), 
+    FOREGIN KEY(brsek) REFERENCES sektori(sektor_id) 
+    ON UPDATE CASCADE ON DELETE NO ACTION 
+)ENGINE=INNODB;
+
+INSERT INTO `sektori`(`sektorID`, `naziv`) VALUES ('1',"Uprava"),('2',"Administracija"),('3',"Marketing"), ('4',"Razvoj softvera"),('5',"Testiranje");
+
+INSERT INTO `radnik`( `radnikID`, `ime`, `prezime`, `datumRodjenja`, `pol`, `plata`, `brsek` ) VALUES( 1, "Pera", "Peric", "2000-01-01", 'M', 45000, 1 ),( 2, "Zika", "Zikic", "2001-01-01", 'M', 55000, 2 ),( 3, "Laza", "Lazic", "2002-01-01", 'M', 65000, 3 ),( 4, "Mika", "Mikic", "1990-01-01", 'M', 75000, 4 ),( 5, "Milan", "Milanovic", "1985-01-01", 'M', 85000, 5 ),( 6, "Ana", "Anic", "1986-02-02", 'Z', 46000, 1 ),( 7, "Ivana", "Ivanovic", "1987-03-03", 'Z', 56000, 2 ),( 8, "Nina", "Ninic", "1988-04-04", 'Z', 66000, 3 ),( 9, "Mina", "Minic", "1989-05-05", 'Z', 76000, 4 ),( 10, "Masa", "Masic", "1989-06-06", 'Z', 88000, 5 );
+
+
+##### upiti SELECT
+svaki upit počinje sa SELECT
+može da koristi kolone i funkcije
+# SELECT kolona FROM tabela
+SELECT ime FROM radnik; # da pokaze samo imena radnika
+
+#SELECT kol1, kol2,...,kolN FROM tabela
+SELECT ime, prezime, datumRodj FROM radnik; 
+
+#svi podaci kolone iz tabele
+#  1. nacin: sve kolone nabrojati
+# SELECT kol1, kol2,...,kolN FROM tabela
+# 2. nacin: korišćenjem *
+# SELECT * FROM tabela
+SELECT * FROM radnik
+
+SELECT naziv FROM sektori
+
+# sortiranje
+# SELECT ... FROM tabela ORDER BY kolona-e za sortiranje
+SELECT ime, prezime, plata FROM radnik ORDER BY plata # plata po rastućem redosledu
+# eksplicitno navodjenje redosleda sortiranja
+# asc - rastući, podrazumevano
+# desc - opadajući redosled
+# # SELECT ... FROM tabela ORDER BY kolona-e za sortiranje DESC; # opadajući redosled sortiranja, poredak
+SELECT ime, prezime, plata FROM radnik ORDER BY plata # plata po opadajućem redosledu-poretku
+
+# Prikazati ime, prezime, datum rodjenja svih radnika sortiranih u rastucem I opadajućem redosledu po datumu rodjenja
+SELECT ime, prezime, datumRodj FROM radnik ORDER BY datumRodj;
+SELECT ime, prezime, datumRodj FROM radnik ORDER BY datumRodj DESC;
+
+### FUNKCIJE
+#racunanje prosečne plate radnika - primena funkcije
+# F-JA avg(kolona) racuna prosek
+SELECT AVG(plata) FROM RADNIK;
+
+#alternativni naziv
+# AS naziv
+SELECT AVG(plata) AS ProsekPlate FROM radnik;
+
+# Ispisati ukupan broj svih radnika 
+SELECT COUNT(radnik_id) AS UkupanBrojRadnika FROM radnik
+# COUNT(kolona) prebrojavanje
+
+# najveća/najmanja vrednost  MAX(kolona) / MIN(kolona)
+# Prikazati najvecu platu 
+SELECT MAX(plata) AS NajvecaPlata FROM radnik
+
+# zbir SUM(kolona)
+
+#filtriranje
+"uopšte ako se ne navede koji se podaci traze navode se sve kolone
+# SELECT * FROM tabela WHERE uslov
+# string može kao stringKOl = "vrednost" / stringKOl LIKE "VREDNOST
+
+# prikazati imena i prezimena svih radnika cija je plata veca od 60000 SELECT ime, prezime FROM radnik WHERE plata>60000
+
+SELECT * FROM radnik WHERE prezime = "Lazic" AND plata < 60000
+
+# logički operatori
+# AND za I, OR za ILI, XOR za isključivo ili NOT za negaciju
+# NOT se koristi i uz druge operatore kako bi okrenuo istinitost
+
+SELECT * FROM radnik WHERE prezime = "Zikic" OR "Anic"
+
+# Prikazati sve podatke o svim radnicima koji se prezivaju Zikic # ili Anic. 
+SELECT * from radnik where prezime = "Zikic" or prezime = "Anic"
+
+SELECT * FROM radnik WHERE prezime IN("Zikic","Anic");
+# operator IN ima značenje sadrži neku od vrednosit (ili, ili)
+# kolona IN(vred1,vred2,...)
+
+SELECT * FROM radnik WHERE prezime NOT IN("Peric","Ninic")
+
+SELECT * FROM radnik WHERE prezime <> "Peric" AND prezime <> "Ninic"
+
+# od ... do BETWEEN od AND do  /   > od AND < do ne ukljucuje granicne vrednosti
+Select * from radnik Where plata Between 60000 and 80000;
+
+# Prikazati sve podatke o svim radnicima cije prezime pocinje slovom M
+# LIKE - (ne)potpuno poredjenje stringova % - menja bilo koji skup znakova,0,1,...n
+# Prikazati sve podatke o svim radnicima cije prezime pocinje #slovom M SELECT * from radnik WHERE prezime LIKE "M%"
+# ne sadrzi N u prezimenu
+SELECT * FROM radnik WHERE prezime NOT LIKE "%n%"
+
+SELECT * FROM radnik WHERE IS null (datum)
+
+#provera da li je podatak upisan ovde za datum rodjenja
+SELECT * FROM radnik WHERE datumRodjenja IS NULL
+
+SELECT * FROM radnik ORDER BY brsek DESC, prezime ASC
+
+
+
+Prikazati sve radnike koji rade u 2. sektoru. 
+Prikazati sve muske radnike. 
+Prikazati sve radnike koji su rodjeni izmedju 1990 i 2000 godine. Prikazati sve zenske radnike koji su stariji od 20 godina. Prikazati sve muske radnike cija je plata manja od 64321.
+
+SELECT * FROM radnik WHERE brsek = 2;
+
+SELECT * FROM radnik OREDER BY datumRodj WHERE datumRodj BETWEEN #01.01.1989# AND #01.01.2001#;
+
+# od 3ceg dela, prva dva su laganica
+SELECT * FROM radnici WHERE datumRodjenja BETWEEN '1990-01-01' AND '2000-01-01'
+
+SELECT * FROM radnik WHERE pol = 'Z' AND datumrodj > '01-01-2002'
+
+SELECT * FROM radnik WHERE pol='M' AND plata <64321
+
+#vraca trenutni broj godina - starost
+SELECT ime, prezime, TIMESTAMPDIFF(year, datumrodj, CURRENT_DATE) AS godine FROM radnik;
+
+# LIKE može i za date LIKE "1987-%-%") 1987 GODINA
+
+6. Prikazati sve muske radnike koji imaju platu vecu od 65000 i koji u imenu imaju slovo M na prvo mesto. 
+7. Prikazati sve zenske radnike koji imaju platu manju od 60000 i koji nemaju slovo N u imenu. 
+8. Prikazati sve radnike po sektorima sortirane prema broju sektora u kome rade silazno, a prema imenu isto silazno. 
+9. Prikazati zbirnu platu svih radnika koji rade u 2. sektoru. 
+10. Prikazati samo najvecu i samo najmanju platu iz svih sektora.. 
+11. Prikazati sve radnike zenskog pola koje su rodjenje 1987 godine. 
+12. Prikazati sve muske osobe koje rade Testiranje i koje su starije od 1990g.
+
+SELECT * FROM radnik WHERE plata > 65000 AND ime LIKE "M%";
+
+SELECT * FROM radnik WHERE pol = "Z" AND plata < 60000 AND ime NOT LIKE "%N%";
+
+SELECT * FROM radnik ORDER BY brsek DESC, ime DESC;
+
+SELECT sum(plata) AS Plata_sektor2 FROM radnik WHERE brsek = 2;
+
+SELECT min(plata) AS NajmanjaPlata, max(plata) AS NajvecaPlata FROM radnik;
+
+SELECT * from radnik where pol = "Z" AND datumRodj BETWEEN "1987-01-01" AND "1987-12-31"
+
+select * from radnik where pol = "M" WHEREL brsek = 5 AND datumRodj < "1990-01-01"
+
+SELECT * from radnik WHERE pol = "M" AND brsek = 5 AND datumrodj < '1990-%-%'  #može i ovako, ali ne svuda
+
+SELECT * from radnik WHERE pol = "M" AND brsek = 5 AND year(datumrodj) < 1990; # r+treća varijanta je ok
+
+#sql, mysql podržava i matematičke funkcije sličnih / istih naziva kao i u javi i drugim programskim jezyicima
+
+mod(n,x) ostatak deljenja
+power(a, stepen) stepenov
+sign/n) znaka broja, vraća -1,0 ili 1 ya - ,0 +
+sqrt(n) koren
+trunc(n,d) - n sa d decimala, zaokruzivanje
+rand() - slucajan brij 0-1
+rand(n)- od 0 do 1
+...
+concat(a,b,...) - povezivanje vredosti
+
+mounth(datum) - mesec iz datuma
+year(d( godina
+length/s( dyzina stringa
+version() mysql verzija
+user() korisnik koji korististi server
+now() - tekuci datum i vreme
+a div b - deljenje a/b
+
+#### ažuriranje vrednosti
+prvo pronaci
+SELECT radnik_id FROM radnik WHERE ime = "Proba" AND prezime = "Proba"
+pa azurirati nrp ime
+UPDATE radnik set ime = "Nikola" WHERE radnik_id = 11;
+prezime
+UPDATE radnik SET prezime = "Nikolic" WHERE radnik_id = 11
+
+#### brisanje, zahteva više provera: naći, proveriti šta se sve briše, brisanje, provera da li je zaista obrisan
+SELECT radnik_id FROM radnik WHERE ime = "NikolA" AND prezime = "Nikolic"
+SELECT * where radni_id = 11 # rpovera
+DELETE FROM radnik WHERE radnik_id = 11 #brisanje, postavice mysql pitanje
+SELECT * where radni_id = 11 #provera da li je obrisan
+
+### povezivanje dva stringa, podatka: ime i prezime
+SELECT concat(ime, ' ' , prezime) AS ImePrezime From radnik
+SELECT concat(ime, ' ', prezime as imePrezime from radnik order by length(imePrezime)
+sa štampanjem i dyzune
+SELECT concat(ime, ' ', prezime) as imePrezime, length(ime)+length(prezime)+1 as Duzina from radnik order by length(imePrezime) desc;
+ili
+SELECT concat(ime, ' ' , prezime) AS ImePrezime, length(concat(ime, ' ' , prezime)) as duzina From radnik order by length(ImePrezime) DESC;
+
+# left(text,n) - izdvaja prvih n znakova
+#right(text,n) - poslednjih n znakova
+#trim(text) - odbacuhe blankove sa početka i kraja 
+# upper(t) sve velika slova
+
+select upper(ime) from radnik
+
+# replace(str1, str2, str3) str2 se menja sa str3 u str1
+nekitext, neki, dobar => dobartext
+substring(t,n,m) -izdvaja deo teksta od n u dužini m: n=0,1,2,...
+d
+
+# datum i freme
+date(d) izvlači datum
+time(d) iyvlaci vreme
+d ? datum u podržanom formatu ili za tekuci now
+
+# pogled - prikaz tabele, virtuelna tabela
+create view pogled as UPIT
+
+create view radnici as select ime, prezime from radnik
+
+create view sviradnici select * from radnik
+
+rezultati su tabele - pogledikoise mogu koriste
+
+######### zadatak
+1. За сваки филм знамо његов назив и годину када је снимљен. Филм може да има тачно једног режисера. За сваког режисера знамо име, презиме, државу рођења, годину рођења, годину смрти. Потребно је да податке о улогама разних глумаца у разним филмовима. За сваког глумца знамо уметничко име (обавезно), име и презиме (опционо), државу рођења, годину рођења, годину смрти. Сваки филм припада тачно једном жанру (комедија, хорор, крими...). Жанр има назив и опис. Приказати и узорак података у бази креираној на основу овог модела.
+
+nacrtitat ER dijagram i napraviti i popuniti tabele
+
+
+
+# koristi bazu iz defbaza
+
+# DISTINC izbacuje duplikate iz rezultata
+
+SELECT sektor_id FROM radnici; # sve, sa ponavljanjima
+
+SELECT DISTINCT sektor_id FROM radnici # samo jedinstvene vrednosti
+
+# LIMIT x  - broj (x) zapisa / rezultata prikazati, ne ubrzava izvršavanje upita koji se izvršav a u potpunosti samo što se sve ne prikazuje
+
+# SELECT * FROM tabela LIMIT x
+
+#prvih 5 radnika, sortiranih po datumu
+SELECT ime, prezime FROM radnici ORDER BY datumrodj LIMIT 5;
+#isto kao ispred, sortirano opadajuće
+# 
+SELECT ime, prezime FROM radnici ORDER BY datumrodj DESC LIMIT 5;
+
+# SELECT * FROM tabela LIMIT x,y - y zapisa počevši od x, prvi elemetn ima indeks nula
+# 2 radnik
+SELECT ime, prezime FROM radnici LIMIT 1,1;
+# 1.radnik
+SELECT ime, prezime FROM radnici LIMIT 0,1;
+
+# WHERE uslov za prikaz rezultata
+# samo zenski radnici
+SELECT * FROM radnici WHERE pol = 'Z'
+
+# GROUP BY - grupisanje vrsta na osnovu zajedničkih vrednosti
+#SELECT * FROM tabela GROUP BY polje
+# broj randika u sektorima
+SELECT sektor_id, AS Sektor, COUNT(*) AS BrojRadnika FROM radnici;  # vraća grešku, treba da vrati broj radnika u sektorima, ukupno
+SELECT sektor_id AS Sektor, COUNT(*) AS BrojRadnika FROM radnici GROUP BY sektor_id; # po 2 radnika  svakom sektoru
+
+# HAVING - filtriranje rezultata iz GROUP BY
+#za svaki sektor grupisana, i sektori koji imaju više od 1 radnika
+SELECT sektor_id AS Sektor, COUNT(*) AS BrojRadnika FROM radnici GROUP BY sektor_id HAVING COUNT(*) > 1; #za datu bazu vraća isti rezultat kao bez having
+#umesto count(*) može da se koristi i alians BrojRadnika
+
+#group by having i where se mogu kombinovati gde se primenjuje redosled
+# where ... group by ... having ... order by ...
+
+# sektori koji imaju više od 1 ženskog radnika
+SELECT sektor_id, COUNt(*) AS BrojRadnika FROM radnici where pol = 'Z' GROUP BY sektor_id HAVING COUNT(*) > 1 # ne vraća ništa, ako je >0 onda svuda po 1
+
+#prosečne plate po sektorima po polovima radnika
+SELECT sektor_id, AVG(plata) AS Prosek FROM radnici GROUP By sektor_id, pol
+#:... sortirano po prosečnoj plati rastuči
+SELECT sektor_id, pol, AVG(plata) AS Prosek FROM radnici GROUP By sektor_id, pol ORDER BY Prosek;
+# sa malo više detalja i malo drugačije
+SELECT sektor_id AS Sektor, pol as Pol, AVG(plata) AS ProsekPlate FROM radnici GROUP BY sektor_id, pol ORDER BY AVG(plata)
+
+# zadACI za vezbe
+
+# prezimena radnika
+SELECT prezime FROM radnici;
+
+#sve prezimena sortirana unazad
+SELECT * FROM radnici ORDER BY prezime DESC;
+
+# imena i zarade soritrano po zaradi rastuće
+SELECT ime, plata FROM radnici ORDER BY plata;
+
+# broj sektora
+SELECT COUNT(*) as ukupanBrojSektora FROM sektori
+SELECT COUNT(sektor_id) as ukupanBrojSektora FROM sektori
+
+# najveća plata svih randika
+SELECT MAX(plata) FROM radnici
+
+#najstariji radnik
+SELECT ime, prezime, MIN(datumrodj) FROM radnici
+
+# radik koji se preziva lazić
+SELECT * from radnici where prezime = "Lazic"  # where prezime Like "Lazic"
+
+# zenski radnici
+SELECT ime, prezime FROM radnici WHERE pol = 'Z';
+
+# prezimena anić i mikić
+SELECT ime, prezime FROM radnici where prezime IN("Anic","Mikic");
+
+# radnici rodjeni izmedju 1990 i 2000
+SELECT ime, prezime FROM radnici WHERE datumrodj BEETWEN '1990-01-01' AND '2000-12-31'
+
+# Iradnic počinje prezime sa A
+SELECT ime, prezime FROM radnici WHERE prezime LIKE "A%"
+
+# milan milanovic da se preziva petrovic
+SELECT * FROM radnici WHERE prezime = "Milanovic"
+UPDATE radnici SET prezime = "Petrovic" WHERE prezime = "Milanovic" AND ime="Milan"
+SELECT * FROM radnici WHERE prezime = "Milanovic"
+
+#moze i ovako bolji način
+SELECT radnik_id FROM radnici WHERE ime = "Milan" AND prezime = "Milanovic"
+UPDATE radnici set prezime = "Petrovic" WHERE radnik_id = 5
+SELECT radnik_id FROM radnici WHERE ime = "Milan" AND prezime = "Milanovic"
+
+#obrisati lazu lazić
+SELECT radnik_id FROM radnici where prezime = "Lazic" and ime = "Laza"
+SELECT * FROM radnici WHERE radnik_id = 3
+DELETE FROM radnici WHERE radnik_id = 3
+SELECT * FROM radnici WHERE radnik_id = 3 #ako ne postoji obrisano je
+
+# velika slova PREZIMENA rastuće sortirano
+SELECT concat(UPPER(ime)," ",UPPER(prezime)) AS Radnik FROM radnici ORDER BY prezime;
+
+#ime prezime i mesec rodjenja (slovima)
+SELECT ime, prezime, DATE_FORMAT(datumrodj, '%M') AS MesecRodjenja FROM radnici ORDER BY prezime
+
+#broj randika u sektoru
+SELECT sektor_id, COUNT(*) AS broj_radnika
+FROM radnici
+GROUP BY sektor_id;
+
+#broj radnika sektora, ali da ima više od 1 radnika
+SELECT sektor_id, COUNT(*) AS broj_radnika FROM radnici GROUP BY sektor_id HAVING COUNT (*) > 1
+
+#info o sektoru koi imaju više od 1 muškog radnika
+SELECT sektor_id AS Sektor, COUNT(*) AS BrojRadnika FROM radnici GROUP BY sektor_id HAVING COUNT(pol="M") > 1
+
+#prosečne plate po sektorima i polovima
+SELECT sektor_id as sektor, pol as Pol, AVG(plata) as prosecnaPlata from radnici GROUP by sektor_id, pol order by AVG(plata)
+
+#Prikazati imena i prezimena radnika, njihove plate i plate uvećane za bonus # od 5000, kod radnika čija plata nakon dodatka bonusa ima iznos veci od 70000
+SELECT ime, prezime, plata, plata+5000 AS UvecanaPlata FROM `radnici` WHERE plata+5000 > 70000;
+
+#prvih 5 po datumu opadajuče
+SELECT ime, prezime FROM radnici ORDER BY datumrodj DESC LIMIT 5
+
+#prvih 5 najstarijih
+SELECT ime, prezime FROM radnici ORDER BY datumrodj LIMIT 5
+#može i
+SELECT ime AS Ime, prezime AS Prezime, datumrodj AS Datum FROM radnici order by datumrodj LIMIT 0,5
+
+#2,3,4.najstarijih
+SELECT ime, prezime FROM radnici ORDER BY datumrodj LIMIT 1,3
+
+#5 radnika sa najmanjim platama
+SELECT ime, prezime, plata FROM radnici ORDER BY plata ASC LIMIT 5
+
+#žene rodjene 1987
+SELECT ime, prezime, datumrodj FROM radnici WHERE pol = 'Z' AND datumrodj BETWEEN '1987-01-01' AND '1987-12-31' 
+
+####
+
+# operacija JOIN -povezivanje sve ili više tabela
+# SELECT klone TABELA A join b JOIN KLAUZUla
+# povezivanje se radi po zajedickojkoloni
+# unutrašne spajanje inner JOIN samo ono gde ima podudarnaja na obe strane, može da se gleda kao presek skupova, tj vraća zajedničke elemente po ključu
+SELECT radnici.ime, radnici.prezime, sektori.naziv FROM radnici inner JOIN sektori ON radnici.sektor_id = sektori.sektor_id;
+#sa alijasom
+SELECT r.ime, r.prezime, s.naziv FROM radnici as r inner JOIN sektori as s ON r.sektor_id = s.sektor_id;
+#using može ako su nazivi polja jednaki
+SELECT r.ime, r.prezime, s.naziv FROM radnici as r inner JOIN sektori as s USING(sektor_id);
+poredjenje Using(kolona) menja on jedan = dva
+
+#ime i prezime zajedno kao radnik + sektor,naziv kao sektor 
+SELECT CONCAT(r.ime, " ", r.prezime) AS Radnik, s.naziv AS Sektor FROM radnici AS r INNER JOIN sektori AS s USING(sektor_id)
+
+#imena i datumrojd i sektor, ime = M*
+SELECT r.ime AS Ime, r.datumrodj AS `Datum rodjenja`, s.naziv AS Sektor FROM radnici AS r INNER JOIN sektori AS s USING (sektor_id) where r.ime like "M%"
+
+#spoljni spojevI. levi, desni, puni
+#isto štio i unutrašnju + nepoklapanja
+#levi spoljašnji spoj - ide prvo kao kod inner join (strana više je prva), može da rezultira da leva (prva) nema poklanjae u desnoj (druga) tabeli.
+# ZA SVAKOG RANDIKA SEKTOR U KOJI RADI 
+SELECT r.*, s.naziv FROM radnici AS r LEFT JOIN sektori AS s ON r.sektor_id = s.sektor_id;
+
+#jos jedna randica
+INSERT INTO `radnici`(`radnik_id`, `ime`, `prezime`, `datumrodj`, `pol`, `plata`) VALUES (12, "Iva", "Ivic", '2002-05-05', 'Z', 105000)
+
+#desni spoj
+SELECT r.*, s.naziv FROM radnici AS r right JOIN sektori AS s ON r.sektor_id = s.sektor_id;
+
+
+Моделовати базу података према следећим упутствима: 
+Удружење таксиста води евиденцију о свим вожњама. 
+Таксиста је запослен у удружењу и познате су његове контакт информације, као и број текућег рачуна. 
+За сваку вожњу се бележе датум, време почетка, дужина трајања, почетна локација и дестинација. 
+Вожња се обавља по одређеној тарифи. 
+За сваку тарифу су познати назив (дневна, ноћна, празнична, градска, ванградска и сл), опис и цена по минуту. 
+Таксиста има возачку доволу. В
+озачка дозвола има број, датум издавања и датум важења. 
+Возачка дозвола може да обухвата неколико категорија. 
+За сваку категорију су познати ознака (А, Б, Ц и сл) и опис. 
+За сваку возачку дозволу и сваку категорију коју садржи је познат датум стицања те категорије од стране носиоца возачке дозволе.
+
+
+CREATE TABLE if not exists kategorije (
+	kategorija_id int primary KEY not null,
+    naziv_kategorije varchar(30) not null,
+    opis varchar(255)
+) ENGINE = INNODB;
+
+create table if not exists tarife (
+	tarifa_id int primary key not null,
+    naziv_tarife varchar(30) not null,
+    opis varchar(255),
+    cena double not null
+) ENGINE = INNODB;
+
+create table if not exists taksisti (
+	taksista_id int PRIMARY KEY not null,
+    ime varchar(30) not null,
+    prezime varchar(30) not null,
+    grad varchar(30) not null,
+    ulica varchar(50),
+    broj varchar(5),
+    broj_telefona varchar(30),
+    broj_tekuceg varchar(45) not null,
+    broj_vozacke varchar(30) not null    
+) ENGINE = INNODB;
+
+create table if not exists vozacke_dozvole (
+	vozacka_id int PRIMARY KEY AUTO_INCREMENT not null,
+    taksista_id int not null,
+    kategorija_id 
+) ENGINE = INNODB;
+
+
+
+CREATE TABLE KategorijeVozacka (
+    kategorijaVozackaID INT PRIMARY KEY not null,
+    datumSticanja DATE not null,
+    brojID int,
+    kategorijaID int, 
+    FOREIGN KEY (kategorijaID) REFERENCES ON kategorije(kategorijaID)
+    ON UPDATE CASCADE ON DELETE NO ACTION
+) ENGINE = INNODB;
+
+--------- ono sto je radjeno
+
+tarife
+CREATE TABLE Tarife( tarifaID INT PRIMARY KEY AUTO_INCREMENT, naziv VARCHAR(45), opis VARCHAR(100), cena INT ) ENGINE = INNODB
+
+VOZACKA DOZVOLA
+CREATE TABLE IF NOT EXISTS `taksi_udruzenje`.`vozacka_dozvola` ( `vozacka_dozvola_id` INT NOT NULL, `broj_dozvole` VARCHAR(20) NULL, `datum_izdavanja` DATE NOT NULL, `dozvola_vazi_do` DATE NOT NULL, PRIMARY KEY (`vozacka_dozvola_id`) ) ENGINE = InnoDB;
+
+kategorije
+CREATE TABLE kategorije ( kategorijeID INT PRIMARY KEY, oznaka ENUM ('A','B','C'), opis varchar (40), datumSticanja DATE ) ENGINE = INNODB;
+
+kategorijevozacka
+CREATE TABLE kategorijeVozacke( kategorijaVozackaID INT PRIMARY KEY AUTO_INCREMENT, datumSticanja DATE, kategorijeID INT, vozacka_dozvola_id INT, foreign key(kategorijeID) references kategorije(kategorijeID) ON UPDATE CASCADE ON DELETE NO ACTION, foreign key(vozacka_dozvola_id) references vozacka_dozvola(vozacka_dozvola_id) ON UPDATE CASCADE ON DELETE NO ACTION )ENGINE = INNODB;
+
+voznje
+CREATE TABLE voznje( voznjaID INT PRIMARY KEY AUTO_INCREMENT, pocetnaLokacija VARCHAR(30), destinacija VARCHAR(30), datum DATE, vremepocetka TIME, trajanje TIME, taksistaID INT, tarifaID INT, FOREIGN KEY(taksistaID) REFERENCES taksisti(taksistaID) ON UPDATE CASCADE ON DELETE NO ACTION, FOREIGN KEY(tarifaID) REFERENCES tarife(tarifaID) ON UPDATE CASCADE ON DELETE NO ACTION ) ENGINE = INNODB
+
+---ono sto je proslo
+CREATE TABLE voznje( voznjaID INT PRIMARY KEY AUTO_INCREMENT, pocetnaLokacija VARCHAR(30), destinacija VARCHAR(30), datum DATE, vremepocetka TIME, trajanje TIME, taksistaID INT, tarifaID INT, FOREIGN KEY(tarifaID) REFERENCES tarife(tarifaID) ON UPDATE CASCADE ON DELETE NO ACTION ) ENGINE = INNODB
+
+--- prvo ovo pre voznje
+CREATE TABLE takstisti( taksistaID INT PRIMARY KEY NOT NULL, ime varchar(45), prezime varchar(45), telefon varchar(45), email varchar(45), tekuciRacun varchar(45), grad varchar(45), ulica varchar(45), ulicniBroj int(3) ) ENGINE = INNODB;
+
+
+
+## INNER JOIN ... ekvivelentan preseku skupova, vraćaju se samo podudaranja, ono što je zajedničko
+ako se navede samo join, podrazumeva se kao unutrašnje (inner) spajanje
+# I nacin
+SELECT ... FROM dete INNER JOIN roditelj ON dete.ključ = roditelj.kljuc
+SELECT radnici.ime, radnici.prezime, sektori.naziv FROM radnici INNER JOIN sektori ON radnici.sektor_id = sektori.sektor_id;
+# II nacin ... alijansi
+SELECT ... FROM dete AS d INNER JOIN roditelj AS r ON d.ključ = r.kljuc
+SELECT r.ime, r.prezime, s.naziv FROM radnici AS r INNER JOIN sektori AS s ON r.sektor_id = s.sektor_id;
+# III nacin ... USING kada su nazivi isti ... može da se kombinuje sa alijansima, nije obavezno
+SELECT ... FROM dete INNER JOIN roditelj USING (ključ)
+
+## spoljašnji spoj
+# LEFT JOIN ... sve iz deteta, leva tabela, + zajedničko sa roditeljem 
+SELECT ... FROM dete LEFT JOIN roditelj ON dete.kljuc = roditelj.kljuc
+SELECT r.*, s.naziv FROM radnici AS r LEFT JOIN sektori AS s ON r.sektor_id = s.sektor_id;
+# RIGHT JOIN ... sve zajedničko + sve iz desne tabele, roditelja;  prvo se posmatra desna tabela, pa onda leva tabela
+SELECT ... FROM dete RIGHT JOIN roditelj ON dete.kljuc = roditelj,kljuc
+SELECT r . * , s.naziv FROM radnici AS r RIGHT JOIN sektori AS s ON r.sektor_id = s.sektor_id;
+
+ #### vežbe ####
+
+Zadatak1:Prikazati podatke o studentima i njihovim ispitima koji su održani 28.1.2015. Izdvojiti indeks, ime i prezime studenta, id predmeta i ocenu.. 
+
+SELECT dosije.indeks, dosije.ime, dosije.prezime, ispit.id_predmeta, ispit.ocena FROM ispit INNER JOIN dosije USING (indeks) WHERE datum_ispita = '2015-01-28'; # 28. nema nipta
+
+SELECT dosije.indeks, dosije.ime, dosije.prezime, ispit.id_predmeta, ispit.ocena FROM dosije INNER JOIN ispit USING (indeks) WHERE datum_ispita = '2015-01-20' 
+
+SELECT dosije.indeks, dosije.ime, dosije.prezime, ispit.id_predmeta, ispit.ocena FROM ispit INNER JOIN dosije USING (indeks) WHERE ispit.godina_roka = 2015 AND oznaka_roka = 'jan';
+
+Zadatak2: Za svaki predmet izdvojiti naziv, godinu i oznaku roka u kojima je taj predmet polagan. Rezultat urediti prema nazivu predmeta.
+
+SELECT predmet.naziv, ispit.godina_roka, ispit.oznaka_roka FROM ispit INNER JOIN predmet USING (id_predmeta) ORDER BY predmet.naziv;
+
+
+
+
+Zadatak1:  Prikazati  nazive  predmeta  koje  je  polagao  neki  student  u  januarskom  ispitnom  roku  2015. godine.
+
+SELECT DISTINCT predmet.naziv FROM ispit INNER JOIN predmet USING (id_predmeta) WHERE ispit.godina_roka = 2015 AND oznaka_roka = 'jan';
+
+Zadatak2:Za svaki ispitni rok izdvojiti naziv ispitnog roka i ocene koje su dobijene u tom roku.Rezultat urediti prema nazivu ispitnog roka.
+
+SELECT DISTINCT ispitni_rok.naziv, ispit.ocena FROM ispit INNER JOIN ispitni_rok USING (oznaka_roka) ORDER BY ispitni_rok.naziv;
+
+SELECT DISTINCT ispitni_rok.naziv, ispit.ocena from ispitni_rok INNER JOIN ispit ON ispitni_rok.godina_roka = ispit.godina_roka ORDER BY ispitni_rok.naziv # detaljniji, bolji prikaz
+
+
+# UNIJE - skupovi vrednosti dobijeni selektima
+Zadatak 1. Izdvojiti identifikatore predmeta koji imaju više od 5 bodova ili ih je položio neki student 20.01.2015.
+zadatak se posmatra iz delova
+1- Izdvojiti identifikatore predmeta koji imaju više od 5 bodova 
+SELECT id_predmeta FROM predmet WHERE bodovi>5
+2 - Izdvojiti identifikatore predmeta ... ili ih je položio neki student 20.01.2015.
+SELECT id_predmeta FROM ispit where datum_ispita = '2015-01-20' and ocena > 5;
+#kada se nadovezuju kolone, one moraju biti istog tipa i dužine.
+# prikazuje podatke bez ponavljanja
+SELECT id_predmeta FROM predmet WHERE bodovi>5
+UNION
+SELECT id_predmeta FROM ispit where datum_ispita = '2015-01-20' and ocena > 5;
+# prikazuje podatke sa ponavljanjem, sve vrednosti
+SELECT id_predmeta FROM predmet WHERE bodovi>5
+UNION ALL
+SELECT id_predmeta FROM ispit where datum_ispita = '2015-01-20' and ocena > 5;
+
+Zadatak 2: Izdvojiti indekse studenata koji su rodeni u Beogradu ili imaju ocenu 10. Rezultat urediti u opadajućem poretku.
+SELECT indeks FROM dosije WHERE mesto_rodjenja = "Beograd"
+UNION
+SELECT indeks FROM ispit WHERE ocena = 10
+ORDER by indeks DESC
+
+
+# podupiti, rezultat jednog upita koristi se kao rezultat drugog upita
+SELECT * FROM tabela WHERE nesto [= < > ...] (podupit: SELECT ... koja vraća vrednost odgovarajućeg tipa i vrednosti za nesto)
+Pronaci nazive predmeta koji imaju manje bodova od predmeta sa nazivom Geometrija
+1-pronači koliko bodova ima predmet geometrija,a to iskoristiti dalje
+SELECT bodovi FROM predmet WHERE naziv = 'geometrija'
+2-gornji upit iskoristiti u drugom upitu u njegovom uslovnom delu
+SELECT predmet.naziv, predmet.bodovi FROM predmet WHERE predmet.bodovi < ( SELECT bodovi FROM predmet WHERE naziv = 'geometrija' )
+
+Izdvojiti nazive predmeta koje je polagao student sa indeksom 20140026
+1-naći predmete
+SELECT id_predmeta FROM ispit WHERE indeks = 20140026
+2-iskoristiti - koristiti IN ako se očekuje niz vrednosti, zamena za =
+SELECT naziv FROM predmet WHERE id_predmeta IN( SELECT id_predmeta FROM ispit WHERE indeks = 20140026 )
+
+#Izdvojiti indekse studenata koji su polozili bar jedan predmet koji nije prolozio student sa indeksom 20140022
+SELECT indeks FROM ispit WHERE ocena > 5 and id_predmeta not IN ( SELECT id_predmeta FROM ispit WHERE ocena > 5 and indeks = 20140022 )
+
+
+#Izdvojiti identifikatore predmeta koji imaju vise od 5 bodova i nije ih polozio neki student 20.01.2015
+SELECT id_predmeta FROM predmet WHERE bodovi > 5 and id_predmeta not in ( select id_predmeta from ispit where ocena>5 and datum_ispita='2015-01-20')
+
+#Izdvojiti indekse studenata koji su rodjeni u Beogradu i imaju ocenu 8. Rezultat urediti u opadajucem poretku.
+- Može na dva načina
+SELECT indeks FROM dosije WHERE mesto_rodjenja = "Beograd" AND indeks IN 
+(SELECT indeks FROM ispit WHERE ocena = 8 ORDER BY indeks DESC)
+
+select indeks from ispit where ocena=8 and indeks in(select indeks from dosije where mesto_rodjenja="Beograd" ORDER BY indeks DESC) 
+
+# kreiranje pogleda
+CREATE VIEW AS SELECT upit....
+# brisanje pogleda
+DROP VIEW pogled
+# citanje pogleda ... isto kao i tabele
+select * from pogled
+
+Zadatak 1. Kreirati VIEW koji sadrzi šifre i nazive predmeta koji imaju izmedu 8 i 15 bodova.
+CREATE VIEW v1 AS SELECT predmet.id_predmeta, predmet.naziv FROM predmet WHERE bodovi BETWEEN 8 AND 15
+
+Zadatak 2. Kreirati VIEW koji sadrzi podatke o ispitima na kojima student ima 81, 76 ili 59 bodova.
+CREATE VIEW V2 AS SELECT * FROM `ispit` WHERE bodovi IN(81, 76, 59)
+
+Zadatak3. Kreirati View koji sadrzi nazive predmeta koji imaju po 6 bodova i koje je polagao student sa indeksom 20140021.
+CREATE VIEW v3 as Select predmet.naziv, predmet.bodovi, ispit.indeks FROM predmet INNER JOIN ispit ON predmet.id_predmeta = ispit.id_predmeta Where predmet.bodovi = 6 and ispit.indeks = 20140021
+
+Zadatak4. Kreirati View koji sadrzi naziv ispitnog roka koji je održan izmedu 2010. i 2015. godine i koji u oznaci sadrži slovo p. Rezultat urediti prema nazivu u opadajucem poretku.
+CREATE VIEW v4 AS SELECT naziv FROM ispitni_rok WHERE godina_roka BETWEEN 2010 AND 2015 AND naziv LIKE ("%p%") ORDER BY naziv DESC
+
+Zadatak5.  Kreitati  VIEW  koji  sadrzi  ime,  prezime  i  datum  rodenja  studenata  koji  su  rodeni  izmedu 4.2.1995. i 10.10.1995. i urediti rezultat prema prezimenu studenta.
+CREATE VIEW v5 AS SELECT ime, prezime, datum_rodjenja FROM dosije WHERE datum_rodjenja BETWEEN '1995-02-04' AND '1995-10-10' ORDER BY prezime
+
+
+#### još sql funkcija
+# if...
+IF(uslov, tačno, netačno)
+informacija da li je student položio na osnovu ocene
+SELECT IF(ocena = 5, 'Pao', 'Polozio') AS Status FROM ispit;
+# case ...
+# case when uslov ... then ... when uslov ...  then ... else ... end
+SELECT CASE ocena WHEN 5 THEN 'Nije polozen ispit' ELSE 'Polozen ispit' END AS STATUS FROM ispit ;
+
+# največa vrednost iz spiska GREATEST(v1,v2,...) / najmanja vrendost LEAST(v1,v2,...)
+SELECT GREATEST(235, 1209, 79); # 1209
+SELECT LEAST(234, 2109, 79); # 79
+mogu da se primene i nad kolonoma koje se navode umesto eksplic.vrednosti
+
+
+
+Zadatak 1.Klasifikovati predmete prema broju bodova na sledeci nacin:-ako predmet ima više od 7 bodova tada pripada I kategoriji-ako je broj bodova predmeta u intervalu [5,7] tada pripada II kategoriji-inace predmet pripada III kategoriji.-Izdvojiti naziv predmeta i kategoriju.
+SELECT naziv, CASE WHEN bodovi > 7 THEN 'Kategorija I' when bodovi >= 5 and bodovi <= 7 THEN 'Kat 2' ELSE 'kategorija 3 ' END AS Kategorija FROM predmet
+
+SELECT naziv, CASE WHEN bodovi > 7 THEN 'Kategorija I' when bodovi in(5,6,7) THEN 'Kat 2' ELSE 'kategorija 3 ' END AS Kategorija FROM predmet
+
+SELECT naziv, CASE WHEN bodovi > 7 THEN 'Kategorija I' when bodovi >= 5 and bodovi <= 7 THEN 'Kategorija II' ELSE 'Kategorija III' END AS Kategorija FROM predmet ORDER BY bodovi DESC
+
+
+Zadatak 1: Izdvojiti šifre, nazive i bodove predmeta ciji je broj bodova veci od prosecnog broja bodova svih predmeta.
+
+SELECT sifra, naziv, bodovi FROM predmet where bodovi >  (SELECT AVG(bodovi) FROM predmet)
+
+
+# nastavak procedura, uslovi u procedurama
+# IF 
+DELIMITER //
+CREATE PROCEDURE p100(IN parametar1 INT)
+BEGIN
+    DECLARE variable1 INT; # deklaracija promeljive
+    SET variable1 = parametar1 + 1; # inicijalizacija, za 1 veće od parametra
+    #if slično kao kod jave
+    IF variable1 = 0 THEN
+    INSERT INTO t VALUES(20);
+    END IF;
+    IF parametar1 = 0 THEN
+    UPDATE t SET  s1 = s1 + 1;
+    ELSE
+    UPDATE t SET s1 = s1 + 2;
+    END IF;
+END//
+DELIMITER ;
+
+CALL p100(0);
+SELECT * from t;
+
+# CASE
+DELIMITER //
+CREATE PROCEDURE p101(IN parametar1 INT)
+BEGIN
+DECLARE variable1 INT;
+SET variable1 = parametar1 + 1;
+# case (switch)
+CASE variable1
+WHEN 0 THEN INSERT INTO t VALUES(17);
+WHEN 1 THEN INSERT INTO t VALUES(18);
+ELSE INSERT INTO t VALUES(19);
+END CASE;
+
+END //
+DELIMITER ;
+
+CALL p101(1); # dodaje 19 jer je variable1 = 1 +1 = 2
+SELECT * FROM t;
+
+#while
+# u tabelu t dodaje redove sa vrednostima 0,1,2,3,4 (5 novih reda)
+DELIMITER //
+CREATE PROCEDURE p102()
+BEGIN
+DECLARE v INT; #brojac
+SET v = 0; #inicijalizacija brojaca
+WHILE v < 5 DO
+INSERT INTO t VALUES(v);
+SET v = v + 1; #inkrement, promena vrednosti brojača, ovde za +1
+END WHILE;
+END //
+DELIMITER ;
+
+CALL p102();
+SELECT * FROM t;
+
+
+# funkcije
+DELIMITER //
+CREATE FUNCTION obimKruga(r double) RETURNS double # ulaz promenljiva r tipa double, vraća vrednost tipa double
+DETERMINISTIC # fja je deterministička ako vraća isti tip vrednosti za isti skup vrednosti. cilj je da obriše neku vrednost. ne može da se koristi kao rekurzija; mora DETERMINISTIC pri kreiranju funkcije
+BEGIN
+DECLARE obim DOUBLE;
+SET obim = 2*r*PI();
+RETURN obim; # vraćanje vrednosti
+END //
+DELIMITER ;
+
+# poziv funkcije ide u upit
+SELECT obimKruga(10);
+
+# DOMAĆI. za razmišljanje i istraživanje SQL
+Napisati funkciju za racunanje faktorijela rekurzivno.
+
+
+# TRIGERI
+trigeri su objekti - uskladištene procedure, vezani za tabelu, automatski se aktiviraju kada se desi neki događaj. insert, delete, update ,,,, moraju da se ukombinuju sa vremenima. ne može da se izbriše ili ažurira ako ne postoji.
+ne mogu da se koriste u select kao procedure i funkcije
+vreme izvršenja može biti BEFORE, AFTER 
+CREATE TRIGGER naziv
+vreme izvršenje trigera: BEFORE, AFTER
+dogadjaj: INSERT, UPDATE, DELETE
+FOR EACH ROW za svaki zapis
+OLD, NEW za INSERT može samo NEW.ime_polje, za DELETE samo OLD.ime_polje
+brisanje trigera DROP TRIGGER triger
+prikaz trigera SHOW TRIGGERS za sve dostupne trigere
+
+# triger koji pre promene vrednosti tabele product da se zapiše stara i nova cena -> tabela log_product. pamti cenu pre promene
+DELIMITER //
+CREATE TRIGGER before_update_products
+BEFORE # vreme izvršenja trigera
+UPDATE # pre promene
+ON products # prati dešavanja u tabeli products
+FOR EACH ROW
+# sledi šta triger radi kada se desi
+BEGIN
+INSERT INTO log_products(name, old_price, new_price, created_at)
+VALUES(old.name, old.old_price, new.old_price, now()); # prepisuje name i old.price kao stare vrednosti iz products, new.price uzima posle/u toku update iz update products, now() zapisuje trenutno vreme promene
+
+END //
+DELIMITER ;
+
+ispravan kod
+DELIMITER // 
+CREATE TRIGGER before_update_products BEFORE UPDATE ON products for EACH ROW 
+BEGIN INSERT INTO log_products(name, old_price, new_price, created_at) VALUES (old.name, old.price, new.price, now()); 
+END // 
+DELIMITER ;
+
+sada kada se promeni cena u tabel products upisaće se nove vrednosti u log_products
+update products set price = 10 where id = 1
+dodaje se novo u log_products
+
+# proširen primer, provera nove cene i njeno ograničenje.
+nrp. ako je nova cena veča od 10, nova cena će biti 10
+ako je manja od 10 biće prihvaćena i unete u products
+DELIMITER // 
+CREATE TRIGGER before_update_products_ograniceno BEFORE UPDATE ON products for EACH ROW 
+BEGIN 
+IF new.price > 10 THEN
+SET new.price = 10;
+INSERT INTO log_products(name, old_price, new_price, created_at) VALUES (old.name, old.price, new.price, now()); 
+
+ELSE
+INSERT INTO log_products(name, old_price, new_price, created_at) VALUES (old.name, old.price, new.price, now()); 
+END IF;
+END // 
+DELIMITER ;
+
+# vezba. Za dodati novi proizvod ograniciti cenu na 10
+DELIMITER // 
+CREATE TRIGGER novo BEFORE INSERT ON products for EACH ROW 
+BEGIN 
+IF new.price > 10 THEN
+SET new.price = 10;
+INSERT INTO log_products(name, old_price, new_price, created_at) VALUES (new.name, 0.0, new.price, now()); 
+ELSE
+INSERT INTO log_products(name, old_price, new_price, created_at) VALUES (new.name, 0.0, new.price, now()); 
+END IF;
+END // 
+DELIMITER ;
+
+INSERT INTO `products`(`id`, `name`, `price`, `category_id`, `quantity_aviable`) VALUES (2,'cdf',2.0,5,10)
+
+
+drugo rešenje
+DELIMITER // CREATE TRIGGER ogranicena_cena BEFORE INSERT ON products FOR EACH ROW BEGIN IF NEW.price > 10 THEN SET NEW.price = 10; END IF; END // DELIMITER ;
+
+
+
+# vezbe zadaci
+1. procedura, paran broj
+DELIMITER // CREATE PROCEDURE dalijeparan(IN broj int, OUT rezultat varchar(10)) BEGIN if(broj MOD 2 = 0) THEN SET rezultat = "paran"; ELSE SET rezultat = "neparan"; end if; END // DELIMITER ;
+
+CALL dalijeparan(2, @rezultat); SELECT @rezultat
+
+2. Написати процедуру која испитује да ли је бој паран и дељив бројем 3.
+DELIMITER //
+CREATE PROCEDURE par_3(IN broj INT, OUT izlaz VARCHAR(50))
+BEGIN
+IF (broj % 2 = 0 AND broj % 3 = 0) then
+	SET izlaz = CONCAT(broj, " je paran i deljiv brojem 3");
+ELSE
+	SET izlaz = CONCAT(broj, " nije paran i/ili nije deljiv sa 3");
+end if;
+END //
+DELIMITER ;
+
+CALL par_3(20,@izlaz);
+SELECT @izlaz;
+
+drugo rešenje, prof 
+DELIMITER // DROP PROCEDURE IF EXISTS zadatak2 // CREATE PROCEDURE zadatak2(in broj int, OUT rezultat varchar(100)) BEGIN IF(broj mod 6 = 0 ) THEN SET rezultat = "deljiv brojevima 2 i 3"; else SET rezultat = "Nije deljiv"; END if; END // delimiter ;
+
+CALL zadatak2(18, @rezultat); SELECT @rezultat
+
+3. Написати процедуру која исписује све колоне са задатим именом за претрагу. Нпр. све особе са
+именом Никола.
+DELIMITER //
+CREATE PROCEDURE find_name(IN ime VARCHAR(30))
+BEGIN
+SELECT * FROM test2 WHERE test2.ime = ime;
+END //
+DELIMITER ;
+
+CALL find_name("Mika"); #nije u tabeli bilo nikole pa je postao mika
+
+
+4. Написати функцију која израчунава површину квадра
+DELIMITER // CREATE FUNCTION zadatak4(a double, b double, c double) RETURNS double DETERMINISTIC BEGIN DECLARE povrsina double; SET povrsina = 2*(a*b+a*c+b*c); RETURN povrsina; END // DELIMITER ; SELECT zadatak4(2,2,2)
+
+5. Написати функцију која враћа просечан број година особа оз табеле Osobe.
+
+tabela za peti i slične zadatke
+CREATE TABLE IF NOT EXISTS osobe ( id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, ime VARCHAR(50) NOT NULL, prezime VARCHAR(50) NOT NULL, datum_rodjenja DATE NOT NULL, status VARCHAR(20) ) ENGINE=InnoDB; INSERT INTO osobe (ime, prezime, datum_rodjenja) VALUES ('Marko', 'Marković', '1990-01-15'), ('Ana', 'Anić', '2005-02-10'), ('Petar', 'Petrović', '1985-06-23'), ('Jelena', 'Janković', '1998-11-07'), ('Nikola', 'Nikolić', '1975-04-18');
+
+rešenje
+DELIMITER // 
+CREATE FUNCTION prosecne_godine() RETURNS DECIMAL(10,2) 
+DETERMINISTIC
+BEGIN 
+DECLARE avg_godine DECIMAL(10,2); 
+SELECT AVG(YEAR(CURDATE()) - YEAR(datum_rodjenja)) INTO avg_godine FROM osobe; 
+RETURN avg_godine; 
+END // 
+DELIMITER ;
+
+SELECT prosecne_godine();
+
+6. Написати тригер који у односу на број година особе исписује статус ("Пунолетан", "Малолетан"), 
+
+create table osobe(
+    osobaid int primary key auto_increment,
+    ime varchar(45) default null,
+    prezime varchar(45) default null,
+    godine int(3) default
+);
+
+DELIMITER // CREATE TRIGGER status_osobe BEFORE INSERT ON osobe FOR EACH ROW BEGIN 
+IF NEW.godine >= 18 THEN SET NEW.status = 'Punoletan'; ELSE SET NEW.status = 'Maloletan'; END IF; END // DELIMITER ;
+
+INSERT INTO osobe (ime, prezime, godine) VALUES ('Ana', 'Anic', 25); INSERT INTO osobe (ime, prezime, godine) VALUES ('Bojan', 'Bojanic', 17); INSERT INTO osobe (ime, prezime, godine) VALUES ('Ceca', 'Raznatatovic', 33);
+
+
+
+
+7. Након уноса податка у табели Osobe(osobaID, ime, prezime, godine, status) исписати вредности у
+колонама brojPunoletnih и brojMaloletnih у табели Podaci. 
+DELIMITER // CREATE TRIGGER update_podaci AFTER INSERT ON osobe FOR EACH ROW BEGIN INSERT INTO podaci (brojMaloletnih, brojPunoletnih) SELECT (SELECT count(*) FROM osobe WHERE status = 'PUNOLETAN') AS broj_punoletnih, (SELECT count(*) FROM osobe WHERE status = 'MALOLETAN') AS broj_maloletnih FROM osobe LIMIT 1; END // DELIMITER ;
+
+DELIMITER // CREATE TRIGGER brojPoStatusu AFTER INSERT ON osobe for EACH ROW BEGIN 
+INSERT INTO podaci(brojMaloletnih, brojPunoletnih) VALUES( (SELECT COUNT(osobe.osobaId) FROM osobe WHERE osobe.godine <18), (SELECT COUNT(osobe.osobaId) FROM osobe WHERE osobe.godine >=18) ); END // DELIMITER ;
+
+
+PREBROJAVANJE
+SELECT SUM( CASE status WHEN "Maloletan" THEN 1 ELSE 0 END) AS M, SUM( CASE status WHEN "Punoletan" THEN 1 ELSE 0 END) AS P FROM osobe;
+ostali zadaci su za domaci,
+
+
+#### DOMACI
+
+0. FAKTORIJEL, REKURZIJA
+DROP PROCEDURE IF EXISTS find_fact;
+DROP PROCEDURE IF EXISTS factorial;
+ 
+DELIMITER $$
+CREATE PROCEDURE find_fact(IN n INT)
+BEGIN
+    SET @@GLOBAL.max_sp_recursion_depth = 255;
+    SET @@session.max_sp_recursion_depth = 255;
+  
+    CALL factorial(n,@fact);
+     
+    SELECT @fact;
+END
+$$
+ 
+DELIMITER $$
+CREATE PROCEDURE factorial(IN n INT,OUT fact INT)
+BEGIN
+    IF n = 1 THEN
+        SET fact := 1;
+    ELSE
+        CALL factorial(n-1,fact);
+        SET fact := n * fact;
+    END IF;
+END
+$$
+
+CALL find_fact(5);
+
+ne dozvoljava rekurzivne funkcije i ovo je jedva proslo
+
+DRUGI BOLJI NACIN
+UBACITI U DELIMITER I DODATI DETERMISTIC
+create function FactorialR (n int) returns int
+begin
+    declare resultado BIGint default 1;
+    DECLARE m int DEFAuLT  1;
+    
+loop_label:  LOOP
+      IF  m = n THEN 
+          LEAVE  loop_label;
+      END  IF;
+            
+      SET  m = m + 1;
+      set resultado=resultado*m;
+  END LOOP;
+ return resultado;
+ end
+
+SELECT FactorialR(4)
+
+8. Након aжурирања податка у табели Osobe(osobaID, ime, prezime, godine, status) исписати
+вредности у колонама brojPunoletnih и brojMaloletnih у табели Podaci.
+DELIMITER // 
+CREATE TRIGGER brojStatus_update AFTER UPDATE ON osobe for EACH ROW 
+BEGIN 
+INSERT INTO podaci(brojMaloletnih, brojPunoletnih) VALUES( 
+    (SELECT COUNT(osobe.osobaId) FROM osobe WHERE osobe.godine <18), 
+    (SELECT COUNT(osobe.osobaId) FROM osobe WHERE osobe.godine >=18) ); 
+END // 
+DELIMITER ;
+
+UPDATE `osobe` SET `ime`='Kremenko',`prezime`='Katić',`godine`=7 WHERE osobaId = 1
+
+prepravljena samo jedna rec u odnosu na sedmi.
+
+9. Написати тригер који исписује укупан број особа са годином рођења између 1985 - 1995.
+baza2
+
+# 9. Написати тригер који исписује укупан број особа са годином рођења између 1985 - 1995.
+# primenjuje se nad radnicima jer ima datum rodjenja
+# posle azuriranja jer nije specificirano
+# ne dozvoljava prikza podataka pa to radi procedura
+DELIMITER // 
+drop trigger if exists godiste //
+CREATE TRIGGER godiste after update ON radnici for EACH ROW 
+BEGIN 	
+	INSERT INTO poruke(god85_95) SELECT COUNT(datumrodj) FROM radnici WHERE year(datumrodj) BETWEEN 1985 and 1995;
+END // 
+DELIMITER ;
+
+update radnici set plata = 150000 where radnik_id = 8;
+SELECT god85_95 FROM poruke;
+
+10.10. Написати тригер који исписује број особа које имају непаран број година.
+DELIMITER // 
+drop trigger if exists neparneGodine //
+CREATE TRIGGER neparneGodine after INSERT ON osobe for EACH ROW 
+BEGIN 	
+	INSERT INTO poruke(nepar) SELECT COUNT(*) FROM osobe WHERE godine MOD 2 <> 0;
+END // 
+DELIMITER ;
+
+INSERT INTO `osobe`(`ime`, `prezime`, `godine`) VALUES ('Vesli','Krašer',15)
+SELECT nepar FROM poruke;
+
+
+------ osobe -> podaci
+1. pri unosu,after, belezi koliko je punoletnih/maloletnih, koliko je rodjeno 1985-1995 god i koliko ima osoba sa neparnim brojem godina
+DELIMITER //
+DROP TRIGGER IF EXISTS unos1 //
+CREATE TRIGGER unos1 AFTER INSERT ON osobe FOR EACH ROW
+BEGIN
+	INSERT INTO podaci(brojMaloletnih, brojPunoletnih, brojRodjenih1985do1995,neparanBrojGodina) 
+    VALUES ((SELECT COUNT(godine) FROM osobe WHERE godine < 18), 
+            (SELECT COUNT(godine) FROM osobe WHERE godine > 17), 
+            (SELECT COUNT(datumRodjenja) FROM osobe WHERE YEAR(datumRodjenja) BETWEEN 1985 AND 1995), 
+            (SELECT COUNT(godine) FROM osobe WHERE godine MOD 2 != 0)); 
+END //
+DELIMITER ;
+
+INSERT INTO osobe(ime,prezime,datumRodjenja,godine,status) VALUES
+("Petra","Perić",'1985-01-05',40,'punoletan'), ("Jovana","Jovanovic",'2010-05-05',12,'maloletan'),
+("Lazar","Lelic",'2008-07-28',14,'maloletan');
+
+SELECT * FROM podaci;
+
+2. unos before - racuna godine i status / after - prebrojava (prethodni triger)
+DELIMITER //
+DROP TRIGGER IF EXISTS unos1 //
+DROP TRIGGER IF EXISTS dopuna //
+CREATE TRIGGER dopuna BEFORE INSERT ON osobe FOR EACH ROW
+BEGIN
+	SET new.godine = YEAR(CURRENT_DATE) - YEAR(new.datumRodjenja);
+    IF new.godine > 17 THEN
+    	SET new.status = "punoletan";
+	ELSE
+    	SET new.status = "maloletan";
+	END IF;
+END //
+
+CREATE TRIGGER unos1 AFTER INSERT ON osobe FOR EACH ROW
+BEGIN
+	   
+	INSERT INTO podaci(brojMaloletnih, brojPunoletnih, brojRodjenih1985do1995,neparanBrojGodina) 
+    VALUES ((SELECT COUNT(godine) FROM osobe WHERE godine < 18), 
+            (SELECT COUNT(godine) FROM osobe WHERE godine > 17), 
+            (SELECT COUNT(datumRodjenja) FROM osobe WHERE YEAR(datumRodjenja) BETWEEN 1985 AND 1995), 
+            (SELECT COUNT(godine) FROM osobe WHERE godine MOD 2 != 0)); 
+END //
+DELIMITER ;
+
+INSERT INTO osobe(ime,prezime,datumRodjenja) VALUES
+("Petra","Perkić",'1985-01-05'), ("Jovana","Jovankovic",'1993-05-05'),
+("Mira","Mirić",'1991-07-28');
+
+SELECT * FROM podaci;
+
+
+
+Zadatak 2: Za svaki predmet izracunati koliko studenata ga je položilo.
+SELECT id_predmeta, (SELECT COUNT(*) FROM ispit WHERE ispit.id_predmeta = predmet.id_predmeta AND ispit.ocena > 5) AS Polozilo FROM predmet
+
+SELECT predmet.naziv, COUNT(ispit.indeks) AS broj_polozenih FROM predmet LEFT JOIN ispit ON predmet.id_predmeta = ispit.id_predmeta AND ispit.ocena >= 6 GROUP BY predmet.naziv
+
+ 
+Zadatak 3: Izdvojiti nazive predmeta koje je položio student sa indeksom 20140022.
+
+SELECT predmet.naziv FROM predmet INNER JOIN ispit USING(id_predmeta) WHERE ispit.indeks = 20140022 AND ispit.ocena > 5
+
+# EXISTS vraca true - ako ima bar jedan pozitivan rezultat, povratnu vrednost iz uslova u naslovu, ako ima ispisuje prvi deo
+SELECT naziv FROM predmet WHERE EXISTS(SELECT * from ispit WHERE ispit.id_predmeta = predmet.id_predmeta AND ocena > 5 AND indeks = 20140022)
+(prikazaće se naziv predmeta tamo gde postoji polozen ispit od strane studenta sa indeksom 20140022)
+
+
+Zadatak 1. Za svakog studenta izdvojiti predmete koje je položio. Prikazati indeks, ime i prezime studenta,
+naziv predmeta i ocenu.
+SELECT dosije.indeks, dosije.ime, dosije.prezime, predmet.naziv, ispit.ocena FROM dosije INNER JOIN ispit USING(indeks) INNER JOIN predmet USING(id_predmeta) WHERE ispit.ocena > 5
+
+SELECT ispit.indeks, dosije.ime, dosije.prezime, predmet.naziv, ispit.ocena FROM ispit JOIN dosije ON ispit.indeks = dosije.indeks JOIN predmet ON ispit.id_predmeta = predmet.id_predmeta WHERE ispit.ocena >= 6 ORDER BY ispit.indeks, predmet.naziv
+
+SELECT dosije.indeks, dosije.ime, dosije.prezime, predmet.naziv, ispit.ocena FROM dosije INNER JOIN ispit ON dosije.indeks = ispit.indeks INNER JOIN predmet ON ispit.id_predmeta = predmet.id_predmeta WHERE ocena > 5
+
+
+Zadatak 2. Izdvojiti podatke o studentima cije prezime sadrži malo slovo o na 5. poziciji i završava na
+malo slovo c i koji imaju ocenu 6, 8 ili 10 iz predmeta cija je šifra u intervalu [M105, P103].
+
+SELECT dosije.*, predmet.naziv, ispit.ocena FROM dosije INNER JOIN ispit ON dosije.indeks = ispit.indeks INNER JOIN predmet ON predmet.id_predmeta = ispit.id_predmeta WHERE dosije.prezime LIKE '____o%c'AND ispit.ocena IN(6,8,10) AND predmet.sifra BETWEEN 'M105' AND 'P100'
+
+######### primeri sa datumima i vremenima
+Zadatak 1. Za današnji datum izracunati:
+- koji je dan u godini;
+- u kojoj je nedelji u godini;
+- koji je dan u nedelji; # 1-7, ned=1, sub=7
+- ime dana;
+- ime meseca.
+
+SELECT dayofyear(CURRENT_DATE) AS `Dan u godini`, week(CURRENT_DATE) AS `Nedelja u godini`, dayofweek(CURRENT_DATE) AS `Dan u nedelji`), dayname(CURRENT_DATE) AS `Ime dana`, monthname(CURRENT_DATE) AS `Naziv meseca`
+
+
+
+Zadatak 2. Izdvojiti ispite koji su održani posle 28. januara 2015. godine.
+SELECT * FROM ispit WHERE datum_ispita > '2015-01-19'
+
+SELECT * from ispit WHERE datum_ispita > date('2015-01-19')
+
+SELECT DATE_FORMAT(datum_ispita, '%d-%m-%Y') AS Datum FROM ispit WHERE datum_ispita > '2015-01-01' AND datum_ispita <= CURDATE();
+
+
+
+
+Zadatak 3. Pronaci ispite koji su održani u poslednjih 88 meseci.
+
+SELECT * FROM ispit WHERE datum_ispita > DATE_SUB(NOW(),INTERVAL 88 MONTH)
+
+date_sub od trenutnog datuma (prvi parametar), oduzima zadati broj meseci (interval)
+
+
+
+
+1. Iz baze izbrisati podatke o studentima rodenim 1990. godine.
+DELETE FROM dosije WHERE YEAR(dosije.datum_rodjenja) = 1990
+
+
+2. Iz baze izbrisati ispite u kojima je polagan predmet Programiranje 2 ili predmet koji ima 15 bodova.
+DELETE FROM ispit WHERE id_predmeta=(SELECT id_predmeta from predmet WHERE naziv='Programiranje 2' OR bodovi = 15)
+
+
+3. Svim predmetima cija šifra pocinje sa P povecati broj bodova za 20%. 
+
+UPDATE `predmet` SET `bodovi`=ROUND(bodovi*1.2) WHERE sifra LIKE 'P%';
+
+UPDATE predmet set bodovi = bodovi * 1.2 WHERE sifra LIKE 'P%'
+
+# ovo samo izdvaja
+SELECT *, ROUND(bodovi*1.2) FROM predmet WHERE sifra LIKE 'P%'
+
+
+
+# procedure - ugrađene procedure
+- deo koda koji se često koristi smešta se u procedure
+- brže se izvršava u odnosu na standardne upite pa je dobra praksa da se komplikovani upiti smeštaju u procedure
+- procedure nemaju return
+
+-opšta sintaksa
+DELIMITER //
+CREATE PROCEDURE nazivProcedure()
+
+#može se dodati telo procedure
+#blok naredbi BEGIN...END
+BEGIN
+
+END
+DELIMITER ;
+
+# Ssve vrednosti tabele t (bazaa)
+DELIMITER //
+CREATE PROCEDURE p1()
+BEGIN
+    SELECT * FROM t; #ovde obavezno tačka-zarez na kraju
+END //
+DELIMITER ;
+
+- na početku umesto // može da se koristi $$. // koristi se umesto tačka-zareza i označava da nije kraj naredbe, tačka zarez = kraj naredbe
+- klik na go izvršava se naredba
+
+# poziv procedure
+CALL naziv procedure
+- ovde
+CALL p1;
+
+isto to aa na drugi naačin
+
+DELIMITER $$ 
+CREATE PROCEDURE p1() 
+    BEGIN SELECT * FROM t; 
+END $$ 
+DELIMITER ;
+
+delimiter sprečava da se izvršava linija po liniju kod kod kreiranja procedure
+procedure se izvršavaju kroz mrežni saobraćaj
+
+procedure mogu da prihvataju parametee
+DELIMITER //
+CREATE PROCEDURE p2(IN p int)
+#ima jedan ulazni IN parametar naziva p INT tipa
+BEGIN
+    SET @X = p; # x  je nova promenljiva
+END //
+DELIMITER ;
+
+#poziv procedure sa parametrom
+CALL p2(12345);
+SELECT @x;
+
+x je lokalnog tipa i može se da se koristi samo pri izvršavanju procesdure, tj neposredno po pozivu iste.
+
+# vratiti covu sa tim godinama
+DELIMITER //
+CREATE PROCEDURE p4(IN p int)
+#ima jedan ulazni IN parametar naziva p INT tipa
+BEGIN
+    SET @x = p;
+END //
+DELIMITER ;
+
+#poziv procedure sa parametrom
+CALL p4(1999);
+SELECT * FROM test2 WHERE test2.god = @x;
+
+DELIMITER // 
+CREATE PROCEDURE unesiGod2(IN year INT) 
+BEGIN 
+	SELECT * FROM test2 WHERE god = year; 
+END // 
+DELIMITER ; 
+CALL unesiGod(1999);
+
+
+brisanje procedure
+DROP PROCEDURE IF EXISTS naziv procedure //
+može da se ubaci ispred CREATE PROCEDURE, unutar demiliter-a
+
+sa brisanjem
+DELIMITER // 
+drop PROCEDURE if EXISTS proverapogodini // 
+CREATE PROCEDURE proverapogodini(IN p year) 
+BEGIN 
+    SELECT * FROM test2 WHERE god = p; # ako ne radi, radiće sa: god LIKE p
+END // 
+DELIMITER ;
+
+
+# out parametar (izlazni parametar)
+DELIMITER //
+DROP PROCEDURE IF EXISTS p3 //
+CREATE PROCEDURE p3(OUT p int)
+BEGIN
+    SET p = 10;
+END //
+DELIMITER ;
+
+#poziv procedure sa izlaznim parametrom
+CALL p3(@t); # t - promenljiva koja prihvata izlazni parametar
+SELECT @t; # 10
+
+#procedura koja ispisuje trenutni datum i slučajnu vrednost iz tabele t
+#vraća vrednosti
+
+DELIMITER //
+DROP PROCEDURE IF EXISTS p4 //
+CREATE PROCEDURE p4(OUT d date, OUT s double)
+BEGIN
+    SET d = CURRENT_DATE;
+    SET s = RAND();
+END //
+DELIMITER ;
+
+CALL p4(@datum, @broj);
+SELECT @datum AS `Današnji datum`, @broj AS `Slucajni broj`;
+
+
+# declare naredba - definisanje lokalne promenljive procedure
+DELIMITER //
+DROP PROCEDURE IF EXISTS p8 //
+CREATE PROCEDURE p8()
+BEGIN
+    DECLARE a int;  # deklaracija promenljive: DECLARE promenljiva TIP
+    DECLARE b int;
+    # inicijalizacija
+    SET a = 5;
+    SET b = 5;
+    INSERT INTO t VALUES(a); # ubacuje vrednost od a u tabelu t
+    SELECT s1 * a FROM t WHERE s1 >= b; #25
+END //    
+DELIMITER ;
+
+CALL p8()
+
+#DEFAULT klauzula - uvodjenje novih promenljivih, dodea počtn, defalt vrednosti
+
+DELIMITER //
+DROP PROCEDURE IF EXISTS p9 //
+CREATE PROCEDURE p9()
+BEGIN
+    DECLARE a, b int DEFAULT 10;
+    # inicijalizacija
+    SET a = 5;
+    SET b = 5;
+    INSERT INTO t VALUES(a); # ubacuje vrednost od a u tabelu t
+    SELECT s1 * a FROM t WHERE s1 >= b; #25
+END //    
+DELIMITER ;
+
+CALL p9()
+
+DEFAULT može da sekoristi kao labava zamena za konstante.
+
+
+procedure se ne mogu preklapati, moraju imati različite nazive
+nazivi nisu case sensitivni
+
+
+primer: procedure za racunanje površine kruga
+DELIMITER //
+DROP PROCEDURE IF EXISTS povrsinaKruga //
+CREATE PROCEDURE povrsinaKruga(IN r double)
+BEGIN
+    SELECT r AS poluprecnik, (r*r*PI()) AS povrsina;
+END //    
+DELIMITER ;
+
+CALL povrsinaKruga(10);
+
+#konačna varijanta, prof.
+DELIMITER //
+DROP PROCEDURE IF EXISTS povrsinaKruga2 //
+CREATE PROCEDURE povrsinaKruga2(IN r double, OUT p double)
+BEGIN
+    SET p = r*r*PI();
+END //    
+DELIMITER ;
+
+CALL povrsinaKruga2(10,@p);
+SELECT @p AS `Povrsina kruga`;
+
+#izracunavanje povrsine pravouganika
+DELIMITER //
+DROP PROCEDURE IF EXISTS povrsinaPravougaonika //
+CREATE PROCEDURE povrsinaPravougaonika(IN a double, IN b double, OUT p double)
+BEGIN
+    SET p = a*b;
+END //    
+DELIMITER ;
+
+CALL povrsinaPravougaonika(10,3, @p);
+SELECT @p AS `Povrsina pravouganika`;
+
+
+CREATE TABLE korisnici(
+    korisnikID INT PRIMARY KEY AUTO_INCREMENT,
+    korisnickoIme varchar(45) NOT NULL,
+    lozinka varchar(45) NOT NULL,
+    ime varchar(45) NOT NULL
+    email varchar(45) NOT NULL
+);
+
+java
+
+String url = "jdbc:mysql://localhost:3306/tb";
+String username = "emma";
+String password = "baya1234";
+
+try(
+    Connection conn = DriverManager.getConnection(url, username, password)// java.sql.drivermanager {
+    System.out.println("Uspesna konekcija");
+}
+)
+catch(SQLException e) {
+    System.out.println("Greska " + e);
+}
+
+// ide u try blok
+String sqlselect = "SELECT * FROM korisnici";
+Statement stmt = conn.createStatement();
+ResultSet result = stmt.executeQuery(sqlselect);
+
+while(result.next()) {
+    //indeksiranje ide od 1 po poljima
+    String ki = result.getString(2); // korisnik
+    String lo = result.getString(3); // lozinka
+    String ime = result.getString(4); // 
+    String email = result.getString(5); //email
+
+    StringBuilder builder = new StringBuilder();
+    builder.append("Korisničko ime: ");
+    builder.append(ki);
+    builder.append("\nLozinka: ");
+    builder.append(lo);
+    builder.append("\nIme: ");
+    builder.append(ime);
+    builder.append("\nE-mail: ");
+    builder.append(email);
+    System.out.println(builder.toString);
+}
+
+String sqlinsert = "INSERT INTO korisnici(korisnickoIme, lozinka, ime, email) VALUES (?,?,?,?);" //zamena za podatak koji će se uneti u kod kasnije
+
+PreparedStatement ps = conn.prepareStatement(sqlinsert);
+ps.setString(1,"ABC"); //unos
+ps.setString(2,"pss123");
+ps.setString(3,"Abc");
+ps.setString(4,"abc@gmail.com");
+
+int unetPodata = execute.update(); // izvrsavanje
+if (unetPodatak > 0 {
+    System.ount.println("unetoje");
+}
+
+
+UPDATE korisnici SET lozinka = ?, ime = ?, email = ? WHERE korisnickoIme = ?
+
+INDEKSI (1,2,3...) ODGOVARAJU REDOSLEDU U UPITU A NE U TABELI
+
+
+
+
+
+
+

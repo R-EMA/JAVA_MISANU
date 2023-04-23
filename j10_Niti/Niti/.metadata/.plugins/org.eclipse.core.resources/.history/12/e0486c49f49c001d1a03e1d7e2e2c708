@@ -1,0 +1,16 @@
+package generik;
+
+public class Generik<T> {
+	
+	T obj;
+	
+	Generik(T obj) {
+		this.obj = obj;
+	}
+	
+	public void info() {
+		System.out.println("Parametar: " + obj);
+		System.out.println("Tip generičke klase (parametar): " + this.getClass().getName());
+	}
+
+}

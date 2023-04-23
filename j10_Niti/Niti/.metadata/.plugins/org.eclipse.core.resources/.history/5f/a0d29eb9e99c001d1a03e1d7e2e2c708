@@ -1,0 +1,30 @@
+package podaci;
+
+import java.io.*;
+
+public class Datoteke {
+
+	public static void main(String[] args) throws IOException {
+		// jednostavan upis/citanje u datoteku
+		
+		//upis, ako ne postoji kreira; postojeću sa write prepisuje
+		DataInputStream dis = new DataInputStream(System.in);
+		FileOutputStream fos = new FileOutputStream("datoteka.txt");
+		char c; //za unos znak po znak
+		while( (c = (char) dis.read()) != '$') {
+			fos.write(c);
+		}
+		
+		fos.close();
+		
+		//čitanje, -1 ako je kraj datoteke
+		FileInputStream fis = new FileInputStream("datoteka.txt");		
+		while( (c = (char) fis.read()) != -1 ) {
+			System.out.println(c);
+		}
+		
+		fis.close();
+		
+	}
+
+}

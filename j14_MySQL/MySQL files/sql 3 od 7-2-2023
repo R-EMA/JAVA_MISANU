@@ -1,0 +1,90 @@
+CREATE DATABASE automobili;
+USE automobili;
+
+CREATE TABLE proizvodjaci (
+    pib int(9) PRIMARY KEY not null,
+    naziv Varchar(55) not null,
+    grad Varchar(35),
+    ulica Varchar(55),
+    broj Varchar(10),
+    webadresa Varchar(50)
+    
+) ENGINE = INNODB;
+
+CREATE TABLE modeli (
+    modelid int primary key,
+    oznaka varchar(45) not null,
+    jacina motora int(3)
+    brojVrata int(1)
+    cena int,
+    pib int(9),
+    foreign key(pib)
+    references proizvodjaci(pib)
+    on update cascade
+    on delete no action
+) ENGINE = iNNODB;
+
+
+########### profesorovo rešenje
+CREATE DATABASE automobili; CREATE TABLE proizvodjaci ( PIB int (9) PRIMARY KEY not null, naziv varchar(45) not null, grad varchar(35) not null, ulica varchar(55) not null, broj varchar(10) not null, adresaSajta varchar(45) not null )ENGINE = INNODB create table modeli ( modelID int primary key, oznaka varchar(45) not null, jacinaMotora int(3), brojVrata int(1), cena int, PIB int(9), foreign key(PIB) references Proizvodjaci(PIB) ON UPDATE CASCADE ON DELETE NO ACTION )Engine = INNODB
+###############################################
+
+Школа страних језика организује курсеве. Сваки курс има свој назив, укупан број часова, план и програм. Један курс води један предавач, док исти предавач може да води и неколико различитих курсева. Предавач је запослен у школи и познате су његове контакт информације, као и број текућег рачуна и датум од када ради у школи. Исти курс може више пута да се реализује и за сваку реализацију имамо датум почетка, датум завршетка и број полазника.
+
+################################################
+predavaci: 
+predavacID int *
+ime varchar 45
+prezime varchar 45
+brojracuna varchar 20
+datumzaposlenja date
+grad varchar 45
+ulica varchar 45
+broj int 4
+telefon varchar 15
+
+kursevi
+kursid int *
+naziv varchar 45
+brijcasiva int
+plan varcgar 45
+predavacid int * strani
+
+realizacije
+realizacijaid int
+pocetak date
+kraj date
+broj polaznika
+kursid int
+
+
+
+CREATE TABLE predavaci( predavacID INT PRIMARY KEY NOT null, imePredavaca VARCHAR(45), prezimePredavaca VARCHAR(45), nazivUlice VARCHAR(45), brojUlice VARCHAR(10), nazivGrada VARCHAR(25), brojRacuna VARCHAR(45), telefon VARCHAR(25), zaposlenOd VARCHAR(25) )ENGINE= INNODB 
+
+CREATE TABLE kursevi( kursID INT PRIMARY KEY NOT null, nazivKursa VARCHAR(45), brojCasova INT(3), planKursa VARCHAR (500), predavacID INT, FOREIGN KEY(predavacID) REFERENCES predavaci(predavacID) ON UPDATE CASCADE ON DELETE NO ACTION )ENGINE=INNODB 
+
+CREATE TABLE predavanja( predavanjeID INT PRIMARY KEY NOT null, datumPocetka VARCHAR(25), datumKraja VARCHAR(25), brojPolaznika INT(2), kursID INT, FOREIGN KEY(kursID) REFERENCES kursevi(kursID) ON UPDATE CASCADE ON DELETE NO ACTION )ENGINE=INNODB
+
+INSERT INTO `predavaci`(`predavacID`, `imePredavaca`, `prezimePredavaca`, `nazivUlice`, `brojUlice`, `nazivGrada`, `brojRacuna`, `telefon`, `zaposlenOd`) VALUES (1, "Lazar", "Lazic", "Ulica 1", 10, "Novi Grad", 11220005632, 06652253113, '2023-02-07') 
+INSERT INTO `kursevi`(`kursID`, `nazivKursa`, `brojCasova`, `planKursa`, `predavacID`) VALUES (1, "Baze podataka", 60, "Osnove baza podataka", 1) INSERT INTO `predavanja`(`predavanjeID`, `datumPocetka`, `datumKraja`, `brojPolaznika`, `kursID`) VALUES (1, "05.01.2023", "28.02.2023", 25, 1)
+ Milica Jarić 21:11
+
+CREATE TABLE `kursevi` ( 
+`id` int NOT NULL AUTO_INCREMENT, 
+`skola_id` int NOT NULL, 
+`naziv` varchar(255) NOT NULL, 
+`plan_i_program` varchar(255) NOT NULL, `
+predavac_id` int NOT NULL, 
+PRIMARY KEY (`id`), KEY `predavac_id` (`predavac_id`), KEY `skola_id` (`skola_id`), CONSTRAINT `kursevi_ibfk_1` FOREIGN KEY (`predavac_id`) REFERENCES `predavac` (`id`), CONSTRAINT `kursevi_ibfk_2` FOREIGN KEY (`skola_id`) REFERENCES `skole` (`id`) ) CREATE TABLE `predavac` ( `id` int NOT NULL AUTO_INCREMENT, `ime` int NOT NULL, `prezime` int NOT NULL, PRIMARY KEY (`id`) ) CREATE TABLE `realizacije_kurseva` ( `id` int NOT NULL AUTO_INCREMENT, `kurs_id` int NOT NULL, `broj_polaznika` int NOT NULL, `pocetak` date NOT NULL, `kraj` date NOT NULL, PRIMARY KEY (`id`), KEY `kurs_id` (`kurs_id`), CONSTRAINT `realizacije_kurseva_ibfk_1` FOREIGN KEY (`kurs_id`) REFERENCES `kursevi` (`id`) CREATE TABLE `skole` ( `id` int NOT NULL AUTO_INCREMENT, `naziv` int NOT NULL, `kontakt` int NOT NULL, PRIMARY KEY (`id`) )
+
+#######################################
+
+Фудбалски клуб има неколико различитих група. 
+За сваку групу су познати најмлађе и најстарије годиште чланова. 
+Kлуб има неколико тренера. 
+Тренер је запослен у клубу и познате су његове контакт информације, као и број текућег рачуна и број тренерске лиценце. 
+Један тренер може да води и неколико група, а исту групу може да води и неколико тренера. 
+Сваки тренер додељен некој групи има одређену улогу (главни тренер, помоћни тренер, кондициони тренер и сл.), а познати су и датуми од када и до када ради са неком групом.
+
+
+

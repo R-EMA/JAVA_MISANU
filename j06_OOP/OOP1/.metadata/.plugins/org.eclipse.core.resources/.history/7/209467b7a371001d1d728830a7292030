@@ -1,0 +1,9 @@
+package dan1;
+
+public class A {
+	
+	//demonstracija get i set metoda (geteri i seteri)
+
+	private String message;
+	
+}

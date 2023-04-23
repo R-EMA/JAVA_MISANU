@@ -1,0 +1,9 @@
+package dan1;
+
+public class Krug {
+	
+	//korisnički konstruktor
+	
+	private int poluprecnik;
+
+}

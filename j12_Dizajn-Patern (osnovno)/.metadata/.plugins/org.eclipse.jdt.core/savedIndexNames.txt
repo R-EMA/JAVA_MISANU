@@ -1,0 +1,8 @@
+INDEX VERSION 1.131+/home/ema/eclipse-workspaces/klaseNasledje3/.metadata/.plugins/org.eclipse.jdt.core
+3802744743.index
+1865797976.index
+829136654.index
+2023742380.index
+2936998573.index
+2361627781.index
+2009436934.index

@@ -1,0 +1,45 @@
+package paket;
+
+/**
+ * 
+ * @author emma
+ * 
+ * Zadatak 3.
+ * Napisati program koji ispisuje sve proste brojeve od 1 do 10. 
+ * Prost broj je deljiv samo jedinicom i samim sobom.
+ *
+ */
+
+public class ProstiBrojevi {
+
+	public static void main(String[] args) {
+		// prosti brojevi
+		
+		boolean deljivo = false;
+		System.out.println("Prosti brojevi od 1 do 10: 1 2 ");
+		for(int i=3; i<=10; i++) {
+			//System.out.print(i + ": ");
+			for(int j=(i-1); j>1; j--) {	
+				if( i % j == 0)	
+					deljivo = true;
+				else
+					deljivo = false;
+			}
+			if( !deljivo )
+				System.out.print( i + " ");
+			//System.out.println("");
+		}
+		
+		System.out.println("\nkontrola deljivosti za 9");
+		for(int j=8;j>1;j--) {
+			if( 9 % j == 0)	
+				deljivo = true;
+			else
+				deljivo = false;
+			System.out.println(j + " = " + deljivost);
+			
+		}
+
+	}
+
+}

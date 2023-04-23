@@ -1,0 +1,16 @@
+package podaci;
+
+import java.io.DataInputStream;
+
+public class Datoteke {
+
+	public static void main(String[] args) {
+		// jednostavan upis/citanje u datoteku
+		
+		//upis
+		DataInputStream dis = DataInputStream(System.in);
+		
+		
+	}
+
+}

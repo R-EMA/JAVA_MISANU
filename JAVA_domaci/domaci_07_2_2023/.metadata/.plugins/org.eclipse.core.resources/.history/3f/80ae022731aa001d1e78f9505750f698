@@ -1,0 +1,16 @@
+package tacke;
+
+/**
+ * 
+ * @author emma
+ * 
+ * Zadatak 1: 
+ * Napisati klasu koja opisuje tačke u ravni. 
+ * Predvideti postavljanje koordinata, dohvatanje koordinata, izračunavanja rastojanja 
+ * do zadate tačke, čitanje tačke, pisanje tačke i glavnu funkciju za ispitivanje klase.
+ *
+ */
+
+public class Tacka {
+
+}

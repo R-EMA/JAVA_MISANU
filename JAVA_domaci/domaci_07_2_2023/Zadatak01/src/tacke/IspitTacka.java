@@ -1,0 +1,75 @@
+package tacke;
+
+import java.text.DecimalFormat;
+import java.util.Scanner;
+
+/**
+ * 
+ * @author emma
+ * 
+ * Zadatak 1.
+ * Napisati klasu koja opisuje tačke u ravni. 
+ * Predvideti postavljanje koordinata, dohvatanje koordinata, izračunavanja rastojanja 
+ * do zadate tačke, čitanje tačke, pisanje tačke i glavnu funkciju za ispitivanje klase.
+ *
+ */
+
+
+public class IspitTacka {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+		Scanner sc = new Scanner(System.in);
+		DecimalFormat df = new DecimalFormat("##0.00");
+		Tacka t1 = new Tacka(1.0,1.5);
+		Tacka t2 = new Tacka(5.0,4.5);
+		double x; double y;
+		
+		System.out.println("Rastojanje između tačke t1" + t1.getTacka() + 
+				" i tačke t2" + t2.getTacka() + " iznosi " + df.format(t1.rastojanjeTacaka(t2)));
+		
+		System.out.println("\nPromena koordinata tačke t1");
+		//čitanje koordnata
+		System.out.print("x = ");
+		if(sc.hasNextDouble()) {
+			x = sc.nextDouble();
+			t1.setY(x);
+		}
+		else
+			System.out.println("Neuspeo pokušaj promene koordinate X!");
+		System.out.print("y = ");
+		if(sc.hasNextDouble()) {
+			y = sc.nextDouble();
+			t1.setY(y);
+		}
+		else
+			System.out.println("Neuspeo pokušaj promene koordinate Y!");
+		
+		System.out.println("\nPromena koordinata tačke t2 - čitanje tačke:");
+		//čitanje tačke
+		System.out.print("x = ");
+		if(sc.hasNextDouble()) {
+			x = sc.nextDouble();			
+			System.out.print("y = ");
+			if(sc.hasNextDouble()) {
+				y = sc.nextDouble();
+				t2.setTacka(x, y);
+			}
+			else {
+				System.out.println("Neuspeo pokušaj čitanja tačke t2. Neispravna vrednost koordinate Y.");			
+			}			
+		}
+		else {
+			System.out.println("Neuspeo pokušaj čitanja tačke t2. Neispravna vrednost koordinate X.");			
+		}
+		
+		System.out.println("\nPoložaji tačaka posle promene vrednosti:");
+		System.out.println("Tacka t1: " + t1.getTacka());		
+		System.out.println("Tacka t2: " + t2.getTacka());
+		System.out.println("Novo rastojanje između tačaka t1 i t2 iznosi " + df.format(t1.rastojanjeTacaka(t2)));
+		
+		sc.close();
+	}
+
+}

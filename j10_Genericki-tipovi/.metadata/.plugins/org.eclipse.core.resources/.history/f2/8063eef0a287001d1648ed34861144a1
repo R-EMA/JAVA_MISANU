@@ -1,0 +1,17 @@
+package paket;
+
+public class Main {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+		TestirajDeljivost rezultat = (n, m) -> (n % m) == 0;
+		
+		if(rezultat.test(9, 2))
+			System.out.println("Broj 10 deljiv je brojem 2");
+		else
+			System.out.println("Broj 9 nije deljiv brojem 2");
+			
+	}
+
+}

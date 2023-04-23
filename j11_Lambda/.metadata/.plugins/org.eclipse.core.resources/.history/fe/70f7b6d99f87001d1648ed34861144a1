@@ -1,0 +1,19 @@
+package paket;
+
+public class MainLambda {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+		//primena intefrefejsa i lambda izraza (desna strana jednakosti)
+		TestiraBroj paranBroj = (x) -> (x % 2) == 0;
+		
+		if(paranBroj.test(10))
+			System.out.println("Broj je paran");
+		else
+			System.out.println("Brojn ije paran");
+			
+
+	}
+
+}

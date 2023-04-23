@@ -1,0 +1,19 @@
+package paket;
+
+public class MainVezba {
+
+	public static void main(String[] args) {
+		
+		A obj = new A();
+		obj.info();
+		//obj.finalize();
+		obj = null;
+		//obj.info();
+		
+		A on[] = new A[2];
+		on[0] = new A();
+		on[1] = obj;
+
+	}
+
+}

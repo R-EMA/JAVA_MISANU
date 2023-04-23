@@ -1,0 +1,144 @@
+CREATE BASE baza1;
+SELECT baza1;
+CREATE TABLE polaznici (
+    polaznikID int PRIMARY KEY,
+    ime varchar(30) not null,
+    prezime varchar(30) not null,
+    godine int not null
+) ENGINE = INNODB;  # obavezno kada se tabele povezuju
+
+CREATE TABEL if not exists kontakti (
+    kontaktID int PRIMARY KEY,
+    email varchar(45),
+    telefon varchar(45)
+); ENGINE = INNODB;
+
+# veza 1-1 ostvaruje se povezivanjem primarnih ključeva tabele
+# dodavanje veze - drugi način
+ALTER TABLE kontakti ADD FOREIGN KEY(kontaktID) REFERENCES polaznici(polaznikID)
+
+#popunjavanje povezanih tabela
+INSERT INTO polaznici(polaznikID, ime, prezime, godine) VALUES(1, "Mika", "Mikic", 20); INSERT INTO polaznici(polaznikID, ime, prezime, godine) VALUES(2, "Zika", "Zikic", 40)
+
+#druga tabela
+INSERT INTO kontakti (kontaktID, email, telefon)VALUES(1,"mikamikic@gamil.com","06234554321");
+INSERT INTO kontakti (kontaktID, email, telefon)VALUES(2,"zikazikic@gamil.com","06324654326");
+
+# EER dijagram je grafički prikaz tabela i njihovih veza
+
+# #####
+# država
+CREATE TABLE drzave (
+    drzavaID int PRIMARY KEY,
+    nazivDrzave varchar(50) not null
+) ENGINE = INNODB;
+CREATE TABLE glavniGradovi (
+    gradID int PRIMARY KEY,
+    nazivGrada varchar(50) not null
+) ENGINE = INNODB;
+#ovo je usvojeno
+CREATE table if NOT EXISTS glavniGradovi( gradID int PRIMARY KEY, nazivGlavnogGrada varchar(45)) ENGINE = INNODB;
+#veza . druga tabela (njen id) referenca prva tabela(ključprvetabele)
+ALTER TABLE glavniGradovi ADD FOREIGN KEY(gradID) REFERENCES drzave(drzavaID);
+# unos
+INSERT INTO drzave (drzavaID, nazivDrzave) VALUES (1,"Srbija"), (2,"Rumunija");
+
+INSERT INTO glavniGradovi (gradID, nazivGrada) VALUES (1,"Beograd"), (2,"Bukurešt");
+
+
+#### veza 1 prema više
+# roditelj je na strani 1, dete je na strani više
+
+CREATE TABLE ucenici (
+    ucenikID int PRIMARY KEY,
+    imeUcenika Varchar(50),
+    prezimeUcenika Varchar(50)
+) ENGINE = INNODB;
+
+CREATE TABLE odeljenja (
+    odeljenjeID int PRIMARY KEY,
+    razred int(2),
+    oznaka varchar(10) not null
+) ENGINE = INNODB;
+
+#povezivanje
+#detetu, ako ne postoji, dodati kolonu istog naziva kao primarni ključ roditelja
+ALTER TABLE ucenici ADD COLUMN odeljenjeID int;
+# veza: detetu dodati strani ključ koji je istog naziva/vrednosti i tipa kao primarni ključ roditelja
+# alter table dete add foreign key (primarni-roditelj) REFERENCES roditelj(primarni-roditelj)
+ALTER TABLE ucenici ADD FOREIGN KEY (odeljenjeID) REFERENCES odeljenja(odeljenjeID) ON UPDATE CASCADE ON DELETE NO ACTION;
+# referencijalni integrited treba dodati
+* ON UPDATE CASCADE $ promena roditelja rezultira promenom kd deteta
+* ON DELETE NO ACTION # sprečava da brisanje deteta, ne obriše se roditelj.
+
+# unos podataka: prvo se "puni" roditelj, a posle toga dete jer dete uzima vrednosti primarnog ključa roditelja kao sekundardni ključ, vezu.
+INSERT INTO odeljenja (odeljenjeID, razred, oznaka) VALUES (1,1,"1"),(2,1,"2"),(3,1,"3");
+
+INSERT INTO ucenici (ucenikID, imeUcenika, prezimeUcenika, odeljenjeID) VALUES (1,"Mika","Mikic",1), (1,"Andrija","Đurišić",3), (3,"Petar","Petrovic",3);
+
+
+##### više prema više
+CREATE TABLE knjige (
+    knjigaID int PRIMARY KEY,
+    nazivKnjige VARCHAR(50)
+) ENGINE = INNODB;
+
+CREATE TABLE autori (
+    autorID int PRIMARY KEY,
+    imeAutora varchar(30),
+    prezimeAutor varchar(30)
+) ENGINE = INNODB;
+
+# dodaje se posrednička tabela; spajaju se nazivi tabela, a može bilo šta
+# ima svoj primarni ključ
+# sadrži primarne ključeve tabela koje povezuje (naziv, tip, duzina su isti; naziv ne mora da bude isti). to su strani ključevi iz roditeljskih tabela
+# može da sadrži i dodatne zajedničke kolone za obe tabele
+3
+CREATE TABLE knjigeAutori (
+    knjigaAutorID int PRIMARY KEY AUTO_INCREMENT
+    knjigaID int,
+    autoriID int
+) ENGINE = INNODB;
+
+ALTER TABLE knjigeAutori 
+ADD FOREIGN KEY (knjigaID) REFERENCES knjige(knjigaID) ON UPDATE CASCADE ON DELETE NO ACTION,
+ADD FOREIGN KEY (autorID) REFERENCES autori(autorID) ON UPDATE CASCADE ON DELETE NO ACTION;
+
+# popunjavanje
+# prvo oba roditelja, redosled nije uvek bitan
+
+INSERT INTO knjige (knjigaID, nazivKnjige) VALUES (1, "Na Drini Ćuprija"), (2, "Starac i more"), (3, "Tom Sojer"), (4, "Koreni");
+INSERT INTO autori (autorID, imeAutora, prezimeAutora) VALUES (1, "Ivo", "Andrić"), (2, "Ernest", "Hemingvej"), "3, "Mark", "Tven"), (4, "Dobrica", "Ćosić"), (5, "Džejn", "Ostin");
+# dete, zajednicka
+INSERT INTO knjigeAutori (knjigaID, autorID) VALUES (1,1), (2,2), (3,3), (4,4);
+
+
+
+### zadatak za vežbu
+
+Продајни салон продаје возила зарних произвођача. Сваки произвођач аутомобила има назив, адресу седишта (улица и број, град) и адресу веб-сајта. Kако су произвођачи аутомобила правна лица имају додељен ПИБ (порески идентификациони број). Произвођач аутомобила производи више различитих модела. Сваки модел има ознаку, јачину мотора, број врата и цену.
+
+CREATE TABLE proizvodjaci (
+    pib int(9) PRIMARY KEY,
+    naziv varchar(50),
+    grad varchar(25),
+    ulica varchar(30),
+    broj varchar(10),
+    sajt varchar(50)
+
+) ENGINE = INNODB;
+
+CREATE TABLE modeli (
+    modelID int PRIMARY KEY,
+    oznakaModela varchar(30),
+    jacinaMotora int(5),
+    brojVrata int(1),
+    cena Decimal,
+    pib int(9)        
+) ENGINE = INNODB;
+
+ALTER TABLE modeli ADD FOREIGN KEY (pib) REFERENCES proizvodjaci(pib);
+
+
+
+

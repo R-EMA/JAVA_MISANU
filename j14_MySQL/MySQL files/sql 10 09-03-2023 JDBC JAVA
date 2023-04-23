@@ -1,0 +1,67 @@
+CREATE TABLE korisnici(
+    korisnikID INT PRIMARY KEY AUTO_INCREMENT,
+    korisnickoIme varchar(45) NOT NULL,
+    lozinka varchar(45) NOT NULL,
+    ime varchar(45) NOT NULL
+    email varchar(45) NOT NULL
+);
+
+java
+
+String url = "jdbc:mysql://localhost:3306/tb";
+String username = "emma";
+String password = "baya1234";
+
+try(
+    Connection conn = DriverManager.getConnection(url, username, password)// java.sql.drivermanager {
+    System.out.println("Uspesna konekcija");
+}
+)
+catch(SQLException e) {
+    System.out.println("Greska " + e);
+}
+
+// ide u try blok
+String sqlselect = "SELECT * FROM korisnici";
+Statement stmt = conn.createStatement();
+ResultSet result = stmt.executeQuery(sqlselect);
+
+while(result.next()) {
+    //indeksiranje ide od 1 po poljima
+    String ki = result.getString(2); // korisnik
+    String lo = result.getString(3); // lozinka
+    String ime = result.getString(4); // 
+    String email = result.getString(5); //email
+
+    StringBuilder builder = new StringBuilder();
+    builder.append("Korisničko ime: ");
+    builder.append(ki);
+    builder.append("\nLozinka: ");
+    builder.append(lo);
+    builder.append("\nIme: ");
+    builder.append(ime);
+    builder.append("\nE-mail: ");
+    builder.append(email);
+    System.out.println(builder.toString);
+}
+
+String sqlinsert = "INSERT INTO korisnici(korisnickoIme, lozinka, ime, email) VALUES (?,?,?,?);" //zamena za podatak koji će se uneti u kod kasnije
+
+PreparedStatement ps = conn.prepareStatement(sqlinsert);
+ps.setString(1,"ABC"); //unos
+ps.setString(2,"pss123");
+ps.setString(3,"Abc");
+ps.setString(4,"abc@gmail.com");
+
+int unetPodata = execute.update(); // izvrsavanje
+if (unetPodatak > 0 {
+    System.ount.println("unetoje");
+}
+
+
+UPDATE korisnici SET lozinka = ?, ime = ?, email = ? WHERE korisnickoIme = ?
+
+INDEKSI (1,2,3...) ODGOVARAJU REDOSLEDU U UPITU A NE U TABELI
+
+
+

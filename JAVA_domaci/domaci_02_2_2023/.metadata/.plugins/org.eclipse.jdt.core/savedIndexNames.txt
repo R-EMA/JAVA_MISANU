@@ -1,0 +1,8 @@
+INDEX VERSION 1.131+/home/emma/eclipse-workspace/domaci_02_2_2023/.metadata/.plugins/org.eclipse.jdt.core
+2976664226.index
+586413364.index
+3820606103.index
+3328932404.index
+1600269198.index
+1865797976.index
+1824685552.index

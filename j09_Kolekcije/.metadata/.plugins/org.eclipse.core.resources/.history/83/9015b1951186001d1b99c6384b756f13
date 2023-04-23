@@ -1,0 +1,33 @@
+package paket;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class MainStrLista {
+	
+	
+	public static void main(String[] args) {
+		
+		List<String> kolStr = new ArrayList<String>();
+		
+		kolStr.add("prvi");
+		kolStr.add("drugi");
+		kolStr.add("treci");
+		kolStr.add("cetvrti");
+		
+		//dužina kolekcije .size
+		System.out.println("Početna dužina kolekcije: " + kolStr.size());
+		
+		//provera postojanja vrednosti .contains() vraća boolean
+		boolean sadrzi = kolStr.contains("Treci");
+		System.out.println("treci => kolStr");
+		if(sadrzi) 
+			System.out.println("\tTraženi element se nalazi u zadatoj kolekciji.");
+		else
+			System.out.println("\tTraženi element se ne nalazi u zadatoj kolekciji.");
+	}
+	
+	
+	
+
+}

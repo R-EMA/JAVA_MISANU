@@ -1,0 +1,19 @@
+package paket;
+
+/**
+ * 
+ * @author ema
+ * 
+ * Lambda izrazom okrenuti redosled znakova u znakovnom nizu
+ *
+ */
+
+
+public class Main {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+	}
+
+}

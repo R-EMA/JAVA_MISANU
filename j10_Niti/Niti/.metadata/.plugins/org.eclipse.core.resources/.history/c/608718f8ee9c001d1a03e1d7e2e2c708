@@ -1,0 +1,45 @@
+package podaci;
+
+import java.io.*;
+
+public class Datoteke {
+
+	public static void main(String[] args) throws IOException {
+		// jednostavan upis/citanje u datoteku
+		
+		//upis, ako ne postoji kreira; postojeću sa write prepisuje
+		System.out.println("Upis....");
+		DataInputStream dis = new DataInputStream(System.in);
+		FileOutputStream fos = new FileOutputStream("datoteka.txt");
+		char c; //za unos znak po znak
+		while( (c = (char) dis.read()) != '\n') {
+			fos.write(c);
+		}
+		
+		fos.close();
+		
+		//čitanje postojeće datoteek, -1 ako je kraj datoteke
+		System.out.println("\nČitanje....");
+		FileInputStream fis = new FileInputStream("datoteka.txt");	
+		int ch;
+		while( (ch = fis.read()) != -1 ) {
+			System.out.print( (char) ch);
+		}		
+		
+		fis.close();
+		
+		//opšti rad sa postojećo datotekom
+		System.out.println("\n\nOpšti rad sa datotekom");
+		File f = new File("datoteka.txt");
+		System.out.println("Dužina datoteke (by): " + f.length());
+		System.out.println("Datoteka spremna za izvršavanje? - " + f.canExecute());
+		System.out.println("Datoteka spremna za upisivanje? - " + f.canWrite());
+		System.out.println("Datoteka spremna za čitanje? - " + f.canRead());
+		System.out.println("Poslednja promena datoteke (ms): " + f.lastModified());
+		
+		String st = new String("Hello, žaba!");
+		System.out.println(st);
+			
+	}
+
+}

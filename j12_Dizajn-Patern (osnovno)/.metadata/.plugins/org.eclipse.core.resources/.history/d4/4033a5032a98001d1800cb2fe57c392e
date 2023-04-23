@@ -1,0 +1,18 @@
+package nabrajanje;
+
+public class MainEnum {
+
+	public static void main(String[] args) {
+		
+		Boje b; // deklarisanje enum-a
+		b = Boje.Crvena; // inicijalizacija enum-a
+
+		System.out.println("Boja: " + b);
+		
+		b = Boje.Plava; //ažuriranj
+		if(b == Boje.Plava)
+		    System.out.println("Plava");
+
+	}
+
+}

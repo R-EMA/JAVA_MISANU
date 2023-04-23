@@ -1,0 +1,41 @@
+package dan1;
+
+import java.util.Scanner;
+
+public class Primer2 {
+
+	public static void main(String[] args) {
+		// unos, prikaz i štampa i proizvod članova vrednosti [3 .. 9]
+		
+		Scanner sc = new Scanner(System.in);
+		System.out.print("Unesite broj članova niza: ");
+		int n = sc.nextInt();
+		int x[] = new int[n];
+		int p39 = 1; // za proizvod
+		
+		System.out.println("Unesite " + n + " cel-a/ih brojeva: ");
+		for(int i = 0; i < n; i++) {
+			System.out.print("x[" + i + "] = ");
+			x[i] = sc.nextInt();
+		}
+		
+		// prikaz i obrada
+		// svi članovi (primena x.length umesto n)
+		System.out.print("U nizu:  ");
+		for(int i = 0; i < x.length; i++)
+			System.out.print(x[i] + " ");
+		System.out.print("\nčlanovi: ");
+		// samo oni između 3 i 9, uključujući i 3 i 9
+		for(int i = 0; i < n; i++) {
+			if(x[i] >= 3 && x[i] <= 9) {
+				System.out.print(x[i] + " ");
+				p39 *= x[i];
+			}
+		}
+		System.out.print("\t su u opsegu [3,9] i njihov proizvod iznosi " + p39);
+		
+		sc.close();
+
+	}
+
+}

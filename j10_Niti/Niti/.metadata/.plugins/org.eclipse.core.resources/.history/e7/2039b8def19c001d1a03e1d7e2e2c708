@@ -1,0 +1,7 @@
+package lambda;
+
+public interface Funkcija {
+	
+	public int kvadrat(int x);
+
+}

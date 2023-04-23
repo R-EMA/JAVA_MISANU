@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy element &apos;Jedinstveno.java&apos; to &apos;niz.Jedinstveno.java&apos;&#x0A;- Original project: &apos;Zadatak02&apos;&#x0A;- Destination element: &apos;niz.Jedinstveno.java&apos;&#x0A;- Original element: &apos;niz.Jedinstveno.java&apos;" description="Copy compilation unit" destination="/src&lt;niz{Jedinstveno.java" element1="/src&lt;niz{Jedinstveno.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1675526700857" units="1" version="1.0"/>
+</session>

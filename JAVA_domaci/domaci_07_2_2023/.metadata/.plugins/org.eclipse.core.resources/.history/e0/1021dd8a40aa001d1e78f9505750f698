@@ -1,0 +1,74 @@
+package predmeti;
+
+/**
+ * 
+ * @author emma
+ * 
+ * Zadatak 2 - klasa Predmet
+ * Predmet ima specifičnu težinu i jednoslovnu oznaku vrste predmeta. 
+ * Predvideti ... dohvatanje oznake vrste predmeta, ...., izračunavanje težine,
+ * ... i i sastavljanja tekstualnog opisa predmeta.
+ * 
+ *
+ */
+
+public class Predmet {
+
+	protected double t; //specifična težina predmeta, N/m3
+	protected char oznakaPredmeta; // oznaka predmeta
+	/* 
+	 * oznake:
+	 * 
+	 * S = sfera
+	 * K = kvadar
+	 * 
+	 */
+	
+	protected final double G = 9.81; // sila zemljine teže, N/kg
+	
+	
+	
+	public double getT() {
+		return t;
+	}
+
+
+
+	public void setT(double t) {
+		this.t = t;
+	}
+
+
+
+	public char getOznakaPredmeta() {
+		return oznakaPredmeta;
+	}
+
+
+
+	public void setOznakaPredmeta(char oznakaPredmeta) {
+		this.oznakaPredmeta = oznakaPredmeta;
+	}
+
+
+	// postupak je nezavistan od vrste predmeta
+	public double izracunajTezinu(double v, double t) {
+		/*
+		 * v - zapremina tela
+		 * t - specificna tezina predmeta
+		 */
+		return (t * v)/this.G;
+	}
+	
+	public String opisiPredmet() {
+		String predmet = "predmet";
+		if ( this.oznakaPredmeta == 'S' )
+			predmet = "Sfera";
+		else if ( this.oznakaPredmeta == 'K' )
+			predmet = "Kvadar";
+		
+		return predmet + "\n" + 
+			   "Specifična težina: " + this.t;
+	}
+	
+}

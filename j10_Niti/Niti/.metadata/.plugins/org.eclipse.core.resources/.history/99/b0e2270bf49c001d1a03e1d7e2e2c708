@@ -1,0 +1,11 @@
+package generik;
+
+public class MainGenerik {
+
+	public static void main(String[] args) {
+		//generička klasa, demonstracija rada
+		
+		Generik<Integer> gi = new Generik<Integer>(10);
+		gi.info();
+	}
+}

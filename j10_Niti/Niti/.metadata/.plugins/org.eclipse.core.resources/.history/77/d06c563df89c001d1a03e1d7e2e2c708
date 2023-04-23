@@ -1,0 +1,12 @@
+package enumi;
+
+public class MainBoje {
+	
+	public static void main(String[] args) {
+	
+		Boje boja = Boje.PLAVA;
+	
+		System.out.println(boja);
+	}
+
+}

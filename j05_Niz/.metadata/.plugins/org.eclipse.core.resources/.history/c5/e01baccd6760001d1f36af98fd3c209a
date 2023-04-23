@@ -1,0 +1,22 @@
+package dan1;
+
+import java.util.Scanner;
+
+public class Primer1 {
+
+	public static void main(String[] args) {
+		// Unos i prikaz clanova niza X od N elemenata
+		// plus demonstracija kreiranja niza inicijalizacijom
+		
+		Scanner sc = new Scanner(System.in);
+		int arr[] = {10, 20, 30, 40, 50}; // deklaracija i inicijalizacija niza od 5 članova.
+		
+		// čitanje arr niza
+		System.out.print("Vrednosti: ");
+		for (int i = 0; i < arr.length; i++) {
+			System.out.print(arr[i] + " ");
+		}
+		System.out.println(" su članovi niza od " + arr.length + " članova.");
+	}
+
+}

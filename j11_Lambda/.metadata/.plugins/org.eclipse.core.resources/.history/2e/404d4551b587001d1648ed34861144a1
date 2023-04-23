@@ -1,0 +1,8 @@
+package paket;
+
+public interface NegativanBroj {
+	
+	// broj treba da je manji od nule  (broj < 0)
+	boolean isNegativan(int broj);
+
+}

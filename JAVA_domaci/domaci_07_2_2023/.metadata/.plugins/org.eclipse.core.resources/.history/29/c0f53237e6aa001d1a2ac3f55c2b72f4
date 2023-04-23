@@ -1,0 +1,85 @@
+package vozic;
+
+import generickiNiz.*;
+import teret.*;
+import vozila.*;
+
+/**
+ * 
+ * @author emma
+ * 
+ * Zadatak 3
+ * I
+ * Apstraktan teret ima jedinstven, automatski generisan celobrojan dentifikator i 
+ * zadatu specifičnu težinu. Može da se dohvati jednoslovna oznaka vrste, 
+ * da se odredi zapremina I težina i da se sastavi tekstualn opis koji sadrži 
+ * oznaku vrste i identifikator. 
+ * Sanduk je teret oblika kvadra zadatih dužina ivica. Oznak vrste je S.
+ * Bure je teret oblika valjka zadatog poluprečnika osnove i visine. Oznaka vrste je B.
+ * II
+ * Generički niz sadrži stvari nekog tipa. Stvara se prazan zadatog kapaciteta posle 
+ * čega se stvari dodaju pojedinačno (greška je ako se niz prepuni). 
+ * Može da se dohvati broj stvari u nizu i da se pristupi stvari sa zadatim rednim brojem 
+ * (greška je ako je indeks izvan opsega).
+ * III
+ * Apstraktno vozilo ima zadatu sopstvenu težinu. 
+ * Može da se odredi ukupna težina i vučna sila vozila i da se sastavi tekstualni opis vozila. 
+ * Vučna sila predstavlja težinu terete koji vozilo može da povuče.
+ * Lokomotiva je vozilo zadate vučne sile. Tekstualni opis je L(ukTezina | vučnaSila).
+ * Vagon je vozilo koje sadrži niz terete. Stvara se prazan zadatog kapaciteta posle 
+ * čega se terete dodaju pojedinačno. Vučna sila vagona je 0. 
+ * Teksutalni opis je oblika V(ukTežina|teret, ... teret).
+ * IV
+ * Voz se sastoji od niza vozila. Stvara se prazan zadatog kapaciteta posle čega se 
+ * vozila dodaju pojedinačno(greška je ako se voz preoptereti, tj. ako ukupna težina 
+ * svih vozila i tereta premaši ukupnu vučnu silu vozila u vozu). 
+ * Može da se dohvati broj vozila u vozu, da se proveri da li bi se voz preopteretio 
+ * priključivanjem zadatog vozila i da se sastavi tekstualni opis voza koji sadrži 
+ * tekstualne opise sadržanih vozila (jedno vozilo po redu).
+ * 
+ * Napisati program koji napravi voz s jednom lokomotivom i dva vagona sa po dva tereta. 
+ * Koristiti konstantne parameter (ne treba ništa učitavati sa glavnog ulaza).
+ * 
+ */
+
+public class TestKompozicije {
+
+	public static void main(String[] args) {
+		
+		int izbor; //nasumično bira dva tereta od ponuđenih 4
+		
+		//teret
+		Skup<Teret> ts = new Skup<Teret>();
+		ts.dodajObjekat(new Bure(1000,1,2));
+		ts.dodajObjekat(new Sanduk(1250,1,1,2));
+		ts.dodajObjekat(new Bure(880,1,2));
+		ts.dodajObjekat(new Sanduk(1080,1,2,2));
+		
+		//vagoni
+		//vagon1
+		Vagon vagon1 = new Vagon(100, 500);
+		izbor = (int) Math.floor(Math.random()*4);
+		vagon1.addTeret(ts.getObjekat(izbor));
+		izbor = (int) Math.floor(Math.random()*4);
+		vagon1.addTeret(ts.getObjekat(izbor)); 
+		//vagon2
+		Vagon vagon2 = new Vagon(150, 1800);
+		izbor = (int) Math.floor(Math.random()*4);
+		vagon2.addTeret(ts.getObjekat(izbor));
+		izbor = (int) Math.floor(Math.random()*4);
+		vagon2.addTeret(ts.getObjekat(izbor)); 
+		
+		//lokomotiva
+		Lokomotiva cira = new Lokomotiva(100,5000);
+		
+		//voz
+		Voz soko = new Voz();
+		soko.setCira(cira);
+		soko.addVagon(vagon1);
+		soko.addVagon(vagon2);
+		System.out.println("\nvoz....\n" + soko.toString());
+		System.out.println("Broj vagona: " + soko.brojVagona());
+		
+	}
+
+}

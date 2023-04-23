@@ -1,0 +1,53 @@
+package tacke;
+
+import java.text.DecimalFormat;
+import java.util.Scanner;
+
+/**
+ * 
+ * @author emma
+ * 
+ * Zadatak 1.
+ * Napisati klasu koja opisuje tačke u ravni. 
+ * Predvideti postavljanje koordinata, dohvatanje koordinata, izračunavanja rastojanja 
+ * do zadate tačke, čitanje tačke, pisanje tačke i glavnu funkciju za ispitivanje klase.
+ *
+ */
+
+
+public class IspitTacka {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+		Scanner sc = new Scanner(System.in);
+		DecimalFormat df = new DecimalFormat("##0.00");
+		Tacka t1 = new Tacka(1.0,1.5);
+		Tacka t2 = new Tacka(5.0,4.5);
+		
+		System.out.println("Rastojanje između tačke t1" + t1.ispisiTacku() + 
+				" i tačke t2" + t2.ispisiTacku() + " iznosi " + df.format(t1.rastojanjeTacaka(t2)));
+		
+		System.out.println("\nPromena koordinata tačke t1");
+		System.out.print("x = ");
+		if(sc.hasNextDouble())
+			t1.setX(sc.nextDouble());
+		else
+			System.out.println("Neuspeo pokušaj promene koordinate X!");
+		System.out.print("y = ");
+		if(sc.hasNextDouble())
+			t1.setY(sc.nextDouble());
+		else
+			System.out.println("Neuspeo pokušaj promene koordinate Y!");
+		
+		System.out.println("\nPoložaji tačaka posle promene vrednosti:");
+		System.out.print("Tacka t1: ");
+		t1.procitajTacku();
+		System.out.print("Tacka t2: ");
+		t2.procitajTacku();
+		System.out.println("Novo rastojanje između tačaka: " + df.format(t1.rastojanjeTacaka(t2)));
+		
+		sc.close();
+	}
+
+}

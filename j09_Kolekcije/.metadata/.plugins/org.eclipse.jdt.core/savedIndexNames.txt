@@ -1,0 +1,6 @@
+INDEX VERSION 1.131+/home/ema/eclipse-workspaces/eclipse-kolekcije/.metadata/.plugins/org.eclipse.jdt.core
+1865797976.index
+1191283947.index
+2905006843.index
+959681719.index
+2095220918.index

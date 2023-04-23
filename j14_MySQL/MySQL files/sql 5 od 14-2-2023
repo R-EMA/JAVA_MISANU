@@ -1,0 +1,175 @@
+# koristi bazu iz defbaza
+
+# DISTINC izbacuje duplikate iz rezultata
+
+SELECT sektor_id FROM radnici; # sve, sa ponavljanjima
+
+SELECT DISTINCT sektor_id FROM radnici # samo jedinstvene vrednosti
+
+# LIMIT x  - broj (x) zapisa / rezultata prikazati, ne ubrzava izvršavanje upita koji se izvršav a u potpunosti samo što se sve ne prikazuje
+
+# SELECT * FROM tabela LIMIT x
+
+#prvih 5 radnika, sortiranih po datumu
+SELECT ime, prezime FROM radnici ORDER BY datumrodj LIMIT 5;
+#isto kao ispred, sortirano opadajuće
+# 
+SELECT ime, prezime FROM radnici ORDER BY datumrodj DESC LIMIT 5;
+
+# SELECT * FROM tabela LIMIT x,y - y zapisa počevši od x, prvi elemetn ima indeks nula
+# 2 radnik
+SELECT ime, prezime FROM radnici LIMIT 1,1;
+# 1.radnik
+SELECT ime, prezime FROM radnici LIMIT 0,1;
+
+# WHERE uslov za prikaz rezultata
+# samo zenski radnici
+SELECT * FROM radnici WHERE pol = 'Z'
+
+# GROUP BY - grupisanje vrsta na osnovu zajedničkih vrednosti
+#SELECT * FROM tabela GROUP BY polje
+# broj randika u sektorima
+SELECT sektor_id, AS Sektor, COUNT(*) AS BrojRadnika FROM radnici;  # vraća grešku, treba da vrati broj radnika u sektorima, ukupno
+SELECT sektor_id AS Sektor, COUNT(*) AS BrojRadnika FROM radnici GROUP BY sektor_id; # po 2 radnika  svakom sektoru
+
+# HAVING - filtriranje rezultata iz GROUP BY
+#za svaki sektor grupisana, i sektori koji imaju više od 1 radnika
+SELECT sektor_id AS Sektor, COUNT(*) AS BrojRadnika FROM radnici GROUP BY sektor_id HAVING COUNT(*) > 1; #za datu bazu vraća isti rezultat kao bez having
+#umesto count(*) može da se koristi i alians BrojRadnika
+
+#group by having i where se mogu kombinovati gde se primenjuje redosled
+# where ... group by ... having ... order by ...
+
+# sektori koji imaju više od 1 ženskog radnika
+SELECT sektor_id, COUNt(*) AS BrojRadnika FROM radnici where pol = 'Z' GROUP BY sektor_id HAVING COUNT(*) > 1 # ne vraća ništa, ako je >0 onda svuda po 1
+
+#prosečne plate po sektorima po polovima radnika
+SELECT sektor_id, AVG(plata) AS Prosek FROM radnici GROUP By sektor_id, pol
+#:... sortirano po prosečnoj plati rastuči
+SELECT sektor_id, pol, AVG(plata) AS Prosek FROM radnici GROUP By sektor_id, pol ORDER BY Prosek;
+# sa malo više detalja i malo drugačije
+SELECT sektor_id AS Sektor, pol as Pol, AVG(plata) AS ProsekPlate FROM radnici GROUP BY sektor_id, pol ORDER BY AVG(plata)
+
+# zadACI za vezbe
+
+# prezimena radnika
+SELECT prezime FROM radnici;
+
+#sve prezimena sortirana unazad
+SELECT * FROM radnici ORDER BY prezime DESC;
+
+# imena i zarade soritrano po zaradi rastuće
+SELECT ime, plata FROM radnici ORDER BY plata;
+
+# broj sektora
+SELECT COUNT(*) as ukupanBrojSektora FROM sektori
+SELECT COUNT(sektor_id) as ukupanBrojSektora FROM sektori
+
+# najveća plata svih randika
+SELECT MAX(plata) FROM radnici
+
+#najstariji radnik
+SELECT ime, prezime, MIN(datumrodj) FROM radnici
+
+# radik koji se preziva lazić
+SELECT * from radnici where prezime = "Lazic"  # where prezime Like "Lazic"
+
+# zenski radnici
+SELECT ime, prezime FROM radnici WHERE pol = 'Z';
+
+# prezimena anić i mikić
+SELECT ime, prezime FROM radnici where prezime IN("Anic","Mikic");
+
+# radnici rodjeni izmedju 1990 i 2000
+SELECT ime, prezime FROM radnici WHERE datumrodj BEETWEN '1990-01-01' AND '2000-12-31'
+
+# Iradnic počinje prezime sa A
+SELECT ime, prezime FROM radnici WHERE prezime LIKE "A%"
+
+# milan milanovic da se preziva petrovic
+SELECT * FROM radnici WHERE prezime = "Milanovic"
+UPDATE radnici SET prezime = "Petrovic" WHERE prezime = "Milanovic" AND ime="Milan"
+SELECT * FROM radnici WHERE prezime = "Milanovic"
+
+#moze i ovako bolji način
+SELECT radnik_id FROM radnici WHERE ime = "Milan" AND prezime = "Milanovic"
+UPDATE radnici set prezime = "Petrovic" WHERE radnik_id = 5
+SELECT radnik_id FROM radnici WHERE ime = "Milan" AND prezime = "Milanovic"
+
+#obrisati lazu lazić
+SELECT radnik_id FROM radnici where prezime = "Lazic" and ime = "Laza"
+SELECT * FROM radnici WHERE radnik_id = 3
+DELETE FROM radnici WHERE radnik_id = 3
+SELECT * FROM radnici WHERE radnik_id = 3 #ako ne postoji obrisano je
+
+# velika slova PREZIMENA rastuće sortirano
+SELECT concat(UPPER(ime)," ",UPPER(prezime)) AS Radnik FROM radnici ORDER BY prezime;
+
+#ime prezime i mesec rodjenja (slovima)
+SELECT ime, prezime, DATE_FORMAT(datumrodj, '%M') AS MesecRodjenja FROM radnici ORDER BY prezime
+
+#broj randika u sektoru
+SELECT sektor_id, COUNT(*) AS broj_radnika
+FROM radnici
+GROUP BY sektor_id;
+
+#broj radnika sektora, ali da ima više od 1 radnika
+SELECT sektor_id, COUNT(*) AS broj_radnika FROM radnici GROUP BY sektor_id HAVING COUNT (*) > 1
+
+#info o sektoru koi imaju više od 1 muškog radnika
+SELECT sektor_id AS Sektor, COUNT(*) AS BrojRadnika FROM radnici GROUP BY sektor_id HAVING COUNT(pol="M") > 1
+
+#prosečne plate po sektorima i polovima
+SELECT sektor_id as sektor, pol as Pol, AVG(plata) as prosecnaPlata from radnici GROUP by sektor_id, pol order by AVG(plata)
+
+#Prikazati imena i prezimena radnika, njihove plate i plate uvećane za bonus # od 5000, kod radnika čija plata nakon dodatka bonusa ima iznos veci od 70000
+SELECT ime, prezime, plata, plata+5000 AS UvecanaPlata FROM `radnici` WHERE plata+5000 > 70000;
+
+#prvih 5 po datumu opadajuče
+SELECT ime, prezime FROM radnici ORDER BY datumrodj DESC LIMIT 5
+
+#prvih 5 najstarijih
+SELECT ime, prezime FROM radnici ORDER BY datumrodj LIMIT 5
+#može i
+SELECT ime AS Ime, prezime AS Prezime, datumrodj AS Datum FROM radnici order by datumrodj LIMIT 0,5
+
+#2,3,4.najstarijih
+SELECT ime, prezime FROM radnici ORDER BY datumrodj LIMIT 1,3
+
+#5 radnika sa najmanjim platama
+SELECT ime, prezime, plata FROM radnici ORDER BY plata ASC LIMIT 5
+
+#žene rodjene 1987
+SELECT ime, prezime, datumrodj FROM radnici WHERE pol = 'Z' AND datumrodj BETWEEN '1987-01-01' AND '1987-12-31' 
+
+####
+
+# operacija JOIN -povezivanje sve ili više tabela
+# SELECT klone TABELA A join b JOIN KLAUZUla
+# povezivanje se radi po zajedickojkoloni
+# unutrašne spajanje inner JOIN samo ono gde ima podudarnaja na obe strane, može da se gleda kao presek skupova, tj vraća zajedničke elemente po ključu
+SELECT radnici.ime, radnici.prezime, sektori.naziv FROM radnici inner JOIN sektori ON radnici.sektor_id = sektori.sektor_id;
+#sa alijasom
+SELECT r.ime, r.prezime, s.naziv FROM radnici as r inner JOIN sektori as s ON r.sektor_id = s.sektor_id;
+#using može ako su nazivi polja jednaki
+SELECT r.ime, r.prezime, s.naziv FROM radnici as r inner JOIN sektori as s USING(sektor_id);
+poredjenje Using(kolona) menja on jedan = dva
+
+#ime i prezime zajedno kao radnik + sektor,naziv kao sektor 
+SELECT CONCAT(r.ime, " ", r.prezime) AS Radnik, s.naziv AS Sektor FROM radnici AS r INNER JOIN sektori AS s USING(sektor_id)
+
+#imena i datumrojd i sektor, ime = M*
+SELECT r.ime AS Ime, r.datumrodj AS `Datum rodjenja`, s.naziv AS Sektor FROM radnici AS r INNER JOIN sektori AS s USING (sektor_id) where r.ime like "M%"
+
+#spoljni spojevI. levi, desni, puni
+#isto štio i unutrašnju + nepoklapanja
+#levi spoljašnji spoj - ide prvo kao kod inner join (strana više je prva), može da rezultira da leva (prva) nema poklanjae u desnoj (druga) tabeli.
+# ZA SVAKOG RANDIKA SEKTOR U KOJI RADI 
+SELECT r.*, s.naziv FROM radnici AS r LEFT JOIN sektori AS s ON r.sektor_id = s.sektor_id;
+
+#jos jedna randica
+INSERT INTO `radnici`(`radnik_id`, `ime`, `prezime`, `datumrodj`, `pol`, `plata`) VALUES (12, "Iva", "Ivic", '2002-05-05', 'Z', 105000)
+
+#desni spoj
+SELECT r.*, s.naziv FROM radnici AS r right JOIN sektori AS s ON r.sektor_id = s.sektor_id;
+

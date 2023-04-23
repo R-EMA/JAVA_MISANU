@@ -1,0 +1,84 @@
+package vozila;
+
+import teret.*;
+import generickiNiz.*;
+
+/**
+ * 
+ * @author emma
+ * 
+ * Zadatak 3 - klasa Vagon, nasleđuje vozilo
+ * Vagon je vozilo koje sadrži niz tereta. Stvara se prazan zadatog kapaciteta posle 
+ * čega se terete dodaju pojedinačno. Vučna sila vagona je 0. 
+ * Teksutalni opis je oblika V(ukTežina|teret, ... teret). * 
+ *
+ */
+public class Vagon extends Vozilo {
+	
+	private double kapacitetVagona; //izražen u tonama
+	Skup<Teret> tereti; 
+	private int brojac; //broji broj unetih tereta, koristi se za brisanje tereta kod koga je došlo do prekoračenja
+	
+	public Vagon(double t, double kapacitet) {
+		super(t);
+		super.vucnaSila = 0;
+		this.kapacitetVagona = kapacitet;
+		this.tereti = new Skup<Teret>();
+		this.brojac = 0;
+	}
+	
+	
+
+	public double getKapacitetVagona() {
+		return kapacitetVagona;
+	}
+
+
+
+	public void setKapacitetVagona(double kapacitetVagona) {
+		this.kapacitetVagona = kapacitetVagona;
+	}
+
+
+	public void addTeret(Teret t) {
+		try {
+			tereti.add(t);		
+			
+			if (this.ukupnaTezina() > this.kapacitetVagona)
+				throw new Exception();
+			brojac++;
+		}
+		catch(Exception e) {
+			System.out.println("Greška! Prekoračenje kapaciteta! Teret " + 
+								t.toString() + " m=" + t.tezinaTereta(t.zapremina()) + 
+								" je odbačen!");
+			tereti.remove(brojac);
+		}	
+	}
+	
+	@Override
+	public double ukupnaTezina() {
+		double tezina = this.tezinaVozila;
+		for(Teret t : this.tereti) {
+			tezina += t.tezinaTereta(t.zapremina());
+		}
+		return tezina;
+	}
+
+	@Override
+	public String toString() {
+		// opis vagona
+		int i = 0;
+		String opis = "V(" + this.ukupnaTezina() + " | ";
+		for(Teret t : this.tereti) {
+			opis += t.tezinaTereta(t.zapremina());
+			i++;
+			if(i < tereti.size())
+				opis += ", ";
+		}
+		opis += ")";
+		
+		return opis; 
+	}
+
+}

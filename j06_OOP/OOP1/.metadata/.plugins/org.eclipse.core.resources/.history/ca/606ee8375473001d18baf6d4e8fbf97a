@@ -1,0 +1,12 @@
+package demo;
+
+public class A {
+	
+	/* 
+	 * I - osnovna klasa
+	 */
+
+	public void info() {
+		System.out.println("Ovo je metod demo klase A");
+	}
+}

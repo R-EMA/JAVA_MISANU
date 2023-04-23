@@ -1,0 +1,284 @@
+Zadatak 1: Izdvojiti šifre, nazive i bodove predmeta ciji je broj bodova veci od prosecnog broja bodova svih predmeta.
+
+SELECT sifra, naziv, bodovi FROM predmet where bodovi >  (SELECT AVG(bodovi) FROM predmet)
+
+
+Zadatak 2: Za svaki predmet izracunati koliko studenata ga je položilo.
+SELECT id_predmeta, (SELECT COUNT(*) FROM ispit WHERE ispit.id_predmeta = predmet.id_predmeta AND ispit.ocena > 5) AS Polozilo FROM predmet
+
+SELECT predmet.naziv, COUNT(ispit.indeks) AS broj_polozenih FROM predmet LEFT JOIN ispit ON predmet.id_predmeta = ispit.id_predmeta AND ispit.ocena >= 6 GROUP BY predmet.naziv
+
+ 
+Zadatak 3: Izdvojiti nazive predmeta koje je položio student sa indeksom 20140022.
+
+SELECT predmet.naziv FROM predmet INNER JOIN ispit USING(id_predmeta) WHERE ispit.indeks = 20140022 AND ispit.ocena > 5
+
+# EXISTS vraca true - ako ima bar jedan pozitivan rezultat, povratnu vrednost iz uslova u naslovu, ako ima ispisuje prvi deo
+SELECT naziv FROM predmet WHERE EXISTS(SELECT * from ispit WHERE ispit.id_predmeta = predmet.id_predmeta AND ocena > 5 AND indeks = 20140022)
+(prikazaće se naziv predmeta tamo gde postoji polozen ispit od strane studenta sa indeksom 20140022)
+
+
+Zadatak 1. Za svakog studenta izdvojiti predmete koje je položio. Prikazati indeks, ime i prezime studenta,
+naziv predmeta i ocenu.
+SELECT dosije.indeks, dosije.ime, dosije.prezime, predmet.naziv, ispit.ocena FROM dosije INNER JOIN ispit USING(indeks) INNER JOIN predmet USING(id_predmeta) WHERE ispit.ocena > 5
+
+SELECT ispit.indeks, dosije.ime, dosije.prezime, predmet.naziv, ispit.ocena FROM ispit JOIN dosije ON ispit.indeks = dosije.indeks JOIN predmet ON ispit.id_predmeta = predmet.id_predmeta WHERE ispit.ocena >= 6 ORDER BY ispit.indeks, predmet.naziv
+
+SELECT dosije.indeks, dosije.ime, dosije.prezime, predmet.naziv, ispit.ocena FROM dosije INNER JOIN ispit ON dosije.indeks = ispit.indeks INNER JOIN predmet ON ispit.id_predmeta = predmet.id_predmeta WHERE ocena > 5
+
+
+Zadatak 2. Izdvojiti podatke o studentima cije prezime sadrži malo slovo o na 5. poziciji i završava na
+malo slovo c i koji imaju ocenu 6, 8 ili 10 iz predmeta cija je šifra u intervalu [M105, P103].
+
+SELECT dosije.*, predmet.naziv, ispit.ocena FROM dosije INNER JOIN ispit ON dosije.indeks = ispit.indeks INNER JOIN predmet ON predmet.id_predmeta = ispit.id_predmeta WHERE dosije.prezime LIKE '____o%c'AND ispit.ocena IN(6,8,10) AND predmet.sifra BETWEEN 'M105' AND 'P100'
+
+######### primeri sa datumima i vremenima
+Zadatak 1. Za današnji datum izracunati:
+- koji je dan u godini;
+- u kojoj je nedelji u godini;
+- koji je dan u nedelji; # 1-7, ned=1, sub=7
+- ime dana;
+- ime meseca.
+
+SELECT dayofyear(CURRENT_DATE) AS `Dan u godini`, week(CURRENT_DATE) AS `Nedelja u godini`, dayofweek(CURRENT_DATE) AS `Dan u nedelji`), dayname(CURRENT_DATE) AS `Ime dana`, monthname(CURRENT_DATE) AS `Naziv meseca`
+
+
+
+Zadatak 2. Izdvojiti ispite koji su održani posle 28. januara 2015. godine.
+SELECT * FROM ispit WHERE datum_ispita > '2015-01-19'
+
+SELECT * from ispit WHERE datum_ispita > date('2015-01-19')
+
+SELECT DATE_FORMAT(datum_ispita, '%d-%m-%Y') AS Datum FROM ispit WHERE datum_ispita > '2015-01-01' AND datum_ispita <= CURDATE();
+
+
+
+
+Zadatak 3. Pronaci ispite koji su održani u poslednjih 88 meseci.
+
+SELECT * FROM ispit WHERE datum_ispita > DATE_SUB(NOW(),INTERVAL 88 MONTH)
+
+date_sub od trenutnog datuma (prvi parametar), oduzima zadati broj meseci (interval)
+
+
+
+
+1. Iz baze izbrisati podatke o studentima rodenim 1990. godine.
+DELETE FROM dosije WHERE YEAR(dosije.datum_rodjenja) = 1990
+
+
+2. Iz baze izbrisati ispite u kojima je polagan predmet Programiranje 2 ili predmet koji ima 15 bodova.
+DELETE FROM ispit WHERE id_predmeta=(SELECT id_predmeta from predmet WHERE naziv='Programiranje 2' OR bodovi = 15)
+
+
+3. Svim predmetima cija šifra pocinje sa P povecati broj bodova za 20%. 
+
+UPDATE `predmet` SET `bodovi`=ROUND(bodovi*1.2) WHERE sifra LIKE 'P%';
+
+UPDATE predmet set bodovi = bodovi * 1.2 WHERE sifra LIKE 'P%'
+
+# ovo samo izdvaja
+SELECT *, ROUND(bodovi*1.2) FROM predmet WHERE sifra LIKE 'P%'
+
+
+
+# procedure - ugrađene procedure
+- deo koda koji se često koristi smešta se u procedure
+- brže se izvršava u odnosu na standardne upite pa je dobra praksa da se komplikovani upiti smeštaju u procedure
+- procedure nemaju return
+
+-opšta sintaksa
+DELIMITER //
+CREATE PROCEDURE nazivProcedure()
+
+#može se dodati telo procedure
+#blok naredbi BEGIN...END
+BEGIN
+
+END
+DELIMITER ;
+
+# Ssve vrednosti tabele t (bazaa)
+DELIMITER //
+CREATE PROCEDURE p1()
+BEGIN
+    SELECT * FROM t; #ovde obavezno tačka-zarez na kraju
+END //
+DELIMITER ;
+
+- na početku umesto // može da se koristi $$. // koristi se umesto tačka-zareza i označava da nije kraj naredbe, tačka zarez = kraj naredbe
+- klik na go izvršava se naredba
+
+# poziv procedure
+CALL naziv procedure
+- ovde
+CALL p1;
+
+isto to aa na drugi naačin
+
+DELIMITER $$ 
+CREATE PROCEDURE p1() 
+    BEGIN SELECT * FROM t; 
+END $$ 
+DELIMITER ;
+
+delimiter sprečava da se izvršava linija po liniju kod kod kreiranja procedure
+procedure se izvršavaju kroz mrežni saobraćaj
+
+procedure mogu da prihvataju parametee
+DELIMITER //
+CREATE PROCEDURE p2(IN p int)
+#ima jedan ulazni IN parametar naziva p INT tipa
+BEGIN
+    SET @X = p; # x  je nova promenljiva
+END //
+DELIMITER ;
+
+#poziv procedure sa parametrom
+CALL p2(12345);
+SELECT @x;
+
+x je lokalnog tipa i može se da se koristi samo pri izvršavanju procesdure, tj neposredno po pozivu iste.
+
+# vratiti covu sa tim godinama
+DELIMITER //
+CREATE PROCEDURE p4(IN p int)
+#ima jedan ulazni IN parametar naziva p INT tipa
+BEGIN
+    SET @x = p;
+END //
+DELIMITER ;
+
+#poziv procedure sa parametrom
+CALL p4(1999);
+SELECT * FROM test2 WHERE test2.god = @x;
+
+DELIMITER // 
+CREATE PROCEDURE unesiGod2(IN year INT) 
+BEGIN 
+	SELECT * FROM test2 WHERE god = year; 
+END // 
+DELIMITER ; 
+CALL unesiGod(1999);
+
+
+brisanje procedure
+DROP PROCEDURE IF EXISTS naziv procedure //
+može da se ubaci ispred CREATE PROCEDURE, unutar demiliter-a
+
+sa brisanjem
+DELIMITER // 
+drop PROCEDURE if EXISTS proverapogodini // 
+CREATE PROCEDURE proverapogodini(IN p year) 
+BEGIN 
+    SELECT * FROM test2 WHERE god = p; # ako ne radi, radiće sa: god LIKE p
+END // 
+DELIMITER ;
+
+
+# out parametar (izlazni parametar)
+DELIMITER //
+DROP PROCEDURE IF EXISTS p3 //
+CREATE PROCEDURE p3(OUT p int)
+BEGIN
+    SET p = 10;
+END //
+DELIMITER ;
+
+#poziv procedure sa izlaznim parametrom
+CALL p3(@t); # t - promenljiva koja prihvata izlazni parametar
+SELECT @t; # 10
+
+#procedura koja ispisuje trenutni datum i slučajnu vrednost iz tabele t
+#vraća vrednosti
+
+DELIMITER //
+DROP PROCEDURE IF EXISTS p4 //
+CREATE PROCEDURE p4(OUT d date, OUT s double)
+BEGIN
+    SET d = CURRENT_DATE;
+    SET s = RAND();
+END //
+DELIMITER ;
+
+CALL p4(@datum, @broj);
+SELECT @datum AS `Današnji datum`, @broj AS `Slucajni broj`;
+
+
+# declare naredba - definisanje lokalne promenljive procedure
+DELIMITER //
+DROP PROCEDURE IF EXISTS p8 //
+CREATE PROCEDURE p8()
+BEGIN
+    DECLARE a int;  # deklaracija promenljive: DECLARE promenljiva TIP
+    DECLARE b int;
+    # inicijalizacija
+    SET a = 5;
+    SET b = 5;
+    INSERT INTO t VALUES(a); # ubacuje vrednost od a u tabelu t
+    SELECT s1 * a FROM t WHERE s1 >= b; #25
+END //    
+DELIMITER ;
+
+CALL p8()
+
+#DEFAULT klauzula - uvodjenje novih promenljivih, dodea počtn, defalt vrednosti
+
+DELIMITER //
+DROP PROCEDURE IF EXISTS p9 //
+CREATE PROCEDURE p9()
+BEGIN
+    DECLARE a, b int DEFAULT 10;
+    # inicijalizacija
+    SET a = 5;
+    SET b = 5;
+    INSERT INTO t VALUES(a); # ubacuje vrednost od a u tabelu t
+    SELECT s1 * a FROM t WHERE s1 >= b; #25
+END //    
+DELIMITER ;
+
+CALL p9()
+
+DEFAULT može da sekoristi kao labava zamena za konstante.
+
+
+procedure se ne mogu preklapati, moraju imati različite nazive
+nazivi nisu case sensitivni
+
+
+primer: procedure za racunanje površine kruga
+DELIMITER //
+DROP PROCEDURE IF EXISTS povrsinaKruga //
+CREATE PROCEDURE povrsinaKruga(IN r double)
+BEGIN
+    SELECT r AS poluprecnik, (r*r*PI()) AS povrsina;
+END //    
+DELIMITER ;
+
+CALL povrsinaKruga(10);
+
+#konačna varijanta, prof.
+DELIMITER //
+DROP PROCEDURE IF EXISTS povrsinaKruga2 //
+CREATE PROCEDURE povrsinaKruga2(IN r double, OUT p double)
+BEGIN
+    SET p = r*r*PI();
+END //    
+DELIMITER ;
+
+CALL povrsinaKruga2(10,@p);
+SELECT @p AS `Povrsina kruga`;
+
+#izracunavanje povrsine pravouganika
+DELIMITER //
+DROP PROCEDURE IF EXISTS povrsinaPravougaonika //
+CREATE PROCEDURE povrsinaPravougaonika(IN a double, IN b double, OUT p double)
+BEGIN
+    SET p = a*b;
+END //    
+DELIMITER ;
+
+CALL povrsinaPravougaonika(10,3, @p);
+SELECT @p AS `Povrsina pravouganika`;
+
+

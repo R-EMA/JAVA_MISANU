@@ -1,0 +1,20 @@
+package paket;
+
+public class Main {
+
+	public static void main(String[] args) {
+		// objekti generičke klase sa dva parametra
+		
+		// integer, string
+		A<Integer, String> obj1 = new A<Integer, String>(100,"Java");
+		obj1.prikaziTip();
+		
+		int vred1 = obj1.getObjT();
+		String vred2 = obj1.getObjV();
+		System.out.println("T vrednost: " + vred1);
+		System.out.println("V vrednost: " + vred2);
+
+		
+	}
+
+}

@@ -1,0 +1,6 @@
+INDEX VERSION 1.131+/home/emma/eclipse-workspace/Niti/.metadata/.plugins/org.eclipse.jdt.core
+3161717035.index
+1865797976.index
+2024174635.index
+479025284.index
+262227133.index

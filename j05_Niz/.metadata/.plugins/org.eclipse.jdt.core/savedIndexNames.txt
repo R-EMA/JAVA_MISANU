@@ -1,0 +1,5 @@
+INDEX VERSION 1.131+/home/ema/eclipse-workspaces/eclipse-vezbe/.metadata/.plugins/org.eclipse.jdt.core
+1865797976.index
+2829668876.index
+689522098.index
+2818476146.index

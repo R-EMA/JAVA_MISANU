@@ -1,0 +1,22 @@
+package paket;
+
+/**
+ * 
+ * @author emma
+ * 
+ * Zadatak 2.
+ * Napisati program koji generiše i ispisuje pet slučajna broja celobrojnog tipa.
+ *
+ */
+
+public class SlucajanBroj {
+
+	public static void main(String[] args) {
+		
+		// Način 1. metod Math.random()		
+		for(int i=0; i<5; i++)
+			System.out.print( (int) Math.floor(Math.random()*20) + " ");
+
+	}
+
+}

@@ -1,0 +1,5 @@
+package vozic;
+
+public abstract class Teret {
+
+}

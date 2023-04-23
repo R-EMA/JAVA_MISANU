@@ -1,0 +1,39 @@
+package dan1;
+
+import java.text.DecimalFormat;
+import java.util.Scanner;
+
+public class Primer8 {
+
+	public static void main(String[] args) {
+		// recipročno za parne, suprotno kvadrati
+
+		DecimalFormat df = new DecimalFormat("####.###");
+		Scanner sc = new Scanner(System.in);
+		System.out.print("Unesite broj članova niza: ");
+		int n = sc.nextInt();
+		int niz[] = new int[n];
+		float y;
+
+		// punjenje niza član po član
+		System.out.println("Unesite " + n + " prirodnih brojeva.");
+		for (int i = 0; i < n; i++) {
+			System.out.print("niz[" + i + "] = ");
+			niz[i] = sc.nextInt();
+		}
+
+		// obrada i prikaz rezultata
+		for (int i = 0; i < n; i++) {
+			if (niz[i] % 2 == 0)
+				y = 1 / niz[i];
+			else
+				y = niz[i] * niz[i];
+			System.out.println(x[i] + " => " + df.format(niz[i]));
+
+		}
+		
+		sc.close();
+
+	}
+
+}

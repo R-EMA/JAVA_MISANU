@@ -1,0 +1,7 @@
+package predmeti;
+
+public interface OsobinePredmeta {
+	
+	public double izracunajZapreminu(); //racunanje zapremine tela
+
+}

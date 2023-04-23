@@ -1,0 +1,30 @@
+package paket;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class MainLista {
+
+	public static void main(String[] args) {
+		// Interfejs <T> = new ArrayList<T>();
+		// <T> = tip promenljive
+		
+		List<Integer> kolArr = new ArrayList<Integer>();
+		
+		//add() - dodaje vrednosti
+		kolArr.add(5);
+		kolArr.add(4);
+		kolArr.add(9);
+		kolArr.add(7);
+		
+		//kolekcija može i ovako da se štampa kao primitivni tip
+		System.out.println(kolArr); //rez: [5,4,9,7]
+		
+		for(int clan : kolArr)
+			System.out.print(clan + "  ");
+		
+		
+
+	}
+
+}

@@ -1,0 +1,23 @@
+package predmeti;
+
+/**
+ * 
+ * @author emma
+ * 
+ * Zadatak 2 - klasa Predmet
+ * Predmet ima specifičnu težinu i jednoslovnu oznaku vrste predmeta.  * 
+ *
+ */
+
+public class Predmet {
+
+	protected double ro; //specifična težina predmeta
+	protected char oznakaPredmeta; // oznaka predmeta
+	/* 
+	 * oznake:
+	 * 
+	 * S = sfera
+	 * K = kvadar
+	 * 
+	 */
+}

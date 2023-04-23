@@ -1,0 +1,394 @@
+# nastavak procedura, uslovi u procedurama
+# IF 
+DELIMITER //
+CREATE PROCEDURE p100(IN parametar1 INT)
+BEGIN
+    DECLARE variable1 INT; # deklaracija promeljive
+    SET variable1 = parametar1 + 1; # inicijalizacija, za 1 veće od parametra
+    #if slično kao kod jave
+    IF variable1 = 0 THEN
+    INSERT INTO t VALUES(20);
+    END IF;
+    IF parametar1 = 0 THEN
+    UPDATE t SET  s1 = s1 + 1;
+    ELSE
+    UPDATE t SET s1 = s1 + 2;
+    END IF;
+END//
+DELIMITER ;
+
+CALL p100(0);
+SELECT * from t;
+
+# CASE
+DELIMITER //
+CREATE PROCEDURE p101(IN parametar1 INT)
+BEGIN
+DECLARE variable1 INT;
+SET variable1 = parametar1 + 1;
+# case (switch)
+CASE variable1
+WHEN 0 THEN INSERT INTO t VALUES(17);
+WHEN 1 THEN INSERT INTO t VALUES(18);
+ELSE INSERT INTO t VALUES(19);
+END CASE;
+
+END //
+DELIMITER ;
+
+CALL p101(1); # dodaje 19 jer je variable1 = 1 +1 = 2
+SELECT * FROM t;
+
+#while
+# u tabelu t dodaje redove sa vrednostima 0,1,2,3,4 (5 novih reda)
+DELIMITER //
+CREATE PROCEDURE p102()
+BEGIN
+DECLARE v INT; #brojac
+SET v = 0; #inicijalizacija brojaca
+WHILE v < 5 DO
+INSERT INTO t VALUES(v);
+SET v = v + 1; #inkrement, promena vrednosti brojača, ovde za +1
+END WHILE;
+END //
+DELIMITER ;
+
+CALL p102();
+SELECT * FROM t;
+
+
+# funkcije
+DELIMITER //
+CREATE FUNCTION obimKruga(r double) RETURNS double # ulaz promenljiva r tipa double, vraća vrednost tipa double
+DETERMINISTIC # fja je deterministička ako vraća isti tip vrednosti za isti skup vrednosti. cilj je da obriše neku vrednost. ne može da se koristi kao rekurzija; mora DETERMINISTIC pri kreiranju funkcije
+BEGIN
+DECLARE obim DOUBLE;
+SET obim = 2*r*PI();
+RETURN obim; # vraćanje vrednosti
+END //
+DELIMITER ;
+
+# poziv funkcije ide u upit
+SELECT obimKruga(10);
+
+# DOMAĆI. za razmišljanje i istraživanje SQL
+Napisati funkciju za racunanje faktorijela rekurzivno.
+
+
+# TRIGERI
+trigeri su objekti - uskladištene procedure, vezani za tabelu, automatski se aktiviraju kada se desi neki događaj. insert, delete, update ,,,, moraju da se ukombinuju sa vremenima. ne može da se izbriše ili ažurira ako ne postoji.
+ne mogu da se koriste u select kao procedure i funkcije
+vreme izvršenja može biti BEFORE, AFTER 
+CREATE TRIGGER naziv
+vreme izvršenje trigera: BEFORE, AFTER
+dogadjaj: INSERT, UPDATE, DELETE
+FOR EACH ROW za svaki zapis
+OLD, NEW za INSERT može samo NEW.ime_polje, za DELETE samo OLD.ime_polje
+brisanje trigera DROP TRIGGER triger
+prikaz trigera SHOW TRIGGERS za sve dostupne trigere
+
+# triger koji pre promene vrednosti tabele product da se zapiše stara i nova cena -> tabela log_product. pamti cenu pre promene
+DELIMITER //
+CREATE TRIGGER before_update_products
+BEFORE # vreme izvršenja trigera
+UPDATE # pre promene
+ON products # prati dešavanja u tabeli products
+FOR EACH ROW
+# sledi šta triger radi kada se desi
+BEGIN
+INSERT INTO log_products(name, old_price, new_price, created_at)
+VALUES(old.name, old.old_price, new.old_price, now()); # prepisuje name i old.price kao stare vrednosti iz products, new.price uzima posle/u toku update iz update products, now() zapisuje trenutno vreme promene
+
+END //
+DELIMITER ;
+
+ispravan kod
+DELIMITER // 
+CREATE TRIGGER before_update_products BEFORE UPDATE ON products for EACH ROW 
+BEGIN INSERT INTO log_products(name, old_price, new_price, created_at) VALUES (old.name, old.price, new.price, now()); 
+END // 
+DELIMITER ;
+
+sada kada se promeni cena u tabel products upisaće se nove vrednosti u log_products
+update products set price = 10 where id = 1
+dodaje se novo u log_products
+
+# proširen primer, provera nove cene i njeno ograničenje.
+nrp. ako je nova cena veča od 10, nova cena će biti 10
+ako je manja od 10 biće prihvaćena i unete u products
+DELIMITER // 
+CREATE TRIGGER before_update_products_ograniceno BEFORE UPDATE ON products for EACH ROW 
+BEGIN 
+IF new.price > 10 THEN
+SET new.price = 10;
+INSERT INTO log_products(name, old_price, new_price, created_at) VALUES (old.name, old.price, new.price, now()); 
+
+ELSE
+INSERT INTO log_products(name, old_price, new_price, created_at) VALUES (old.name, old.price, new.price, now()); 
+END IF;
+END // 
+DELIMITER ;
+
+# vezba. Za dodati novi proizvod ograniciti cenu na 10
+DELIMITER // 
+CREATE TRIGGER novo BEFORE INSERT ON products for EACH ROW 
+BEGIN 
+IF new.price > 10 THEN
+SET new.price = 10;
+INSERT INTO log_products(name, old_price, new_price, created_at) VALUES (new.name, 0.0, new.price, now()); 
+ELSE
+INSERT INTO log_products(name, old_price, new_price, created_at) VALUES (new.name, 0.0, new.price, now()); 
+END IF;
+END // 
+DELIMITER ;
+
+INSERT INTO `products`(`id`, `name`, `price`, `category_id`, `quantity_aviable`) VALUES (2,'cdf',2.0,5,10)
+
+
+drugo rešenje
+DELIMITER // CREATE TRIGGER ogranicena_cena BEFORE INSERT ON products FOR EACH ROW BEGIN IF NEW.price > 10 THEN SET NEW.price = 10; END IF; END // DELIMITER ;
+
+
+
+# vezbe zadaci
+1. procedura, paran broj
+DELIMITER // CREATE PROCEDURE dalijeparan(IN broj int, OUT rezultat varchar(10)) BEGIN if(broj MOD 2 = 0) THEN SET rezultat = "paran"; ELSE SET rezultat = "neparan"; end if; END // DELIMITER ;
+
+CALL dalijeparan(2, @rezultat); SELECT @rezultat
+
+2. Написати процедуру која испитује да ли је бој паран и дељив бројем 3.
+DELIMITER //
+CREATE PROCEDURE par_3(IN broj INT, OUT izlaz VARCHAR(50))
+BEGIN
+IF (broj % 2 = 0 AND broj % 3 = 0) then
+	SET izlaz = CONCAT(broj, " je paran i deljiv brojem 3");
+ELSE
+	SET izlaz = CONCAT(broj, " nije paran i/ili nije deljiv sa 3");
+end if;
+END //
+DELIMITER ;
+
+CALL par_3(20,@izlaz);
+SELECT @izlaz;
+
+drugo rešenje, prof 
+DELIMITER // DROP PROCEDURE IF EXISTS zadatak2 // CREATE PROCEDURE zadatak2(in broj int, OUT rezultat varchar(100)) BEGIN IF(broj mod 6 = 0 ) THEN SET rezultat = "deljiv brojevima 2 i 3"; else SET rezultat = "Nije deljiv"; END if; END // delimiter ;
+
+CALL zadatak2(18, @rezultat); SELECT @rezultat
+
+3. Написати процедуру која исписује све колоне са задатим именом за претрагу. Нпр. све особе са
+именом Никола.
+DELIMITER //
+CREATE PROCEDURE find_name(IN ime VARCHAR(30))
+BEGIN
+SELECT * FROM test2 WHERE test2.ime = ime;
+END //
+DELIMITER ;
+
+CALL find_name("Mika"); #nije u tabeli bilo nikole pa je postao mika
+
+
+4. Написати функцију која израчунава површину квадра
+DELIMITER // CREATE FUNCTION zadatak4(a double, b double, c double) RETURNS double DETERMINISTIC BEGIN DECLARE povrsina double; SET povrsina = 2*(a*b+a*c+b*c); RETURN povrsina; END // DELIMITER ; SELECT zadatak4(2,2,2)
+
+5. Написати функцију која враћа просечан број година особа оз табеле Osobe.
+
+tabela za peti i slične zadatke
+CREATE TABLE IF NOT EXISTS osobe ( id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, ime VARCHAR(50) NOT NULL, prezime VARCHAR(50) NOT NULL, datum_rodjenja DATE NOT NULL, status VARCHAR(20) ) ENGINE=InnoDB; INSERT INTO osobe (ime, prezime, datum_rodjenja) VALUES ('Marko', 'Marković', '1990-01-15'), ('Ana', 'Anić', '2005-02-10'), ('Petar', 'Petrović', '1985-06-23'), ('Jelena', 'Janković', '1998-11-07'), ('Nikola', 'Nikolić', '1975-04-18');
+
+rešenje
+DELIMITER // 
+CREATE FUNCTION prosecne_godine() RETURNS DECIMAL(10,2) 
+DETERMINISTIC
+BEGIN 
+DECLARE avg_godine DECIMAL(10,2); 
+SELECT AVG(YEAR(CURDATE()) - YEAR(datum_rodjenja)) INTO avg_godine FROM osobe; 
+RETURN avg_godine; 
+END // 
+DELIMITER ;
+
+SELECT prosecne_godine();
+
+6. Написати тригер који у односу на број година особе исписује статус ("Пунолетан", "Малолетан"), 
+
+create table osobe(
+    osobaid int primary key auto_increment,
+    ime varchar(45) default null,
+    prezime varchar(45) default null,
+    godine int(3) default
+);
+
+DELIMITER // CREATE TRIGGER status_osobe BEFORE INSERT ON osobe FOR EACH ROW BEGIN 
+IF NEW.godine >= 18 THEN SET NEW.status = 'Punoletan'; ELSE SET NEW.status = 'Maloletan'; END IF; END // DELIMITER ;
+
+INSERT INTO osobe (ime, prezime, godine) VALUES ('Ana', 'Anic', 25); INSERT INTO osobe (ime, prezime, godine) VALUES ('Bojan', 'Bojanic', 17); INSERT INTO osobe (ime, prezime, godine) VALUES ('Ceca', 'Raznatatovic', 33);
+
+
+
+
+7. Након уноса податка у табели Osobe(osobaID, ime, prezime, godine, status) исписати вредности у
+колонама brojPunoletnih и brojMaloletnih у табели Podaci. 
+DELIMITER // CREATE TRIGGER update_podaci AFTER INSERT ON osobe FOR EACH ROW BEGIN INSERT INTO podaci (brojMaloletnih, brojPunoletnih) SELECT (SELECT count(*) FROM osobe WHERE status = 'PUNOLETAN') AS broj_punoletnih, (SELECT count(*) FROM osobe WHERE status = 'MALOLETAN') AS broj_maloletnih FROM osobe LIMIT 1; END // DELIMITER ;
+
+DELIMITER // CREATE TRIGGER brojPoStatusu AFTER INSERT ON osobe for EACH ROW BEGIN 
+INSERT INTO podaci(brojMaloletnih, brojPunoletnih) VALUES( (SELECT COUNT(osobe.osobaId) FROM osobe WHERE osobe.godine <18), (SELECT COUNT(osobe.osobaId) FROM osobe WHERE osobe.godine >=18) ); END // DELIMITER ;
+
+
+PREBROJAVANJE
+SELECT SUM( CASE status WHEN "Maloletan" THEN 1 ELSE 0 END) AS M, SUM( CASE status WHEN "Punoletan" THEN 1 ELSE 0 END) AS P FROM osobe;
+ostali zadaci su za domaci,
+
+
+#### DOMACI
+
+0. FAKTORIJEL, REKURZIJA
+DROP PROCEDURE IF EXISTS find_fact;
+DROP PROCEDURE IF EXISTS factorial;
+ 
+DELIMITER $$
+CREATE PROCEDURE find_fact(IN n INT)
+BEGIN
+    SET @@GLOBAL.max_sp_recursion_depth = 255;
+    SET @@session.max_sp_recursion_depth = 255;
+  
+    CALL factorial(n,@fact);
+     
+    SELECT @fact;
+END
+$$
+ 
+DELIMITER $$
+CREATE PROCEDURE factorial(IN n INT,OUT fact INT)
+BEGIN
+    IF n = 1 THEN
+        SET fact := 1;
+    ELSE
+        CALL factorial(n-1,fact);
+        SET fact := n * fact;
+    END IF;
+END
+$$
+
+CALL find_fact(5);
+
+ne dozvoljava rekurzivne funkcije i ovo je jedva proslo
+
+DRUGI BOLJI NACIN
+UBACITI U DELIMITER I DODATI DETERMISTIC
+create function FactorialR (n int) returns int
+begin
+    declare resultado BIGint default 1;
+    DECLARE m int DEFAuLT  1;
+    
+loop_label:  LOOP
+      IF  m = n THEN 
+          LEAVE  loop_label;
+      END  IF;
+            
+      SET  m = m + 1;
+      set resultado=resultado*m;
+  END LOOP;
+ return resultado;
+ end
+
+SELECT FactorialR(4)
+
+8. Након aжурирања податка у табели Osobe(osobaID, ime, prezime, godine, status) исписати
+вредности у колонама brojPunoletnih и brojMaloletnih у табели Podaci.
+DELIMITER // 
+CREATE TRIGGER brojStatus_update AFTER UPDATE ON osobe for EACH ROW 
+BEGIN 
+INSERT INTO podaci(brojMaloletnih, brojPunoletnih) VALUES( 
+    (SELECT COUNT(osobe.osobaId) FROM osobe WHERE osobe.godine <18), 
+    (SELECT COUNT(osobe.osobaId) FROM osobe WHERE osobe.godine >=18) ); 
+END // 
+DELIMITER ;
+
+UPDATE `osobe` SET `ime`='Kremenko',`prezime`='Katić',`godine`=7 WHERE osobaId = 1
+
+prepravljena samo jedna rec u odnosu na sedmi.
+
+9. Написати тригер који исписује укупан број особа са годином рођења између 1985 - 1995.
+baza2
+
+# 9. Написати тригер који исписује укупан број особа са годином рођења између 1985 - 1995.
+# primenjuje se nad radnicima jer ima datum rodjenja
+# posle azuriranja jer nije specificirano
+# ne dozvoljava prikza podataka pa to radi procedura
+DELIMITER // 
+drop trigger if exists godiste //
+CREATE TRIGGER godiste after update ON radnici for EACH ROW 
+BEGIN 	
+	INSERT INTO poruke(god85_95) SELECT COUNT(datumrodj) FROM radnici WHERE year(datumrodj) BETWEEN 1985 and 1995;
+END // 
+DELIMITER ;
+
+update radnici set plata = 150000 where radnik_id = 8;
+SELECT god85_95 FROM poruke;
+
+10.10. Написати тригер који исписује број особа које имају непаран број година.
+DELIMITER // 
+drop trigger if exists neparneGodine //
+CREATE TRIGGER neparneGodine after INSERT ON osobe for EACH ROW 
+BEGIN 	
+	INSERT INTO poruke(nepar) SELECT COUNT(*) FROM osobe WHERE godine MOD 2 <> 0;
+END // 
+DELIMITER ;
+
+INSERT INTO `osobe`(`ime`, `prezime`, `godine`) VALUES ('Vesli','Krašer',15)
+SELECT nepar FROM poruke;
+
+
+------ osobe -> podaci
+1. pri unosu,after, belezi koliko je punoletnih/maloletnih, koliko je rodjeno 1985-1995 god i koliko ima osoba sa neparnim brojem godina
+DELIMITER //
+DROP TRIGGER IF EXISTS unos1 //
+CREATE TRIGGER unos1 AFTER INSERT ON osobe FOR EACH ROW
+BEGIN
+	INSERT INTO podaci(brojMaloletnih, brojPunoletnih, brojRodjenih1985do1995,neparanBrojGodina) 
+    VALUES ((SELECT COUNT(godine) FROM osobe WHERE godine < 18), 
+            (SELECT COUNT(godine) FROM osobe WHERE godine > 17), 
+            (SELECT COUNT(datumRodjenja) FROM osobe WHERE YEAR(datumRodjenja) BETWEEN 1985 AND 1995), 
+            (SELECT COUNT(godine) FROM osobe WHERE godine MOD 2 != 0)); 
+END //
+DELIMITER ;
+
+INSERT INTO osobe(ime,prezime,datumRodjenja,godine,status) VALUES
+("Petra","Perić",'1985-01-05',40,'punoletan'), ("Jovana","Jovanovic",'2010-05-05',12,'maloletan'),
+("Lazar","Lelic",'2008-07-28',14,'maloletan');
+
+SELECT * FROM podaci;
+
+2. unos before - racuna godine i status / after - prebrojava (prethodni triger)
+DELIMITER //
+DROP TRIGGER IF EXISTS unos1 //
+DROP TRIGGER IF EXISTS dopuna //
+CREATE TRIGGER dopuna BEFORE INSERT ON osobe FOR EACH ROW
+BEGIN
+	SET new.godine = YEAR(CURRENT_DATE) - YEAR(new.datumRodjenja);
+    IF new.godine > 17 THEN
+    	SET new.status = "punoletan";
+	ELSE
+    	SET new.status = "maloletan";
+	END IF;
+END //
+
+CREATE TRIGGER unos1 AFTER INSERT ON osobe FOR EACH ROW
+BEGIN
+	   
+	INSERT INTO podaci(brojMaloletnih, brojPunoletnih, brojRodjenih1985do1995,neparanBrojGodina) 
+    VALUES ((SELECT COUNT(godine) FROM osobe WHERE godine < 18), 
+            (SELECT COUNT(godine) FROM osobe WHERE godine > 17), 
+            (SELECT COUNT(datumRodjenja) FROM osobe WHERE YEAR(datumRodjenja) BETWEEN 1985 AND 1995), 
+            (SELECT COUNT(godine) FROM osobe WHERE godine MOD 2 != 0)); 
+END //
+DELIMITER ;
+
+INSERT INTO osobe(ime,prezime,datumRodjenja) VALUES
+("Petra","Perkić",'1985-01-05'), ("Jovana","Jovankovic",'1993-05-05'),
+("Mira","Mirić",'1991-07-28');
+
+SELECT * FROM podaci;
+
+
+

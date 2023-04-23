@@ -1,0 +1,37 @@
+package p1;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Iterator;
+
+public class Main {
+
+	public static void main(String[] args) {
+		
+		String imena[] = {"Mika", "Žika", "Ana", "Lana", "Hana", "Una"};
+		
+		List<String> listaImena = new ArrayList<String>();
+		
+		// niz -> kolekcija
+		for(String s : imena) {
+			listaImena.add(s);
+		}
+		System.out.println(listaImena);
+		
+		//brisanje
+		String imenaZaBrisanje[] = {"Mika", "Lana", "Hana"};
+		List<String> listaImenaZaBrisanje = new ArrayList<String>();
+		for(String s : imenaZaBrisanje) {
+			listaImenaZaBrisanje.add(s);
+		}
+		System.out.println(listaImenaZaBrisanje);
+		
+		//kreiranje iteratora kolekcije i štampanje iste pomoću iteratora
+		Iterator<String> itrString = listaImena.iterator(); // iterator liste listaImena
+		System.out.println("Štampanje elemenata liste primenom iteratora");
+		while(itrString.hasNext()) 
+			System.out.println(itrString.next());
+		
+	}
+
+}

@@ -1,0 +1,90 @@
+package vozila;
+
+import generickiNiz.*;
+
+/**
+ * 
+ * @author emma
+ * 
+ * Zadatak 3 - klasa Voz, kao skup vozila (sa teretom), koristi Vagon (vagon koristi Teret)
+ * Voz se sastoji od niza vozila. 
+ * Stvara se prazan zadatog kapaciteta posle čega se 
+ * vozila dodaju pojedinačno(greška je ako se voz preoptereti, tj. ako ukupna težina 
+ * svih vozila i tereta premaši ukupnu vučnu silu vozila u vozu). 
+ * Može da se dohvati broj vozila u vozu, da se proveri da li bi se voz preopteretio 
+ * priključivanjem zadatog vozila i da se sastavi tekstualni opis voza koji sadrži 
+ * tekstualne opise sadržanih vozila (jedno vozilo po redu). 
+ *
+ */
+public class Voz {
+	
+	//private double kapacitetVoza; //izražen u tonama
+	Skup<Vagon> vagoni = new Skup<Vagon>(); 
+	Lokomotiva cira = new Lokomotiva(1500, 100);
+	private static int brojac = 0; //broji broj priključenih vagona
+	private static double popunjenostKapaciteta = 0; // trenutna popunjenost voza
+	
+	public Voz() {
+		
+	}
+	
+	
+	
+/*
+	public double getKapacitetVoza() {
+		return kapacitetVagona;
+	}
+	public void setKapacitetVoza(double kapacitetVagona) {
+		this.kapacitetVagona = kapacitetVagona;
+	}
+*/
+
+	public Lokomotiva getCira() {
+		return cira;
+	}
+
+	public void setCira(Lokomotiva cira) {
+		this.cira = cira;
+	}
+
+
+	//dodavanje vagona
+	public void addVagon(Vagon v) {
+		
+		if ( (popunjenostKapaciteta + v.ukupnaTezina()) <= cira.getVucnaSila()) {
+			vagoni.add(v);
+			brojac++;
+		}
+		else {
+			System.out.println("Vagon " + v.toString() + 
+					" ne može da se priključi kompoziciji!");
+		}		
+		
+	}
+	
+	public int brojVagona() {
+		//bez lokomotive
+		return brojac;
+	}
+	
+	public double tezinaVoza() {
+		double tezinaVoza = cira.getTezinaVozila();
+		for(Vagon t : this.vagoni) {
+			tezinaVoza = t.getTezinaVozila();
+		}
+		return tezinaVoza;
+	}
+
+	@Override
+	public String toString() {
+		// opis voza
+		String opis = cira.toString() + "\n";
+		for(Vagon t : this.vagoni) {
+			opis += t.toString() + "\n";		
+		}
+		opis += ")";
+		
+		return opis; 
+	}
+
+}

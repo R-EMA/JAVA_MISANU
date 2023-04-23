@@ -1,0 +1,14 @@
+package paket;
+
+public class Main {
+
+	public static void main(String[] args) {
+		// objekti generičke klase sa dva parametra
+		
+		// integer, string
+		A<Integer, String> obj1 = new A<Integer, String>(100,"Java");
+		obj1.prikaziTip();
+		
+	}
+
+}

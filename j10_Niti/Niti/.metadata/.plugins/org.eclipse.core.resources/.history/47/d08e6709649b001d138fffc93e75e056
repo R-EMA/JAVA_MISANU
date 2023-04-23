@@ -1,0 +1,12 @@
+package paket;
+
+public class MainVezba {
+
+	public static void main(String[] args) {
+		
+		A obj = new A();
+		obj.finalize();
+
+	}
+
+}

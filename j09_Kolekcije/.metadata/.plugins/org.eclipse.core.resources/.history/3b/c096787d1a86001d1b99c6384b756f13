@@ -1,0 +1,24 @@
+package p1;
+
+import java.util.ArrayList;
+import java.util.List;
+
+
+public class Main {
+
+	public static void main(String[] args) {
+		
+		String imena[] = {"Mika", "Žika", "Ana", "Lana", "Hana", "Una"};
+		
+		List<String> listaImena = new Array<String>();
+		
+		// niz -> kolekcija
+		for(String s : imena) {
+			listaImena.add(s);
+		}
+		System.out.println(listaImena);
+		
+
+	}
+
+}

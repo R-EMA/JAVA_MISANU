@@ -1,0 +1,30 @@
+package p1;
+
+import java.util.ArrayList;
+import java.util.List;
+
+
+public class Main {
+
+	public static void main(String[] args) {
+		
+		String imena[] = {"Mika", "Žika", "Ana", "Lana", "Hana", "Una"};
+		
+		List<String> listaImena = new ArrayList<String>();
+		
+		// niz -> kolekcija
+		for(String s : imena) {
+			listaImena.add(s);
+		}
+		System.out.println(listaImena);
+		
+		//brisanje
+		String imenaZaBrisanje[] = {"Mika", "Lana", "Hana"};
+		List<String> listaImenaZaBrisanje = new ArrayList<String>();
+		for(String s : imenaZaBrisanje) {
+			listaImenaZaBrisanje.add(s);
+		}
+		System.out.println(listaImenaZaBrisanje);
+	}
+
+}

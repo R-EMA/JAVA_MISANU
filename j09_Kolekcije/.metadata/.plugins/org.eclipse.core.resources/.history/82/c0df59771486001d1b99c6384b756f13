@@ -1,0 +1,54 @@
+package paket;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class MainStrLista {
+	
+	
+	public static void main(String[] args) {
+		
+		List<String> kolStr = new ArrayList<String>();
+		
+		kolStr.add("prvi");
+		kolStr.add("drugi");
+		kolStr.add("treci");
+		kolStr.add("cetvrti");
+		
+		System.out.println("p\nPočetna kolekcija: " + kolStr);
+		//dužina kolekcije .size
+		System.out.println("Početna dužina kolekcije: " + kolStr.size());
+		
+		//provera postojanja vrednosti .contains() vraća boolean - Case Sensitive
+		boolean sadrzi = kolStr.contains("Treci");
+		System.out.println("treci => kolStr");
+		if(sadrzi) 
+			System.out.println("\tTraženi element se nalazi u zadatoj kolekciji.");
+		else
+			System.out.println("\tTraženi element se ne nalazi u zadatoj kolekciji.");
+		
+		//element na određenoj poziciji: .get(index)     .... index = 0,1,2,... n-1  (n broj članova kolekcije)
+		System.out.println("2gi element kolekcije je " + kolStr.get(2));
+		
+		//prvo pojavljivanje elementa, pozicija-index .... .indefOf(vrednnost)
+		System.out.println("drugi se nalazi na poziciji: " + kolStr.indexOf("drugi"));
+		
+		//pravljenje niza od kolekcije .toArray()   ... isti je tip
+		String[] nizStr = new String[kolStr.size()]; 
+		kolStr.toArray(nizStr);
+		//test iteracija kroz niz
+		for(String clan: nizStr)
+			System.out.print(clan +  " ");
+		
+		//uklanjanje člana niza, brisanje prve pojave zadate vrednosti, .remove
+		kolStr.remove("treci");
+		System.out.println("p\nKolekcija posle izmene (uklanjanje elementa): " + kolStr);
+		
+		
+		
+	}
+	
+	
+	
+
+}

@@ -1,0 +1,29 @@
+package adapter;
+
+public class CurkaAdapter {
+	
+	/*prvo se implementira interfejs tipa prema kojem se vrši prilagođavanje 
+	- to je interfejs koji klijent očekuje */
+	public class CurkaAdapter implements Patka {
+	    Curka curka; // kreira se objekat druge klase
+	    
+	    /* zatim se dobija referenca na objekat koji se prilagođava */
+	    public CurkaAdapter(Curka curka) {
+	        this curka = curka;
+	    }
+	    
+	    /* implementacija metoda implementiranog interfejsa, ovde Patka */
+	    //prevodi metod kvace() u metod curlice()
+	    public void kvace()  {
+	        curka.curlice(); // poziv ekviv. metoda iz Curke
+	    }
+	    
+	    public void leti()  {
+	        //cilj je izjednačiti dužinu letenja, brojevi nisu bitni ovde
+	        for(int i=0; i<5; i++) {
+	            curka.leti();
+	        }
+	    }
+	}
+
+}

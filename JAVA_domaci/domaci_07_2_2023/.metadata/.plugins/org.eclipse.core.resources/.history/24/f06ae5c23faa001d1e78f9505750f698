@@ -1,0 +1,28 @@
+package predmeti;
+
+/**
+ * 
+ * @author emma
+ * 
+ * Zadatak 3 - klasa Sfera
+ * Sfera je predmet zadat poluprečnikom. 
+ * Predvideti inicijalizaciju zadatim vrednostima parametara (podrazumevano 1), 
+ * dohvatanje oznake vrste predmeta, izračunavanje zapremine, izračunavanje težine, 
+ * čitanje predmeta sa glavnog ulaza i sastavljanja tekstualnog opisa predmeta. 
+ *
+ */
+
+public class Sfera extends Predmet {
+	
+	private double r; // poluprečnik sfere
+	
+	public Sfera() {
+		this.r = 1;
+	}
+	 
+	public Sfera(double r)  {
+		this.r = r;
+	}
+	
+
+}

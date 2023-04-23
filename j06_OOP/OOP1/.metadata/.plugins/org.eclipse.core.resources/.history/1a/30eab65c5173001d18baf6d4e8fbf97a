@@ -1,0 +1,38 @@
+package demo;
+
+public class Pravougaonik {
+	
+	/*
+	 * demonstracija rada sa pravouganikom
+	 * definisanje (dimenzije)
+	 * računanje površine
+	 * računanje obima
+	 * računanje dijagonale
+	 * 
+	 */
+	
+	private double a; //dužina
+	private double b; //širina
+	private static int broj;  // brojač instanci
+	
+	//konstruktori
+	Pravougaonik()   {
+		System.out.println("Kreiran je " + (++broj) + ". pravouganik.");
+	}
+	
+	//set-get a
+	public void setA(double a) {
+		this.a = a;
+	}
+	public double getA() {
+		return a;
+	}
+	//set-get b
+	public void setB(double b) {
+		this.b = b;
+	}
+	public double getB() {
+		return b;
+	}
+
+}

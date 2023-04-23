@@ -1,0 +1,38 @@
+package p1;
+
+import java.util.LinkedList;
+import java.util.List;
+
+public class PovezanaLista {
+
+	public static void main(String[] args) {
+		// povezana lista, elementi ne moraju da budu susedni
+
+		List<String> plStr = new LinkedList<String>();
+		
+		//dodavanje elemenata u povezanoj listi
+		plStr.add("A"); //prvo slobodno mesto
+		plStr.add("B");
+		plStr.add(2,"C"); //na poziciji 2 (treče mesto) dodaje se C
+		
+		//čitanje
+		System.out.println("Elementi povezane liste " + plStr);
+		
+		//brisanje
+		plStr.remove(0); // preko indeksa
+		plStr.remove("B"); // preko vrednosti
+		System.out.println("Elementi povezane liste posle brisanja" + plStr);
+		
+		//proširenje
+		plStr.add("D");
+		plStr.add("E");
+		plStr.add("F");
+		System.out.println("Elementi povezane liste posle proširenja" + plStr);
+		
+		//pretraga
+		
+		
+		
+	}
+
+}

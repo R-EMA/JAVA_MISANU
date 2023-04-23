@@ -1,0 +1,5 @@
+package en;
+
+public class Boja {
+	Crvena, Zelena, Plava, Crna, Bela, Narandžasta, Žuta
+}

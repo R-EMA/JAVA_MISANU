@@ -1,0 +1,42 @@
+package dan1;
+
+import java.util.Scanner;
+
+public class Primer1 {
+
+	public static void main(String[] args) {
+		// Unos i prikaz clanova celobrojnog niza X od N elemenata
+		// plus demonstracija kreiranja niza inicijalizacijom
+		
+		Scanner sc = new Scanner(System.in);
+		int arr[] = {10, 20, 30, 40, 50}; // deklaracija i inicijalizacija niza od 5 članova.
+		int x[]; // deklaracija niza x
+		int n = sc.nextInt(); // Deklaracija i inicijalizacija dužine niza
+		x = new int[n];
+		
+		//punjenje niza x
+		System.out.println("Unesite cele brojeve: ");
+		for (int i = 0; i<n; i++) {
+			System.out.print("x[" + i + "] = ");
+			x[i] = sc.nextInt();
+		}
+		
+		//čitanje niza x
+		System.out.print("Članovi niza X su vrednosti:");
+		for (int i = 0; i < n; i++) {
+			System.out.print(x[i] + " ");
+		}
+		System.out.println("\nNiz X ima " + n + " članova.");
+			
+		// čitanje arr niza
+		System.out.print("\nVrednosti: ");
+		for (int i = 0; i < arr.length; i++) {
+			System.out.print(arr[i] + " ");
+		}
+		System.out.println(" su članovi niza od " + arr.length + " članova.\n");
+
+		sc.close();
+		
+	}
+
+}

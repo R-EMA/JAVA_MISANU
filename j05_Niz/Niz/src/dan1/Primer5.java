@@ -1,0 +1,43 @@
+package dan1;
+
+import java.util.Scanner;
+
+public class Primer5 {
+
+	public static void main(String[] args) {
+		// najveća cifra članova niza
+
+		Scanner sc = new Scanner(System.in);
+		System.out.print("Unesite broj članova niza: ");
+		int n = sc.nextInt();
+		int niz[] = new int[n];
+		int tc; // vrednost člana niza, privremeno za obradu
+		int maxC; // najveća cifra
+		int cifra; // cifra člana niza koji se trenutno obrađuje
+
+		// punjenje niza član po član
+		System.out.println("Unesite " + n + " prirodnih brojeva.");
+		for (int i = 0; i < n; i++) {
+			System.out.print("niz[" + i + "] = ");
+			niz[i] = sc.nextInt();
+		}
+
+		// obrada niza i prikaz rezultata
+		for (int i = 0; i < n; i++) {
+			tc = niz[i];
+			maxC = 0; // najmanja pozitivna vrednost (sve drugo će biti veće pa osigurava da ne bude
+						// lažan max signal
+			while (tc > 0) {
+				cifra = tc % 10;
+				if (cifra > maxC)
+					maxC = cifra;
+				tc /= 10;
+			}
+			System.out.println("Najveća cifra člana niza " + niz[i] + " je " + maxC);
+		}
+
+		sc.close();
+
+	}
+
+}

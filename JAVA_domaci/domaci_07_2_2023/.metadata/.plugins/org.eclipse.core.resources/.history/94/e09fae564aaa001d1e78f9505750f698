@@ -1,0 +1,83 @@
+package predmeti;
+
+import java.text.DecimalFormat;
+
+/**
+ * 
+ * @author emma
+ * 
+ * Zadatak 2 - klasa Predmet
+ * Predmet ima specifičnu težinu i jednoslovnu oznaku vrste predmeta. 
+ * Predvideti ... dohvatanje oznake vrste predmeta, ...., izračunavanje težine,
+ * ... i i sastavljanja tekstualnog opisa predmeta.
+ * 
+ *
+ */
+
+public class Predmet {
+
+	protected DecimalFormat df = new DecimalFormat("##0.00");
+	protected double specificnaTezina; //specifična težina predmeta, N/m3
+	protected char oznakaPredmeta; // oznaka predmeta
+	/* 
+	 * oznake:
+	 * 
+	 * S = sfera
+	 * K = kvadar
+	 * 
+	 */
+	
+	protected final double G = 9.81; // sila zemljine teže, N/kg
+	
+	
+	public Predmet() {
+		this.specificnaTezina = 1;
+	}
+	
+	
+	public double getSpecificnaTezina() {
+		return specificnaTezina;
+	}
+
+
+
+	public void setSpecificnaTezina(double t) {
+		this.specificnaTezina = t;
+	}
+
+
+
+	public char getOznakaPredmeta() {
+		return oznakaPredmeta;
+	}
+
+
+
+	public void setOznakaPredmeta(char oznakaPredmeta) {
+		this.oznakaPredmeta = oznakaPredmeta;
+	}
+
+
+	// postupak je nezavistan od vrste predmeta
+	public double izracunajTezinu(double v) {
+		/*
+		 * v - zapremina tela, m3
+		 * 
+		 * Napomena: ovde sam se rukovodila da je u govoru težina = masa izraženo u kg, t, dg, g, ...
+		 * ( u fizici težina (Q) jednaka je proizvodu mase (m) i ubrzanja zemljine teže (g) )
+		 */
+		return (this.specificnaTezina * v)/this.G; // kg
+	}
+	
+	public String opisiPredmet() {
+		String predmet = "Predmet";		
+		if ( this.oznakaPredmeta == 'S' )
+			predmet = "Sfera";
+		else if ( this.oznakaPredmeta == 'K' )
+			predmet = "Kvadar";
+		
+		return predmet + "\n" + 
+			   "Specifična težina: " + df.format(this.specificnaTezina) + " N/m3 \n";
+	}
+	
+}

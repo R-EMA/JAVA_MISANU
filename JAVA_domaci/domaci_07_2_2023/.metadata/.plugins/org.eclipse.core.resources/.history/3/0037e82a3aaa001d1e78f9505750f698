@@ -1,0 +1,34 @@
+package predmeti;
+
+/**
+ * 
+ * @author emma
+ * 
+ * Zadatak 2 - klasa Predmet
+ * Predmet ima specifičnu težinu i jednoslovnu oznaku vrste predmeta.  * 
+ *
+ */
+
+public class Predmet {
+
+	protected double ro; //specifična težina predmeta, N/m3
+	protected char oznakaPredmeta; // oznaka predmeta
+	/* 
+	 * oznake:
+	 * 
+	 * S = sfera
+	 * K = kvadar
+	 * 
+	 */
+	
+	protected final double G = 9.81; // sila zemljine teže, N/kg
+	
+	public double izracunajTezinu(double v, double ro) {
+		/*
+		 * v - zapremina tela
+		 * ro - specificna tezina predmeta
+		 */
+		return (ro * v)/this.G;
+	}
+	
+}

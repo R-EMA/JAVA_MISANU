@@ -1,0 +1,31 @@
+package teret;
+
+/**
+ * 
+ * @author emma
+ * 
+ * Zadatak 3 - klasa Bure, nasleđuje Teret
+ * Bure je teret oblika valjka zadatog poluprečnika osnove i visine. Oznaka vrste je B.
+ *
+ */
+
+public class Bure extends Teret {
+	
+	private int poluprecnik;
+	private int visina;
+	public double tezinaTereta = 0;
+	
+	public Bure(double tezina, int r, int h) {
+		super(tezina);
+		super.vrstaTereta = 'B';
+		this.poluprecnik = r;
+		this.visina = h;
+		this.tezinaTereta = super.tezinaTereta(this.zapremina());
+	}
+
+	@Override
+	protected double zapremina() {
+		return ( poluprecnik * poluprecnik * visina * Math.PI );
+	}
+
+}

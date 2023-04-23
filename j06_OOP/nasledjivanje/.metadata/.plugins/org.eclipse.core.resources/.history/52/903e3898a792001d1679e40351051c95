@@ -1,0 +1,13 @@
+package geometri;
+
+public class Krug extends Oblik {
+	private double poluprecnik;
+	
+	Krug(double r) {
+		poluprecnik = r;
+	}
+	
+	public double uzmiPovrsinu() {
+		return Math.PI * poluprecnik * poluprecnik;
+	}
+}

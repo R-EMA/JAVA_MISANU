@@ -1,0 +1,27 @@
+package paket;
+
+import java.util.Scanner;
+
+public class NaprednaFor2 {
+
+	public static void main(String[] args) {
+		// uvod u kolekcije, nizovi
+		
+		Scanner sc = new Scanner(System.in);
+		int brojevi[] = new int[5];
+		
+		for(int clan : brojevi) {
+			System.out.println("Unesite broj: ");
+			clan = sc.nextInt();			
+		}
+		
+		// štampanje niza
+		System.out.println("Elementi niza su:");
+		for(int i : brojevi )
+			System.out.print(i + "  ");	
+		
+		sc.close();
+		
+	}
+
+}

@@ -1,0 +1,151 @@
+## INNER JOIN ... ekvivelentan preseku skupova, vraćaju se samo podudaranja, ono što je zajedničko
+ako se navede samo join, podrazumeva se kao unutrašnje (inner) spajanje
+# I nacin
+SELECT ... FROM dete INNER JOIN roditelj ON dete.ključ = roditelj.kljuc
+SELECT radnici.ime, radnici.prezime, sektori.naziv FROM radnici INNER JOIN sektori ON radnici.sektor_id = sektori.sektor_id;
+# II nacin ... alijansi
+SELECT ... FROM dete AS d INNER JOIN roditelj AS r ON d.ključ = r.kljuc
+SELECT r.ime, r.prezime, s.naziv FROM radnici AS r INNER JOIN sektori AS s ON r.sektor_id = s.sektor_id;
+# III nacin ... USING kada su nazivi isti ... može da se kombinuje sa alijansima, nije obavezno
+SELECT ... FROM dete INNER JOIN roditelj USING (ključ)
+
+## spoljašnji spoj
+# LEFT JOIN ... sve iz deteta, leva tabela, + zajedničko sa roditeljem 
+SELECT ... FROM dete LEFT JOIN roditelj ON dete.kljuc = roditelj.kljuc
+SELECT r.*, s.naziv FROM radnici AS r LEFT JOIN sektori AS s ON r.sektor_id = s.sektor_id;
+# RIGHT JOIN ... sve zajedničko + sve iz desne tabele, roditelja;  prvo se posmatra desna tabela, pa onda leva tabela
+SELECT ... FROM dete RIGHT JOIN roditelj ON dete.kljuc = roditelj,kljuc
+SELECT r . * , s.naziv FROM radnici AS r RIGHT JOIN sektori AS s ON r.sektor_id = s.sektor_id;
+
+ #### vežbe ####
+
+Zadatak1:Prikazati podatke o studentima i njihovim ispitima koji su održani 28.1.2015. Izdvojiti indeks, ime i prezime studenta, id predmeta i ocenu.. 
+
+SELECT dosije.indeks, dosije.ime, dosije.prezime, ispit.id_predmeta, ispit.ocena FROM ispit INNER JOIN dosije USING (indeks) WHERE datum_ispita = '2015-01-28'; # 28. nema nipta
+
+SELECT dosije.indeks, dosije.ime, dosije.prezime, ispit.id_predmeta, ispit.ocena FROM dosije INNER JOIN ispit USING (indeks) WHERE datum_ispita = '2015-01-20' 
+
+SELECT dosije.indeks, dosije.ime, dosije.prezime, ispit.id_predmeta, ispit.ocena FROM ispit INNER JOIN dosije USING (indeks) WHERE ispit.godina_roka = 2015 AND oznaka_roka = 'jan';
+
+Zadatak2: Za svaki predmet izdvojiti naziv, godinu i oznaku roka u kojima je taj predmet polagan. Rezultat urediti prema nazivu predmeta.
+
+SELECT predmet.naziv, ispit.godina_roka, ispit.oznaka_roka FROM ispit INNER JOIN predmet USING (id_predmeta) ORDER BY predmet.naziv;
+
+
+
+
+Zadatak1:  Prikazati  nazive  predmeta  koje  je  polagao  neki  student  u  januarskom  ispitnom  roku  2015. godine.
+
+SELECT DISTINCT predmet.naziv FROM ispit INNER JOIN predmet USING (id_predmeta) WHERE ispit.godina_roka = 2015 AND oznaka_roka = 'jan';
+
+Zadatak2:Za svaki ispitni rok izdvojiti naziv ispitnog roka i ocene koje su dobijene u tom roku.Rezultat urediti prema nazivu ispitnog roka.
+
+SELECT DISTINCT ispitni_rok.naziv, ispit.ocena FROM ispit INNER JOIN ispitni_rok USING (oznaka_roka) ORDER BY ispitni_rok.naziv;
+
+SELECT DISTINCT ispitni_rok.naziv, ispit.ocena from ispitni_rok INNER JOIN ispit ON ispitni_rok.godina_roka = ispit.godina_roka ORDER BY ispitni_rok.naziv # detaljniji, bolji prikaz
+
+
+# UNIJE - skupovi vrednosti dobijeni selektima
+Zadatak 1. Izdvojiti identifikatore predmeta koji imaju više od 5 bodova ili ih je položio neki student 20.01.2015.
+zadatak se posmatra iz delova
+1- Izdvojiti identifikatore predmeta koji imaju više od 5 bodova 
+SELECT id_predmeta FROM predmet WHERE bodovi>5
+2 - Izdvojiti identifikatore predmeta ... ili ih je položio neki student 20.01.2015.
+SELECT id_predmeta FROM ispit where datum_ispita = '2015-01-20' and ocena > 5;
+#kada se nadovezuju kolone, one moraju biti istog tipa i dužine.
+# prikazuje podatke bez ponavljanja
+SELECT id_predmeta FROM predmet WHERE bodovi>5
+UNION
+SELECT id_predmeta FROM ispit where datum_ispita = '2015-01-20' and ocena > 5;
+# prikazuje podatke sa ponavljanjem, sve vrednosti
+SELECT id_predmeta FROM predmet WHERE bodovi>5
+UNION ALL
+SELECT id_predmeta FROM ispit where datum_ispita = '2015-01-20' and ocena > 5;
+
+Zadatak 2: Izdvojiti indekse studenata koji su rodeni u Beogradu ili imaju ocenu 10. Rezultat urediti u opadajućem poretku.
+SELECT indeks FROM dosije WHERE mesto_rodjenja = "Beograd"
+UNION
+SELECT indeks FROM ispit WHERE ocena = 10
+ORDER by indeks DESC
+
+
+# podupiti, rezultat jednog upita koristi se kao rezultat drugog upita
+SELECT * FROM tabela WHERE nesto [= < > ...] (podupit: SELECT ... koja vraća vrednost odgovarajućeg tipa i vrednosti za nesto)
+Pronaci nazive predmeta koji imaju manje bodova od predmeta sa nazivom Geometrija
+1-pronači koliko bodova ima predmet geometrija,a to iskoristiti dalje
+SELECT bodovi FROM predmet WHERE naziv = 'geometrija'
+2-gornji upit iskoristiti u drugom upitu u njegovom uslovnom delu
+SELECT predmet.naziv, predmet.bodovi FROM predmet WHERE predmet.bodovi < ( SELECT bodovi FROM predmet WHERE naziv = 'geometrija' )
+
+Izdvojiti nazive predmeta koje je polagao student sa indeksom 20140026
+1-naći predmete
+SELECT id_predmeta FROM ispit WHERE indeks = 20140026
+2-iskoristiti - koristiti IN ako se očekuje niz vrednosti, zamena za =
+SELECT naziv FROM predmet WHERE id_predmeta IN( SELECT id_predmeta FROM ispit WHERE indeks = 20140026 )
+
+#Izdvojiti indekse studenata koji su polozili bar jedan predmet koji nije prolozio student sa indeksom 20140022
+SELECT indeks FROM ispit WHERE ocena > 5 and id_predmeta not IN ( SELECT id_predmeta FROM ispit WHERE ocena > 5 and indeks = 20140022 )
+
+
+#Izdvojiti identifikatore predmeta koji imaju vise od 5 bodova i nije ih polozio neki student 20.01.2015
+SELECT id_predmeta FROM predmet WHERE bodovi > 5 and id_predmeta not in ( select id_predmeta from ispit where ocena>5 and datum_ispita='2015-01-20')
+
+#Izdvojiti indekse studenata koji su rodjeni u Beogradu i imaju ocenu 8. Rezultat urediti u opadajucem poretku.
+- Može na dva načina
+SELECT indeks FROM dosije WHERE mesto_rodjenja = "Beograd" AND indeks IN 
+(SELECT indeks FROM ispit WHERE ocena = 8 ORDER BY indeks DESC)
+
+select indeks from ispit where ocena=8 and indeks in(select indeks from dosije where mesto_rodjenja="Beograd" ORDER BY indeks DESC) 
+
+# kreiranje pogleda
+CREATE VIEW AS SELECT upit....
+# brisanje pogleda
+DROP VIEW pogled
+# citanje pogleda ... isto kao i tabele
+select * from pogled
+
+Zadatak 1. Kreirati VIEW koji sadrzi šifre i nazive predmeta koji imaju izmedu 8 i 15 bodova.
+CREATE VIEW v1 AS SELECT predmet.id_predmeta, predmet.naziv FROM predmet WHERE bodovi BETWEEN 8 AND 15
+
+Zadatak 2. Kreirati VIEW koji sadrzi podatke o ispitima na kojima student ima 81, 76 ili 59 bodova.
+CREATE VIEW V2 AS SELECT * FROM `ispit` WHERE bodovi IN(81, 76, 59)
+
+Zadatak3. Kreirati View koji sadrzi nazive predmeta koji imaju po 6 bodova i koje je polagao student sa indeksom 20140021.
+CREATE VIEW v3 as Select predmet.naziv, predmet.bodovi, ispit.indeks FROM predmet INNER JOIN ispit ON predmet.id_predmeta = ispit.id_predmeta Where predmet.bodovi = 6 and ispit.indeks = 20140021
+
+Zadatak4. Kreirati View koji sadrzi naziv ispitnog roka koji je održan izmedu 2010. i 2015. godine i koji u oznaci sadrži slovo p. Rezultat urediti prema nazivu u opadajucem poretku.
+CREATE VIEW v4 AS SELECT naziv FROM ispitni_rok WHERE godina_roka BETWEEN 2010 AND 2015 AND naziv LIKE ("%p%") ORDER BY naziv DESC
+
+Zadatak5.  Kreitati  VIEW  koji  sadrzi  ime,  prezime  i  datum  rodenja  studenata  koji  su  rodeni  izmedu 4.2.1995. i 10.10.1995. i urediti rezultat prema prezimenu studenta.
+CREATE VIEW v5 AS SELECT ime, prezime, datum_rodjenja FROM dosije WHERE datum_rodjenja BETWEEN '1995-02-04' AND '1995-10-10' ORDER BY prezime
+
+
+#### još sql funkcija
+# if...
+IF(uslov, tačno, netačno)
+informacija da li je student položio na osnovu ocene
+SELECT IF(ocena = 5, 'Pao', 'Polozio') AS Status FROM ispit;
+# case ...
+# case when uslov ... then ... when uslov ...  then ... else ... end
+SELECT CASE ocena WHEN 5 THEN 'Nije polozen ispit' ELSE 'Polozen ispit' END AS STATUS FROM ispit ;
+
+# največa vrednost iz spiska GREATEST(v1,v2,...) / najmanja vrendost LEAST(v1,v2,...)
+SELECT GREATEST(235, 1209, 79); # 1209
+SELECT LEAST(234, 2109, 79); # 79
+mogu da se primene i nad kolonoma koje se navode umesto eksplic.vrednosti
+
+
+
+Zadatak 1.Klasifikovati predmete prema broju bodova na sledeci nacin:-ako predmet ima više od 7 bodova tada pripada I kategoriji-ako je broj bodova predmeta u intervalu [5,7] tada pripada II kategoriji-inace predmet pripada III kategoriji.-Izdvojiti naziv predmeta i kategoriju.
+SELECT naziv, CASE WHEN bodovi > 7 THEN 'Kategorija I' when bodovi >= 5 and bodovi <= 7 THEN 'Kat 2' ELSE 'kategorija 3 ' END AS Kategorija FROM predmet
+
+SELECT naziv, CASE WHEN bodovi > 7 THEN 'Kategorija I' when bodovi in(5,6,7) THEN 'Kat 2' ELSE 'kategorija 3 ' END AS Kategorija FROM predmet
+
+SELECT naziv, CASE WHEN bodovi > 7 THEN 'Kategorija I' when bodovi >= 5 and bodovi <= 7 THEN 'Kategorija II' ELSE 'Kategorija III' END AS Kategorija FROM predmet ORDER BY bodovi DESC
+
+
+
+
+
+
+

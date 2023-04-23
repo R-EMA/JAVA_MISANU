@@ -1,0 +1,20 @@
+package paket;
+
+/**
+ * 
+ * @author emma
+ * 
+ * Zadatak 3.
+ * Napisati program koji ispisuje sve proste brojeve od 1 do 10. 
+ * Prost broj je deljiv samo jedinicom i samim sobom.
+ *
+ */
+
+public class ProstiBrojevi {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+	}
+
+}

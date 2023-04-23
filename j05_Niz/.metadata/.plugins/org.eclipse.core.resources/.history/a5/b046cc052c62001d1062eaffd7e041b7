@@ -1,0 +1,72 @@
+package dan2;
+
+public class Primer {
+
+	public static void main(String[] args) {
+		// sortiranje niza
+		
+		int arr[] = {1, 5, 3, 2, 4, 8, 9,10,7,6 };
+		int n = arr.length;
+		int tmp = 0;
+		System.out.println("Originalni niz od " + n + " elemenata.");
+		for(int i=0; i<n; i++) {
+			System.out.print(arr[i] + " ");
+		}
+		System.out.println("");
+
+		// rastući redosled: 1 2 3 4 5 
+		// ok
+		/*
+		for(int i=0; i < n; i++) {
+			for(int j=0; j<n;j++) {
+				if(arr[j] > arr[i]) {
+					tmp = arr[i];
+					arr[i] = arr[j];
+					arr[j] = tmp;
+				}
+			}
+		} 
+		*/
+		// bubble sort simplex
+		/*
+		for(int i=0; i < n; i++) {			
+			for(int j=i; j<n;j++) {
+				if(arr[j] < arr[i]) {
+					tmp = arr[i];
+					arr[i] = arr[j];
+					arr[j] = tmp;				
+				}
+			}			
+		} 
+		*/
+		// kvik sort
+		int p = n - 1;		
+		for(int i=0; i< p; i++) {
+			System.out.println(arr[p] + " za i = " + i + " p = " + p);
+			for (int j = 0; j < p; j++) {
+				System.out.print(("\tj = " + j);
+				if( arr[j] > arr[p]) {
+					System.out.print(": \t" + arr[i] + " , " + arr[p] + ") => ");
+					tmp = arr[j];
+					arr[j] = arr[p];
+					arr[p] = tmp;
+					System.out.print("(" + arr[i] + " , " + arr[p] + ") ");
+				}
+				//System.out.print(i+","+j+" => (" + arr[i] + " , " + arr[p] + ") ");
+				/*for(int k=0; k<n; k++) {
+					System.out.print(arr[k] + " ");
+				}*/
+				System.out.println("");
+			}
+			System.out.println("");
+			p--;
+			//if(p == n/2) break;
+		}
+		System.out.println("\nSortirano. Rastući redosled?");
+		for(int i=0; i<n; i++) {
+			System.out.print(arr[i] + " ");
+		}
+		System.out.println("");
+	}
+
+}

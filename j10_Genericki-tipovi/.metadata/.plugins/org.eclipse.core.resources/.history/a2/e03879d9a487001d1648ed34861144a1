@@ -1,0 +1,25 @@
+package paket;
+
+/**
+ * 
+ * @author ema
+ * 
+ * Lambda izrazom okrenuti redosled znakova u znakovnom nizu
+ *
+ */
+
+
+public class Main {
+
+	public static void main(String[] args) {
+		
+		OkreniString rezultat = (s) -> {
+			String rezultat = "";
+			for(i=str.length-1; i >=0; i++) {
+				rezultat += str.charAt(i);
+			}
+		}
+
+	}
+
+}

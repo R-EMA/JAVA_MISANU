@@ -1,0 +1,13 @@
+package lambda;
+
+public class MainLambda {
+
+	public static void main(String[] args) {
+		
+		int z = 10;
+		Funkcija rezultat = (z) -> z*z;
+		
+		System.out.println(rezultat.kvadrat(z));
+		
+	}
+}

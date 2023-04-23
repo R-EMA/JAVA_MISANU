@@ -1,0 +1,7 @@
+package predmeti;
+
+public class Kvadar {
+	
+	Kvadar() {}
+
+}

@@ -1,0 +1,62 @@
+package teret;
+
+
+
+/**
+ * 
+ * @author emma
+ * 
+ * Zadatak 3 - apstraktna klasa Teret
+ * Apstraktan teret ima jedinstven, automatski generisan celobrojan dentifikator i 
+ * zadatu specifičnu težinu. Može da se dohvati jednoslovna oznaka vrste, 
+ * da se odredi zapremina I težina i da se sastavi tekstualni opis koji sadrži 
+ * oznaku vrste i identifikator. 
+ *
+ */
+
+public abstract class Teret {
+	
+	
+	private static int teretBr = 0;
+	private int idTereta;
+	private final double G = 9.81; // N/m3 sila zemljine teže
+	protected char vrstaTereta;
+	protected double specificnaTezinaTereta;
+	
+	Teret(double tezina) {
+		teretBr ++;
+		this.idTereta = teretBr;
+		this.specificnaTezinaTereta = tezina;
+	}
+	
+	
+	//vrsta tereta
+	public char getVrstaTereta() {
+		return vrstaTereta;
+	}
+	public void setVrstaTereta(char vrstaTereta) {
+		this.vrstaTereta = vrstaTereta;
+	}
+
+	//specifična težina
+	public double getSpecificnaTezinaTereta() {
+		return specificnaTezinaTereta;
+	}
+	public void setSpecificnaTezinaTereta(int tezinaTereta) {
+		this.specificnaTezinaTereta = tezinaTereta;
+	}
+
+	//racunanje tezine tereta
+	public double tezinaTereta(double v) {
+		return ( (this.specificnaTezinaTereta * v)/G );
+	}
+	
+	public abstract double zapremina(); //metod za racunanje zapremine
+	
+	//opis tereta
+	public String toString() {
+		return  "(Teret:" + idTereta + " | vrsta:" + vrstaTereta + ")";
+	}
+	
+
+}

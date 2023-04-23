@@ -1,0 +1,50 @@
+package dan1;
+
+import java.util.Scanner;
+
+public class Primer5 {
+
+	public static void main(String[] args) {
+		// unos i ... različite operacije nad članovima niza
+		// najmanja i najveća cifra vrednosti člana / na nivou niza
+		
+		Scanner sc = new Scanner(System.in);
+		System.out.print("Unesite broj članova niza: ");
+		int n = sc.nextInt();
+		int x[] = new int[n];
+		int maxC = 0, minC = 9; // najveca, najmanja cifra vrednosti člana niza
+		int maxArr = 0, minArr = 9; // najveca, najmanja cifra u nizu
+		int tmpVal = 0; // vrednost člana niza koji se obrađuje
+				
+		System.out.println("Unesite niz celih brojeva: ");
+		for(int i = 0; i < n; i++) {
+			System.out.print("x[" + i + "] = ");
+			x[i] = sc.nextInt();
+		}
+		// prikaz i obrada članova niza 
+		System.out.printf("\t%5s\t%7s\t\t%7s\t%7s%n", "index", "član", "maximum", "minimum");
+		System.out.println("------------------------------------------------------------");
+		for(int i = 0; i < n; i++) {
+			tmpVal = x[i];
+			while( tmpVal > 0 ) {				
+				if ( tmpVal % 10  > maxC )
+					maxC = tmpVal % 10;
+				else if ( tmpVal % 10  < minC )
+					minC = tmpVal % 10;
+				tmpVal /= 10;
+			}
+			System.out.printf("\t%5d\t\t%7d\t%7d\t%7d%n", i, x[i], maxC, minC);
+			if ( maxC > maxArr ) 
+				maxArr = maxC;
+			if ( minC < minArr ) 
+				minArr = minC;
+			maxC = 0;
+			minC = 9;
+		}
+		System.out.println("------------------------------------------------------------");
+		System.out.printf("\t\t\t\t\t%d\t%d%n", maxArr, minArr);
+		sc.close();
+ 
+	}
+
+}

@@ -1,0 +1,4 @@
+INDEX VERSION 1.132+/home/emma/eclipse-workspace/j04_Funkcije/.metadata/.plugins/org.eclipse.jdt.core
+1865797976.index
+3251737585.index
+519306738.index

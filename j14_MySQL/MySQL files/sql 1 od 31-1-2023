@@ -1,0 +1,27 @@
+CREATE TABLE vozila (
+    voziloID int PRIMARY KEY AUTO_INCREMENT,
+    marka Varchar(30)
+);
+INSERT INTO vozila(marka) VALUES ("opel"), ("BMB"), ("peugeat"), ("mazda"), ("zastava");
+
+
+
+sa predavanja
+
+# naredba za kreiranje baze podataka CREATE DATABASE itp # Naredba za brisanje baze podataka drop DATABASE itp; CREATE TABLE osobe( broj INT(5), nekoIme Varchar(55), datum Date, # YYYY-MM-DD cena decimal(3,2), # za valute 123.45 vrednost double, # kada je potrebno vise od 7 cifara preciznosti f float, # u ostalim slucajevima pol ENUM('M','Z') ) 
+CREATE TABLE polaznici( ImePolaznika Varchar(15), PrezimePolaznika VARCHAR(20), datumRodjenja Date, godineStaza Int(2) ) 
+CREATE TABLE knjige( knjigaID int PRIMARY KEY, nazivKnjige varchar(55) ) 
+CREATE TABLE knjige( knjigaID int, nazivKnjige varchar(55), PRIMARY KEY(knjigaID) ) 
+CREATE TABLE knjige1( knjigaID int PRIMARY KEY AUTO_INCREMENT, nazivKnjige varchar(100) ) 
+alter TABLE knjige ADD godinaIzdavanja INT 
+ALTER TABLE knjige drop COLUMN godinaIzdavanja # objekat iz spoljnog sveta = tabela = relacijom = entitet # kolona = atribut # Tip podataka kolone = Domena atributa # Vrsta = podatak # imePolaznika = atribut(kolona) # Andrija = Vrsta(podatak) # primarni kljuc # kolona1 # kolona2 # straniKljucevi # Vozilo relacija # primarniKljuc # Marka # opel, bmw, peugeot, mazda CREATE table kontakti( kontaktID INT PRIMARY KEY NOT NULL, email varchar(50) NOT Null, telefon varchar(15) not null )
+
+----
+
+zadatak
+
+-----
+
+U bazi podataka treba čuvati podatke o dva tipa entiteta: VOZILO, sa atributima Tip, RegistarskiBroj, BrojMotora, BrojSasije, i VLASNIK sa atributima LicnoIme, Prezime, Adresa, BrojDozvole
+
+

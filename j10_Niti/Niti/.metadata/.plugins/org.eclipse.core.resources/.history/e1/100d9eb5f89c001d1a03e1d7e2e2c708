@@ -1,0 +1,22 @@
+package enumi;
+
+public class MainBoje {
+	
+	public static void main(String[] args) {
+	
+		Boje boja = Boje.PLAVA;
+		//Boje boje[];
+	
+		System.out.println(boja);
+		
+		//iteracija
+		for(Boje b : Boje.values()) {
+			System.out.print(b + " ");
+		}
+		
+		
+		
+		//metode za enum tip
+	}
+
+}

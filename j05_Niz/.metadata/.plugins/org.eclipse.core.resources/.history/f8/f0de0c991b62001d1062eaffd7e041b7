@@ -1,0 +1,19 @@
+package dan2;
+
+public class Primer {
+
+	public static void main(String[] args) {
+		// sortiranje niza
+		
+		int arr[] = {1, 3, 5, 2, 4};
+		int n = arr.length;
+		int tmp = 0;
+		System.out.println("Originalni niz");
+		for(int i=0; i<n; i++) {
+			System.out.print(arr[i] + " ");
+		}
+		System.out.println("\n");
+
+	}
+
+}

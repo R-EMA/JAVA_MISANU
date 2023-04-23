@@ -1,0 +1,47 @@
+package paket;
+
+/**
+ * 
+ * @author emma
+ * 
+ * Zadatak 6.
+ * Napisati program koji pretvara dekadni broj {0,1,2,3,4,5,6,7,8,9} u binarni{0,1}.
+ *
+ */
+
+import java.util.Scanner;
+
+public class BinarnoX {
+
+	public static void main(String[] args) {
+		// pretvaranje dekadnog u binarni broj
+		
+		Scanner sc = new Scanner(System.in);
+		int decBroj; // decimalni broj koji treba pretvoriti u binarni
+		String binBroj = ""; // za čuvanje binarnog broja (podsetnik: pročitati ga naopačke)
+		String tmp = ""; // za okretanje stringa (naopačke binarni broj
+		
+		//unos broja
+		System.out.print("Unesite pozitivan ceo broj: ");
+		decBroj = sc.nextInt();
+		
+		System.out.print("\n\n( " + decBroj + " )10  = ");
+		
+		//pretvaranje  10 -> 2
+		while(decBroj > 0) {
+			tmp += decBroj % 2;
+			decBroj /= 2;
+		}
+		//okretanje stringa	
+		for(int i=0;i<tmp.length();i++) {
+			binBroj = tmp.charAt(i) + binBroj;			
+		}
+		
+		
+		System.out.println(" ( " + binBroj + " )2");
+		
+		sc.close();
+
+	}
+
+}

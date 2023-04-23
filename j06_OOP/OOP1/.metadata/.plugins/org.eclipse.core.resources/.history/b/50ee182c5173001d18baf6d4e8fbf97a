@@ -1,0 +1,56 @@
+package demo;
+
+import java.io.*;
+
+public class Main {
+
+	public static void main(String[] args) throws Exception {
+		/* 
+		 * uvod u klase i objekte
+		 */
+		
+		
+		BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
+		/*
+		 * kreiranje (instanciranje) objekata klase
+		 * 
+		 * Objekat je jedno pojavljivanje (instanca) klase
+		 */
+		A objA = new A();
+		/*
+		 * objekti mogu da pristupaju članicama klase
+		 */
+		objA.info();
+		
+		/* Klasa B: članice klase */
+		B objB = new B();
+		System.out.print("Zdravo! Kako se zoveš? ");
+		objB.ime = bf.readLine(); // dodela vrednosti atributu
+		objB.info(); // izvršavanje metoda (sa čitanjem vrednosti atributa)
+		
+		/* Klasa C: osovine članica klase */
+		C.infoC(); // poziv statičkog metoda
+		C objC = new C();
+		objC.info(); // poziv nestatičkog metoda
+		//objC.infoC(); // poziv statičkog metoda od strane objekta (nije greška, ali nije ni ispravna primena)
+
+		/* Klasa D: geteri i seteri */
+		D objD = new D();
+		System.out.print("Zdravo! Kako se zoveš? ");
+		String ime = bf.readLine();
+		objD.setIme(ime);
+		System.out.println(objD.getIme() + "!? I ja se tako zovem!");
+		
+		/* Klasa E: konstruktor-i i this */
+		E objE1 = new E();
+		E objE2 = new E("EMA");
+		objE1.info();
+		objE2.info();
+		
+		/* 
+		 * Klasa Pravouganik: osnovna matematika pravougaonika i kvadrata
+		 */
+		
+	}
+
+}

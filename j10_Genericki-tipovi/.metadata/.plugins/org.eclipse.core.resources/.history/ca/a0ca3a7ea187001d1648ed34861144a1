@@ -1,0 +1,29 @@
+package paket;
+
+import paket2.*;
+
+public class MainLambda {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+		//primena intefrefejsa i lambda izraza (desna strana jednakosti)
+		TestiraBroj paranBroj = (x) -> (x % 2) == 0;
+		
+		if(paranBroj.test(9))
+			System.out.println("Broj je paran");
+		else
+			System.out.println("Broj nije paran");
+		
+		
+		//isti u drugom paketu
+		TestiraBroj5 pet = (x) -> (x % 2) == 0;
+		
+		if(pet.test2(15))
+			System.out.println("Broj je deljiv sa 5");
+		else
+			System.out.println("Broj nije delljiv sa 5");
+
+	}
+
+}

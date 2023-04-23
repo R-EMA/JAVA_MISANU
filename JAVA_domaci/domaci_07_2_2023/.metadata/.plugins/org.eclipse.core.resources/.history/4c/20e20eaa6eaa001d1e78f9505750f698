@@ -1,0 +1,44 @@
+package vozila;
+
+/**
+ * 
+ * @author emma
+ * 
+ * Zadatak 3 - apstraktna klasa Vozilo
+ * Apstraktno vozilo ima zadatu sopstvenu težinu. 
+ * Može da se odredi ukupna težina i vučna sila vozila i da se sastavi tekstualni opis vozila. 
+ * Vučna sila predstavlja težinu terete koji vozilo može da povuče.
+ *
+ */
+
+public abstract class Vozilo {
+	
+	protected int tezinaVozila;
+	protected int vucnaSila;
+	
+	public Vozilo(int t) {
+		this.tezinaVozila = t;
+		this.vucnaSila = 0;
+	}
+
+	public int getVucnaSila() {
+		return vucnaSila;
+	}
+	public void setVucnaSila(int vucnaSila) {
+		this.vucnaSila = vucnaSila;
+	}
+	
+		
+	public int getTezinaVozila() {
+		return tezinaVozila;
+	}
+	public void setTezinaVozila(int tezinaVozila) {
+		this.tezinaVozila = tezinaVozila;
+	}
+
+	//ukupna tezina vozila je zbir njegove tezine i tezine pridruzenih vozila i tereta (ako postoji)
+	public abstract int ukupnaTezina();
+	
+	public abstract String opisVozila();
+
+}

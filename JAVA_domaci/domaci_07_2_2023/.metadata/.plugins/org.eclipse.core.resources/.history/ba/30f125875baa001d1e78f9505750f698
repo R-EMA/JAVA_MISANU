@@ -1,0 +1,23 @@
+package predmeti;
+
+public class Kvadar {
+	
+	double a;
+	double b;
+	double c;
+	
+	public Kvadar() {
+		this.a = 1;
+		this.b = 1;
+		this.c = 1;
+			
+	}
+	public Kvadar(double a, double b, double c) {
+		this.a = a;
+		this.b = b;
+		this.c = c;
+	}
+	
+	
+
+}

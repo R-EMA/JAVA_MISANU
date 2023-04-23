@@ -1,0 +1,92 @@
+package predmeti;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+/**
+ * 
+ * @author emma
+ * 
+ * Zadatak 2: Napisati sledeće klase: 
+ * Predmet ima specifičnu težinu i jednoslovnu oznaku vrste predmeta. 
+ * Sfera je predmet zadat poluprečnikom. 
+ * Kvadar je predmet zadat dužinama ivica. 
+ * Napisati klase koje omogućavaju obradu nabrojanih vrsta predmeta. 
+ * Predvideti inicijalizaciju zadatim vrednostima parametara (podrazumevano 1), 
+ * dohvatanje oznake vrste predmeta, izračunavanje zapremine, izračunavanje težine, 
+ * čitanje predmeta sa glavnog ulaza i sastavljanja tekstualnog opisa predmeta. 
+ * 
+ * Napisati main klasu koja sa glavnog ulaza pročita podatke o određenom broju predmeta 
+ * i posle toga na glavnom izlazu ispiše podatke o predmetima 
+ * čije su težine iznad proseka.
+ *
+ */
+public class TestiranjePredmeta {
+	
+	public static void main(String[] args) {
+		
+		Scanner sc = new Scanner(System.in);
+		List<Sfera> lopte = new ArrayList<Sfera>();
+		List<Kvadar> kutije = new ArrayList<Kvadar>();
+		double 	specificnaTezina,	// specificna tezina predmeta
+				zapremina,			// zapremina predmeta
+				masa,				// tezina predmeta
+				ukupnaMasa = 0,		// suma masi
+				prosecnaMasa = 0;	// prosečna težina
+		int	brPredmeta = 1,			// koliko predmeta
+			brLopti = 0,			// broj lopti, brojač
+			brKutija = 0;			// broj kutija, brojač
+		char tip; 					// tip predmeta; S - sfera (lopta), K - kvadar
+		
+		try {
+			System.out.println("Koliko predmeta želite da ispitate?");
+			brPredmeta = sc.nextInt();
+			if	( brPredmeta < 0 )
+				brPredmeta *= (-1);
+			if ( brPredmeta > 20 ) {
+				System.out.println("Prevelika vrednost. Biće Vam dozvoljen samo 1 predmet");
+				brPredmeta = 1;
+			}
+			
+			while ( brPredmeta > 0 ) {
+				System.out.print("Tip predmeta (S = sfera, lopta; K = kvadar) ");
+				tip = sc.next().charAt(0);
+				switch(tip) {
+					case 'S', 's': 
+						System.out.print("Poluprečnik sfere (m): ");
+						double r = sc.nextDouble();
+						System.out.print("Specifična težina sfere (N/m3): ");
+						specificnaTezina = sc.nextDouble();
+						lopte.add(new Sfera(r));
+						zapremina = lopte.get(brLopti).izracunajZapreminu();
+						masa = lopte.get(brLopti).izracunajTezinu(zapremina);
+						System.out.println(lopte.get(brLopti).opisiPredmet());
+						ukupnaMasa += masa;
+						brLopti++;
+						break;
+					case 'K', 'k':
+						break;
+					default:
+				}
+				
+			}
+			//iza while, računanje proseka i prikaz nadprosečnih
+			System.out.println("\nBroj sfera " + brLopti);
+			System.out.println("\nBroj kvadra " + brKutija);
+			prosecnaMasa = ukupnaMasa / (brLopti + brKutija);
+			System.out.println("Prosečna težina predmeta: " + prosečna masa)
+	
+				
+		}
+		catch(Exception e) {
+			System.out.println("Došlo je do greške: " + e);
+		}
+		finally {
+			sc.close();
+		}
+		
+		
+	}
+
+}

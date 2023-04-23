@@ -1,0 +1,20 @@
+package demo;
+
+public class Main {
+
+	public static void main(String[] args) {
+		/* 
+		 * uvod u klase i objekte
+		 */
+		
+		/*
+		 * kreiranje (instanciranje) objekata klase
+		 * 
+		 * Objekat je jedno pojavljivanje (instanca) klase
+		 */
+		A objA = new A();
+		
+
+	}
+
+}

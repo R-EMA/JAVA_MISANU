@@ -1,0 +1,57 @@
+package paket;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.io.*;
+
+/**
+ * 
+ * @author emma
+ * 
+ * Zadatak 5.
+ * a) Kreirati dinamički niz.
+ * b) Unutar niza dodati 10 imena, koristeći ugrađenu metodu.
+ * c) Ispisati sadržaj niza.
+ * d) Na poziciji 5 dodati novo ime.
+ * e) Odštampati trenutni sadržaj niza.
+ * f) Obrisati jedno ime.
+ * g) Odštampati trenutni sadržaj niza
+ *
+ */
+
+public class Lista {
+
+	public static void main(String[] args) throws Exception {
+		// dinamički niz ... ArrayList
+		
+		BufferedReader bf = new BufferedReader(new InputStreamReader(System.in)); // za unos vrednosti
+		
+		// Kreiranje dinamičkog niza
+		/* dinamički niz, s obzirom da se traži unos 10 imena.
+		 * u startu je prividno "ogranićen" na 10 unosa.
+		 */
+		List<String> imena = new ArrayList<String>(10); 
+		
+		// unos vrednosti
+		System.out.println("Unesite " + imena.size() + " imena. ");
+		for(int i=0; i < imena.size(); i++) {
+			System.out.print( (i+1) + ". ");
+			imena.add(bf.readLine());
+		}
+		/*
+		 * alternativno, moglo je i kao:
+		 * imena.add("Janko");
+		 * imena.add("Marko");
+		 * imena.add("Ana";
+		 * ...
+		 * i tako 10 puta.
+		 */
+		
+		// prikaz sadržaja niza primenom napredne for petlje
+		System.out.print("\nImena: ");
+		for(String ime : imena)
+			System.out.print(ime);
+		
+	}
+
+}

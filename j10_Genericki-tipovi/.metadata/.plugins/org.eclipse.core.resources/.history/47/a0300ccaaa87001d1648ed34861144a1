@@ -1,0 +1,14 @@
+package paket;
+
+public class Main {
+
+	public static void main(String[] args) {
+		// primena jednostavne generičke klase A
+		
+		A<Integer> intObj = new A<Integer>(100);
+		
+		intObj.prikaziTip();
+
+	}
+
+}

@@ -1,0 +1,43 @@
+package paket;
+
+/**
+ * 
+ * @author emma
+ * 
+ * Zadatak 8.
+ * Koristeći rekurzivan postupak izračunati sumu svih cifara unetog broja.
+ *
+ */
+
+import java.util.Scanner;
+
+
+public class Rekurzija {
+	
+	public static int zbirCifara(int n) {
+		
+		int cifra, zbir = 0;
+		if(n > 0) {
+			cifra = n % 10;
+			n = n / 10;
+			zbir = cifra + zbirCifara(n);
+			//return cifra + zbirCifara(n);
+		}
+		else {
+			//return n;
+		}
+		return zbir;
+		
+	}
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+		int x = 123;
+		
+		int z = zbirCifara(x);
+		System.out.println(z);
+
+	}
+
+}

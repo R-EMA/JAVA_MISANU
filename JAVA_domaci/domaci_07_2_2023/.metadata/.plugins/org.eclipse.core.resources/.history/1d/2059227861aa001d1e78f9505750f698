@@ -1,0 +1,8 @@
+package predmeti;
+
+public interface OsobinePredmeta {
+	
+	//racunanje zapremine tela na osnovu postojećih vrednosti
+	public double izracunajZapreminu(); 
+
+}

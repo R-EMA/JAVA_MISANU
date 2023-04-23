@@ -1,0 +1,56 @@
+package generickiNiz;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * 
+ * @author emma
+ * 
+ * generička klasa koja glumi generički niz
+ * koristi se za dodavanje vagona lokomotivi i 
+ * dodavanje tereta vagonima
+ *
+ */
+public class Skup<T> extends ArrayList<T> {
+	
+	private static final long serialVersionUID = 1L;
+	T obj; //razni objekti
+	List<T> lista = new ArrayList<T>();
+	int n; //kapacitet 
+	
+	public Skup(int n) {
+		this.n = n;
+	}
+	
+	public void dodajObjekat(T obj) {
+		try {
+			lista.add(obj);
+			if( lista.size() >= n ) {
+				throw new Exception("Greška! Prekoračenje kapaciteta!");
+			}
+		}
+		catch(Exception e) {
+			System.out.println(e);
+		}
+		
+	}
+	
+	public int brojObjekata() {
+		return lista.size();
+	}
+	
+	public void procitajObjekat(int in) {
+		System.out.println(lista.get(in).toString());
+	}
+	
+	public T getObjekat(int in) {
+		return lista.get(in);
+	}
+
+	public void protrci() {
+		for(T e: lista) {
+			System.out.println(e.toString());
+		}
+	}
+}
