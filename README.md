@@ -1,5 +1,5 @@
 # JAVA_MISANU
-= radna verzija =
-Projekti iz JAVE i SQL-a (MySQL) koji su bili deo obuke.
+= radna verzija = <br/>
+Projekti iz JAVE i SQL-a (MySQL) koji su bili deo obuke. <br/>
 Projekti su rađeni u Eclipse programskom okruženju.
 
